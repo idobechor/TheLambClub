@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TheLambClub.NewFolder.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:TheLambClub.Models"
+    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+    Title="LoginPage"
+    x:DataType="vm:LoginPageVM">
+    <Grid Margin="5" RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="3*,*">
+        <Entry Grid.ColumnSpan="2"
+           Placeholder="{x:Static m:Strings.UserName}"
+           Text="{Binding UserName}" />
+        <Entry Grid.Row="1" 
+           Placeholder="{x:Static m:Strings.Password}"
+           Text="{Binding Password}"
+           IsPassword="{Binding IsPassword}"/>
+        <Button
+        BackgroundColor="Transparent"
+        BorderWidth="0"
+        Grid.Row="1"
+         Grid.Column="2"   
+        Command="{Binding ToggleIsPasswordCommand}"
+        FontFamily="MaterialSymbols"
+        FontSize="24"
+        Style="{StaticResource IconButtonStyle}"
+        HorizontalOptions="End"
+        Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+        TextColor="Olive"
+        VerticalOptions="Center" />
+        <Entry Grid.Row="2" Grid.ColumnSpan="2"
+           Placeholder="{x:Static m:Strings.Email}"
+           Text="{Binding Email}" />
+        <Button Grid.Row="3" Grid.ColumnSpan="2"
+            Command="{Binding LoginCommand}"
+            Text="{x:Static m:Strings.LoginText}" />
+    </Grid>
+</ContentPage>
