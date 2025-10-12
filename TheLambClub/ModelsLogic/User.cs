@@ -6,12 +6,35 @@ namespace TheLambClub.ModelsLogic
     {
         public override void Register()
         {
+            fbd.CreateUserWithEmailAndPasswordAsync(Email, UserName, Password, OnComplete);              
+        }
+
+        private void OnComplete(Task task)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    SaveToPreferences();
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Registration Failed",
+                        "An error occurred while creating your account. Please try again.",
+                        "OK"
+                    );
+                }
+            });
+        }
+        private void SaveToPreferences()
+        {
             Preferences.Set(Keys.UserNameKey, UserName);
             Preferences.Set(Keys.PasswordNameKey, Password);
             Preferences.Set(Keys.EmailNameKey, Email);
             Preferences.Set(Keys.AgeNameKey, Age);
-
         }
+
         public override bool CanRegister()
         {
             return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age));

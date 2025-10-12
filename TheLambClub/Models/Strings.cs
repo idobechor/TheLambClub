@@ -13,5 +13,8 @@
         public const string Password = "Password";
         public const string Email = "Email";
         public const string Age = "Age";
+        public const string Ok = "Ok";
+        public const string UserNotCreatedError = "User Not Created Error";
+        
     }
 }
