@@ -15,6 +15,9 @@
         public const string Age = "Age";
         public const string Ok = "Ok";
         public const string UserNotCreatedError = "User Not Created Error";
+        public const string DisplayErrorAlert = "An error occurred while creating your account. Please try again.";
+        public const string RegistrationFailed = "Registration Failed";
+
         
     }
 }

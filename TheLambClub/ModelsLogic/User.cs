@@ -19,11 +19,7 @@ namespace TheLambClub.ModelsLogic
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert(
-                        "Registration Failed",
-                        "An error occurred while creating your account. Please try again.",
-                        "OK"
-                    );
+                    await Application.Current.MainPage.DisplayAlert(Strings.RegistrationFailed,Strings.DisplayErrorAlert, Strings.Ok);
                 }
             });
         }
