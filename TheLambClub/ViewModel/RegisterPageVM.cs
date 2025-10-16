@@ -1,6 +1,8 @@
 ﻿using TheLambClub.ModelsLogic;
 using System.Windows.Input;
 using TheLambClub.Models;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 
 namespace TheLambClub.ViewModel
 {
@@ -18,6 +20,7 @@ namespace TheLambClub.ViewModel
         {
             RegisterCommand=new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
+            
         }
         private void ToggleIsPassword()
         {
@@ -26,6 +29,7 @@ namespace TheLambClub.ViewModel
         }
         private void Register()
         {
+            Toast.Make("Test", ToastDuration.Long).Show();
             user.Register();
         }        
         public string UserName

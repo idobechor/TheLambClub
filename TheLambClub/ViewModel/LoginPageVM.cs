@@ -54,5 +54,6 @@ namespace TheLambClub.ViewModel
             }
 
         }
+        public bool IsChecked { get; }
     }
 }
