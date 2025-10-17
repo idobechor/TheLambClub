@@ -1,4 +1,6 @@
-﻿using TheLambClub.Models;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -10,19 +12,29 @@ namespace TheLambClub.ModelsLogic
         }
 
         private void OnComplete(Task task)
-        {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
+        {            
                 if (task.IsCompletedSuccessfully)
                 {
                     SaveToPreferences();
+                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                }
+                else if (task.Exception != null)
+                {
+                string msg = task.Exception.Message;
+                    ShowAlert(msg);                   
                 }
                 else
-                {
-                    await Application.Current.MainPage.DisplayAlert(Strings.RegistrationFailed,Strings.DisplayErrorAlert, Strings.Ok);
-                }
+                ShowAlert(Strings.UnknownRegistrationFailedError);                         
+        }
+
+        private static void ShowAlert(string msg)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(msg, ToastDuration.Long).Show();
             });
         }
+
         private void SaveToPreferences()
         {
             Preferences.Set(Keys.UserNameKey, UserName);

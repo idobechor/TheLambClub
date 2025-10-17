@@ -4,6 +4,7 @@ namespace TheLambClub.Models
 {
     internal abstract class UserModels
     {
+        public EventHandler? OnAuthComplete;
         protected FbData fbd = new();
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;

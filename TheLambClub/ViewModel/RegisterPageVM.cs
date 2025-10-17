@@ -20,8 +20,21 @@ namespace TheLambClub.ViewModel
         {
             RegisterCommand=new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
+            user.OnAuthComplete += OnAuthComplete;
             
         }
+
+        private void OnAuthComplete(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                if (Application.Current != null)
+                {
+                    Application.Current.MainPage = new AppShell();
+                }
+            });
+        }
+
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
@@ -29,7 +42,6 @@ namespace TheLambClub.ViewModel
         }
         private void Register()
         {
-            Toast.Make("Test", ToastDuration.Long).Show();
             user.Register();
         }        
         public string UserName
