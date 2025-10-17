@@ -16,15 +16,28 @@ namespace TheLambClub.ModelsLogic
                 if (task.IsCompletedSuccessfully)
                 {
                     SaveToPreferences();
-                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (task.Exception != null)
                 {
                 string msg = task.Exception.Message;
-                    ShowAlert(msg);                   
+                ShowAlert(GetFirebaseErrorMessage(msg));                   
                 }
                 else
                 ShowAlert(Strings.UnknownRegistrationFailedError);                         
+        }
+        public override  string GetFirebaseErrorMessage(string msg)
+        {
+            if (msg.Contains(Strings.ErrMessageReason))
+            {
+                if (msg.Contains(Strings.EmailExists))
+                    return Strings.EmailExistsErrMsg;
+                if (msg.Contains(Strings.InvalidEmailAddress))
+                    return Strings.InvalidEmailErrMessage;
+                if (msg.Contains(Strings.WeakPassword))
+                    return Strings.WeakPasswordErrMessage;
+            }
+            return Strings.UnknownErrorMessage;
         }
 
         private static void ShowAlert(string msg)
