@@ -16,7 +16,7 @@ namespace TheLambClub.ModelsLogic
                 if (task.IsCompletedSuccessfully)
                 {
                     SaveToPreferences();
-                 OnAuthComplete?.Invoke(this, EventArgs.Empty);//tt
+                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (task.Exception != null)
                 {
