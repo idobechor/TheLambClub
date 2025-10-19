@@ -8,7 +8,7 @@
     Title="LoginPage"
     BackgroundColor="Black"
     x:DataType="vm:LoginPageVM">
-    <Grid Margin="5" RowSpacing="50" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="2*,3*,*">
+    <Grid Margin="5" RowSpacing="50" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="2*,3*,*">
          <Label  FontSize="30" HorizontalOptions="Center" Text="{x:Static m:Strings.LoginText}" TextColor="white"/>
         <Label Grid.Row="1" Text="{x:Static m:Strings.EnterUserName}" TextColor="white"/>
         <Entry TextColor="white" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
@@ -39,7 +39,5 @@
         <Button Grid.Row="4" Grid.ColumnSpan="2"
             Command="{Binding LoginCommand}"
             Text="{x:Static m:Strings.LoginText}" />
-        <Label Grid.Row="5" Grid.Column="1" Text="Remember my data:" TextColor="White"/>
-        <CheckBox Grid.Row="5" Grid.Column="2" IsChecked="{Binding IsChecked}"/>
     </Grid>
 </ContentPage>
