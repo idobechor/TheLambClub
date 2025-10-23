@@ -2,6 +2,7 @@
 {
     static class Strings
     {
+        public const string RememberMeCheckBoxText = "Remember me:";
         public const string LoginButton = "Login";
         public const string Register = "Register";
         public const string LoginText = "Log in";
@@ -13,7 +14,7 @@
         public const string Password = "Password";
         public const string Email = "Email";
         public const string Age = "Age";
-        public const string Ok = "Ok";
+        public const string Ok = "Ok";      
         public const string UnknownErrorMessage = "Unknown Error";
         public const string WeakPassword = "WeakPassword";
         public const string WeakPasswordErrMessage = "Password needs to be at least 6 charecters long";
