@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Style x:Key="MyButtonStyle" TargetType="Button">
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="CornerRadius" Value="30" />
@@ -32,9 +30,12 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style
-    x:Key="IconButtonStyle"
-    BasedOn="{StaticResource baseButton}"
-    TargetType="Button">
+        x:Key="IconButtonStyle"
+        BasedOn="{StaticResource baseButton}"
+        TargetType="Button">
         <Setter Property="BorderColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
     </Style>
 </ResourceDictionary>

@@ -6,40 +6,109 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="LoginPage"
-    BackgroundImageSource="registerbackgroundpage.png"
-    x:DataType="vm:LoginPageVM">
-    <Grid Margin="5" RowSpacing="50" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="2*,3*,*">
-        <Label TextColor="Red"  FontSize="30" HorizontalOptions="Center" Text="{x:Static m:Strings.LoginText}" />
-        <Label FontSize="24" Grid.Row="1" Text="{x:Static m:Strings.EnterUserName}" TextColor="white"/>
-        <Entry FontSize="24" TextColor="white" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-       Placeholder="{x:Static m:Strings.UserName}"
-       Text="{Binding UserName}" />
-        <Label FontSize="24" Grid.Row="2" Text="{x:Static m:Strings.EnterPassword}" TextColor="white"/>
-        <Entry FontSize="24" Grid.Row="2" Grid.Column="1" TextColor="white"
-       Placeholder="{x:Static m:Strings.Password}"
-       Text="{Binding Password}"
-       IsPassword="{Binding IsPassword}"/>
+    x:DataType="vm:LoginPageVM"
+    BackgroundColor="Black">
+    <Grid
+        Margin="5"
+        ColumnDefinitions="2*,3*,*"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+        RowSpacing="50">
+        <Label
+            FontSize="40"
+            Grid.Column="1"
+            Text="{x:Static m:Strings.LoginText}"
+            TextColor="Red" />
+        <Label
+            Grid.Row="1"
+            FontSize="24"
+            Text="{x:Static m:Strings.EnterUserName}"
+            TextColor="white" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                Placeholder="{x:Static m:Strings.UserName}"
+                Text="{Binding UserName}"
+                TextColor="Red" />
+        </Border>
+        <Label
+            Grid.Row="2"
+            FontSize="24"
+            Text="{x:Static m:Strings.EnterPassword}"
+            TextColor="white" />
+        <Border
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                IsPassword="{Binding IsPassword}"
+                Placeholder="{x:Static m:Strings.Password}"
+                Text="{Binding Password}"
+                TextColor="Red"/>
+        </Border>
         <Button
-    BackgroundColor="Transparent"
-    BorderWidth="0"
-    Grid.Row="2"
-    Grid.Column="2"   
-    Command="{Binding ToggleIsPasswordCommand}"
-    FontFamily="MaterialSymbols"
-    FontSize="24"
-    Style="{StaticResource IconButtonStyle}"
-    HorizontalOptions="End"
-    Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
-    TextColor="Red"
-    VerticalOptions="Center" />
-        <Label FontSize="24" Grid.Row="3" Text="{x:Static m:Strings.EnterEmail}" TextColor="white"/>
-        <Entry FontSize="24" TextColor="white" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-       Placeholder="{x:Static m:Strings.Email}"
-       Text="{Binding Email}" />
-        <Button Grid.Row="4" Grid.ColumnSpan="2"
-        Command="{Binding LoginCommand}"
-        Text="{x:Static m:Strings.LoginText}" />
-        <Label  FontSize="24"  Grid.Row="5" Grid.Column="1" Text="Remember me:" TextColor="White"/>
-        <CheckBox Grid.Row="5" Grid.Column="2" IsChecked="{Binding IsChecked}"/>
+            Grid.Row="2"
+            Grid.Column="2"
+            BackgroundColor="Transparent"
+            BorderWidth="0"
+            Command="{Binding ToggleIsPasswordCommand}"
+            FontFamily="MaterialSymbols"
+            FontSize="24"
+            HorizontalOptions="End"
+            Style="{StaticResource IconButtonStyle}"
+            Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+            TextColor="Red"
+            VerticalOptions="Center" />
+        <Label
+            Grid.Row="3"
+            FontSize="24"
+            Text="{x:Static m:Strings.EnterEmail}"
+            TextColor="white" />
+        <Border
+            Grid.Row="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                Placeholder="{x:Static m:Strings.Email}"
+                Text="{Binding Email}"
+                TextColor="Red" />
+        </Border>
+        <Label
+            Grid.Row="4"
+            Grid.Column="1"
+            FontSize="24"
+            Text="Remember me:"
+            TextColor="Red" />
+        <CheckBox
+            Grid.Row="4"
+            Grid.Column="2"
+            IsChecked="{Binding IsChecked}" />
+        <Button
+            Grid.Row="5"
+            Grid.ColumnSpan="3"
+            Background="Red"
+            Command="{Binding LoginCommand}"
+            Text="{x:Static m:Strings.LoginText}" />
     </Grid>
 </ContentPage>

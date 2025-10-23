@@ -7,45 +7,63 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="RegisterPage"
     x:DataType="vm:RegisterPageVM"
-    BackgroundImageSource="registerbackgroundpage.png">
+      BackgroundColor="Black">
     <Grid
         Margin="5"
         ColumnDefinitions="2*,3*,*"
         RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
         RowSpacing="50">
         <Label
-            FontSize="30"
-            HorizontalOptions="Center"
+            Grid.Column="1"
+            FontSize="40"
             Text="Register"
-            TextColor="white" />
+            TextColor="Red" />
         <Label
             Grid.Row="1"
             FontSize="24"
             Text="{x:Static m:Strings.EnterUserName}"
-            TextColor="white" />
-        <Entry
+            TextColor="white"/>
+        <Border
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            FontSize="24"
-            Placeholder="{x:Static m:Strings.UserName}"
-            Text="{Binding UserName}"
-            TextColor="white" />
-
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                FontSize="24"
+                Placeholder="{x:Static m:Strings.UserName}"
+                Text="{Binding UserName}"
+                TextColor="Red" />
+        </Border>
         <Label
             Grid.Row="2"
             FontSize="24"
             Text="{x:Static m:Strings.EnterPassword}"
             TextColor="white" />
-        <Entry
+        <Border
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            FontSize="24"
-            IsPassword="{Binding IsPassword}"
-            Placeholder="{x:Static m:Strings.Password}"
-            Text="{Binding Password}"
-            TextColor="white" />
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                IsPassword="{Binding IsPassword}"
+                Placeholder="{x:Static m:Strings.Password}"
+                Text="{Binding Password}"
+                TextColor="Red" />
+        </Border>
         <Button
             Grid.Row="2"
             Grid.Column="2"
@@ -64,30 +82,47 @@
             FontSize="24"
             Text="{x:Static m:Strings.EnterEmail}"
             TextColor="white" />
-        <Entry
+        <Border
             Grid.Row="3"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            FontSize="24"
-            Placeholder="{x:Static m:Strings.Email}"
-            Text="{Binding Email}"
-            TextColor="white" />
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                Placeholder="{x:Static m:Strings.Email}"
+                Text="{Binding Email}"
+                TextColor="Red" />
+        </Border>
         <Label
             Grid.Row="4"
             FontSize="24"
             Text="{x:Static m:Strings.EnterAge}"
             TextColor="white" />
-        <Entry
+        <Border
             Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            FontSize="24"
-            Placeholder="{x:Static m:Strings.Age}"
-            Text="{Binding Age}"
-            TextColor="white" />
+            Margin="10"
+            Padding="10"
+            BackgroundColor="#99FFFFFF"
+            Stroke="Red"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+            <Entry
+                FontSize="24"
+                Placeholder="{x:Static m:Strings.Age}"
+                Text="{Binding Age}"
+                TextColor="Red" />
+        </Border>
         <Button
             Grid.Row="5"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
+            Background="Red"
             Command="{Binding RegisterCommand}"
             Text="{x:Static m:Strings.Register}"
             TextColor="white" />
