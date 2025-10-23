@@ -60,11 +60,16 @@ namespace TheLambClub.ModelsLogic
         {
             return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age));
         }
-        public override void Login()
+        public override void Login(bool IsChecked)
         {
+            if (IsChecked)
+            { 
             Preferences.Set(Keys.UserNameKey, UserName);
             Preferences.Set(Keys.PasswordNameKey, Password);
             Preferences.Set(Keys.EmailNameKey, Email);
+            }
+            else
+             Preferences.Clear();
         }
       
         public override bool CanLogin()

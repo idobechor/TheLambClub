@@ -11,7 +11,7 @@ namespace TheLambClub.Models
         public string Email { get; set; } = string.Empty;
         public string Age { get; set; } = string.Empty;
         public abstract void Register();
-        public abstract void Login();
+        public abstract void Login(bool IsChecked);
         public abstract bool CanLogin();
         public abstract bool CanRegister();
         public abstract string GetFirebaseErrorMessage(string msg);

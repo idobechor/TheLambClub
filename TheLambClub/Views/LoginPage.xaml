@@ -8,36 +8,38 @@
     Title="LoginPage"
     BackgroundColor="Black"
     x:DataType="vm:LoginPageVM">
-    <Grid Margin="5" RowSpacing="50" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="2*,3*,*">
-         <Label  FontSize="30" HorizontalOptions="Center" Text="{x:Static m:Strings.LoginText}" TextColor="white"/>
+    <Grid Margin="5" RowSpacing="50" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="2*,3*,*">
+        <Label  FontSize="30" HorizontalOptions="Center" Text="{x:Static m:Strings.LoginText}" TextColor="white"/>
         <Label Grid.Row="1" Text="{x:Static m:Strings.EnterUserName}" TextColor="white"/>
         <Entry TextColor="white" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-           Placeholder="{x:Static m:Strings.UserName}"
-           Text="{Binding UserName}" />
+       Placeholder="{x:Static m:Strings.UserName}"
+       Text="{Binding UserName}" />
         <Label Grid.Row="2" Text="{x:Static m:Strings.EnterPassword}" TextColor="white"/>
         <Entry Grid.Row="2" Grid.Column="1" TextColor="white"
-           Placeholder="{x:Static m:Strings.Password}"
-           Text="{Binding Password}"
-           IsPassword="{Binding IsPassword}"/>
+       Placeholder="{x:Static m:Strings.Password}"
+       Text="{Binding Password}"
+       IsPassword="{Binding IsPassword}"/>
         <Button
-        BackgroundColor="Transparent"
-        BorderWidth="0"
-        Grid.Row="2"
-        Grid.Column="2"   
-        Command="{Binding ToggleIsPasswordCommand}"
-        FontFamily="MaterialSymbols"
-        FontSize="24"
-        Style="{StaticResource IconButtonStyle}"
-        HorizontalOptions="End"
-        Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
-        TextColor="Red"
-        VerticalOptions="Center" />
+    BackgroundColor="Transparent"
+    BorderWidth="0"
+    Grid.Row="2"
+    Grid.Column="2"   
+    Command="{Binding ToggleIsPasswordCommand}"
+    FontFamily="MaterialSymbols"
+    FontSize="24"
+    Style="{StaticResource IconButtonStyle}"
+    HorizontalOptions="End"
+    Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
+    TextColor="Red"
+    VerticalOptions="Center" />
         <Label Grid.Row="3" Text="{x:Static m:Strings.EnterEmail}" TextColor="white"/>
         <Entry TextColor="white" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
-           Placeholder="{x:Static m:Strings.Email}"
-           Text="{Binding Email}" />
+       Placeholder="{x:Static m:Strings.Email}"
+       Text="{Binding Email}" />
         <Button Grid.Row="4" Grid.ColumnSpan="2"
-            Command="{Binding LoginCommand}"
-            Text="{x:Static m:Strings.LoginText}" />
+        Command="{Binding LoginCommand}"
+        Text="{x:Static m:Strings.LoginText}" />
+        <Label Grid.Row="5" Grid.Column="1" Text="Remember my data:" TextColor="White"/>
+        <CheckBox Grid.Row="5" Grid.Column="2" IsChecked="{Binding IsChecked}"/>
     </Grid>
 </ContentPage>
