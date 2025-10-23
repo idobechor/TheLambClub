@@ -8,23 +8,20 @@ namespace TheLambClub.ModelsLogic
     {
         public override void Register()
         {
-            fbd.CreateUserWithEmailAndPasswordAsync(Email, UserName, Password, OnComplete);              
+            fbd.CreateUserWithEmailAndPasswordAsync(Email, Password , UserName, OnComplete);              
         }
 
         private void OnComplete(Task task)
         {            
                 if (task.IsCompletedSuccessfully)
                 {
-                    SaveToPreferences();
-                 OnAuthComplete?.Invoke(this, EventArgs.Empty);
+                     SaveToPreferences();
+                     OnAuthComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (task.Exception != null)
-                {
-                string msg = task.Exception.Message;
-                ShowAlert(GetFirebaseErrorMessage(msg));                   
-                }
+                    ShowAlert(GetFirebaseErrorMessage(task.Exception.Message));                   
                 else
-                ShowAlert(Strings.UnknownRegistrationFailedError);                         
+                    ShowAlert(Strings.UnknownRegistrationFailedError);                         
         }
         public override  string GetFirebaseErrorMessage(string msg)
         {
