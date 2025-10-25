@@ -25,16 +25,17 @@ namespace TheLambClub.ModelsLogic
         }
         public override  string GetFirebaseErrorMessage(string msg)
         {
+            string result = string.Empty;
             if (msg.Contains(Strings.ErrMessageReason))
             {
                 if (msg.Contains(Strings.EmailExists))
-                    return Strings.EmailExistsErrMsg;
+                    result= Strings.EmailExistsErrMsg;
                 if (msg.Contains(Strings.InvalidEmailAddress))
-                    return Strings.InvalidEmailErrMessage;
+                    result= Strings.InvalidEmailErrMessage;
                 if (msg.Contains(Strings.WeakPassword))
-                    return Strings.WeakPasswordErrMessage;
+                    result= Strings.WeakPasswordErrMessage;
             }
-            return Strings.UnknownErrorMessage;
+            return result;
         }
 
         private static void ShowAlert(string msg)
@@ -55,7 +56,7 @@ namespace TheLambClub.ModelsLogic
 
         public override bool CanRegister()
         {
-            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age));
+            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age)) && !string.IsNullOrWhiteSpace(Email) && double.TryParse(Age, out double ageNumber)&&true;
         }
         public override void Login(bool IsChecked)
         {

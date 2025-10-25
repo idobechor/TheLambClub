@@ -8,12 +8,12 @@ namespace TheLambClub.ViewModel
     {
         public ICommand LoginCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
-        private bool _isChecked;
+        private bool IsCheckedValue;
 
         public bool IsChecked
         {
-            get => _isChecked;
-            set => _isChecked = value;
+            get => IsCheckedValue;
+            set => IsCheckedValue = value;
         }
         public LoginPageVM() 
         {
@@ -27,7 +27,7 @@ namespace TheLambClub.ViewModel
         }
         private void Login()
         {
-            user.Login(_isChecked);
+            user.Login(IsCheckedValue);
         }
         public bool CanLogin()
         {

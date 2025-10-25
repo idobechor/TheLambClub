@@ -1,4 +1,4 @@
-﻿using TheLambClub.ModelsLogic;
+﻿ using TheLambClub.ModelsLogic;
 using System.Windows.Input;
 using TheLambClub.Models;
 using CommunityToolkit.Maui.Alerts;

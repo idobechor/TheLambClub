@@ -1,4 +1,5 @@
-﻿using TheLambClub.ModelsLogic;
+﻿using CommunityToolkit.Maui.Behaviors;
+using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.Models
 {
@@ -15,6 +16,6 @@ namespace TheLambClub.Models
         public abstract bool CanLogin();
         public abstract bool CanRegister();
         public abstract string GetFirebaseErrorMessage(string msg);
-        public bool IsRegistered => (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email));
+        public bool IsRegistered => (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password));
     }
 }
