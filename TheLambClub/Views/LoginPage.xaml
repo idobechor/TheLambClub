@@ -7,40 +7,41 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="LoginPage"
     x:DataType="vm:LoginPageVM"
-    BackgroundColor="Black">
-    <Grid
+      BackgroundImageSource="registerbackgroundpage.png" >
+    <Border  BackgroundColor="#cF000000" Margin="0" Padding="0"  StrokeThickness="0" StrokeShape="Rectangle">
+        <Grid
         Margin="5"
         ColumnDefinitions="2*,3*,*"
         RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
         RowSpacing="50">
-        <Label
+            <Label
             FontSize="40"
             Grid.Column="1"
             Text="{x:Static m:Strings.LoginText}"
             TextColor="Red" />
-        <Label
+            <Label
             Grid.Row="1"
             Text="{x:Static m:Strings.EnterUserName}"/>
-        <Border
+            <Border
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2">
-            <Entry
+                <Entry
                 Placeholder="{x:Static m:Strings.UserName}"
                 Text="{Binding UserName}" />
-        </Border>
-        <Label
+            </Border>
+            <Label
             Grid.Row="2"
             Text="{x:Static m:Strings.EnterPassword}"/>
-        <Border
+            <Border
             Grid.Row="2"
             Grid.Column="1">
-            <Entry
+                <Entry
                 IsPassword="{Binding IsPassword}"
                 Placeholder="{x:Static m:Strings.Password}"
                 Text="{Binding Password}"/>
-        </Border>
-        <Button
+            </Border>
+            <Button
             Grid.Row="2"
             Grid.Column="2"
             BackgroundColor="Transparent"
@@ -53,32 +54,36 @@
             Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
             TextColor="Red"
             VerticalOptions="Center" />
-        <Label
+            <Label
             Grid.Row="3"
             Text="{x:Static m:Strings.EnterEmail}" />
-        <Border
+            <Border
             Grid.Row="3"
             Grid.Column="1"
             Grid.ColumnSpan="2">
-            <Entry
-                FontSize="24"
+                <Entry
                 Placeholder="{x:Static m:Strings.Email}"
-                Text="{Binding Email}"
-                TextColor="Red" />
-        </Border>
-        <Label
-            Grid.Row="4"
-            Grid.Column="1"
+                Text="{Binding Email}" />
+            </Border>
+            <Border
+       Grid.Row="4"
+       Grid.ColumnSpan="3"
+       StrokeThickness="0">
+                <Label
+            Grid.Row="4"                  
+            Grid.ColumnSpan="3"
             Text="{x:Static m:Strings.RememberMeCheckBoxText}"/>
-        <CheckBox
+            </Border>
+            <CheckBox
             Grid.Row="4"
             Grid.Column="2"
             IsChecked="{Binding IsChecked}" />
-        <Button
+            <Button
             Grid.Row="5"
             Grid.ColumnSpan="3"
             Background="Red"
             Command="{Binding LoginCommand}"
             Text="{x:Static m:Strings.LoginText}" />
-    </Grid>
+        </Grid>
+    </Border>
 </ContentPage>

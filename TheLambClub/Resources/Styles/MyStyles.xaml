@@ -43,13 +43,14 @@
     <Style TargetType="Border">
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Padding" Value="10"/>
-        <Setter Property="BackgroundColor" Value="#99FFFFFF"/>
+        <Setter Property="BackgroundColor" Value="black"/>
         <Setter Property="Stroke" Value="Red"/>
         <Setter Property="StrokeShape" Value="RoundRectangle 10"/>
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>
     <Style TargetType="Entry">
         <Setter Property="FontSize" Value="24"/>
-        <Setter Property="TextColor" Value="Red"/>
-    </Style>
+        <Setter Property="TextColor" Value="LightGray"/>
+        <Setter Property="PlaceholderColor" Value="LightGray"/>
+    </Style> 
 </ResourceDictionary>

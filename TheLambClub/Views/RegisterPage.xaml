@@ -7,50 +7,45 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="RegisterPage"
     x:DataType="vm:RegisterPageVM"
-      BackgroundColor="Black">
-    <Grid
+      BackgroundImageSource="registerbackgroundpage.png" >
+    <Border  BackgroundColor="#cF000000" Margin="0" Padding="0"  StrokeThickness="0" StrokeShape="Rectangle">
+        <Grid
         Margin="5"
         ColumnDefinitions="2*,3*,*"
         RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
         RowSpacing="50">
-        <Label
+            <Label
             Grid.Column="1"
             FontSize="40"
             Text="{x:Static m:Strings.Register}"
             TextColor="Red" />
-        <Label
+            <Label
             Grid.Row="1"
             Text="{x:Static m:Strings.EnterUserName}"/>
-        <Border
+            <Border
             Grid.Row="1"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="10"
-            Padding="10"
-            BackgroundColor="#99FFFFFF"
-            Stroke="Red"
-            StrokeShape="RoundRectangle 10"
-            StrokeThickness="1">
-            <Entry
+            Grid.ColumnSpan="2">
+                <Entry
                 Grid.Row="1"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                Placeholder="{x:Static m:Strings.UserName}"
+                Placeholder="{x:Static m:Strings.UserName}"                
                 Text="{Binding UserName}" />
-        </Border>
-        <Label
+            </Border>
+            <Label
             Grid.Row="2"
             Text="{x:Static m:Strings.EnterPassword}"/>
-        <Border
+            <Border
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="2">
-            <Entry
+                <Entry
                 IsPassword="{Binding IsPassword}"
                 Placeholder="{x:Static m:Strings.Password}"
                 Text="{Binding Password}" />
-        </Border>
-        <Button
+            </Border>
+            <Button
             Grid.Row="2"
             Grid.Column="2"
             BackgroundColor="Transparent"
@@ -63,40 +58,35 @@
             Text="{Binding IsPassword, Converter={StaticResource passwordIconConvert}}"
             TextColor="Red"
             VerticalOptions="Center" />
-        <Label
+            <Label
             Grid.Row="3"
             Text="{x:Static m:Strings.EnterEmail}" />
-        <Border
+            <Border
             Grid.Row="3"
             Grid.Column="1"
             Grid.ColumnSpan="2">
-            <Entry
+                <Entry
                 Placeholder="{x:Static m:Strings.Email}"
                 Text="{Binding Email}" />
-        </Border>
-        <Label
+            </Border>
+            <Label
             Grid.Row="4"
             Text="{x:Static m:Strings.EnterAge}" />
-        <Border
+            <Border
             Grid.Row="4"
             Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="10"
-            Padding="10"
-            BackgroundColor="#99FFFFFF"
-            Stroke="Red"
-            StrokeShape="RoundRectangle 10"
-            StrokeThickness="1">
-            <Entry
+            Grid.ColumnSpan="2">
+                <Entry
                 Placeholder="{x:Static m:Strings.Age}"
                 Text="{Binding Age}" />
-        </Border>
-        <Button
+            </Border>
+            <Button
             Grid.Row="5"
             Grid.ColumnSpan="3"
             Background="Red"
             Command="{Binding RegisterCommand}"
             Text="{x:Static m:Strings.Register}"
-            TextColor="white" />
-    </Grid>
+            TextColor="black" />
+        </Grid>
+    </Border>
 </ContentPage>
