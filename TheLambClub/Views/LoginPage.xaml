@@ -9,11 +9,7 @@
     x:DataType="vm:LoginPageVM"
       BackgroundImageSource="registerbackgroundpage.png" >
     <Border  BackgroundColor="#cF000000" Margin="0" Padding="0"  StrokeThickness="0" StrokeShape="Rectangle">
-        <Grid
-        Margin="5"
-        ColumnDefinitions="2*,3*,*"
-        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-        RowSpacing="50">
+        <Grid>
             <Label
             FontSize="40"
             Grid.Column="1"
