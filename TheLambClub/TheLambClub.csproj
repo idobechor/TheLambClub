@@ -11,13 +11,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <!-- Display name -->
     <ApplicationTitle>TheLambClub</ApplicationTitle>
-
-    <!-- App Identifier -->
     <ApplicationId>com.companyname.TheLambClub</ApplicationId>
-
-    <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
@@ -31,7 +26,6 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <!-- ApplicationId override per configuration -->
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
     <ApplicationTitle>TheLambClub</ApplicationTitle>
     <ApplicationId>com.meitar.thelambclub</ApplicationId>
@@ -73,19 +67,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- App Icon -->
     <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
-
-    <!-- Splash Screen -->
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
-    <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
-
-    <!-- Custom Fonts -->
     <MauiFont Include="Resources\Fonts\*" />
-
-    <!-- Raw Assets -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
@@ -94,12 +79,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- כאן חשוב לכתוב את הנתיב המדויק עם אותיות קטנות (raw) -->
     <GoogleServicesJson Include="Resources\raw\google-services.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- הוספת AndroidManifest.xml כדי שהאנדרואיד יבין את ההגדרות -->
     <MauiAsset Include="Platforms\Android\AndroidManifest.xml" />
   </ItemGroup>
 

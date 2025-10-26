@@ -79,7 +79,6 @@
             <Button
             Grid.Row="5"
             Grid.ColumnSpan="3"
-            Background="Red"
             Command="{Binding RegisterCommand}"
             Text="{x:Static m:Strings.Register}"
             TextColor="black" />
