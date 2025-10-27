@@ -9,14 +9,29 @@
     x:DataType="vm:HomePageVM"
     BackgroundColor="Black">
     <Border Background="Gray" Margin="40">
-    <StackLayout>
-            <Button         
-            FontFamily="MaterialSymbols"            
-            FontSize="35"
-            Background="Gray"
-             TextColor="Blue"
-            Text="{StaticResource IconDeveloper_guide}"
-             Command="{Binding InstructionsCommand}"/>
+        <StackLayout>
+            <Grid ColumnDefinitions="auto,auto,4*,auto" RowDefinitions="*,*">
+                <Label  TextColor="Orange" Text="TheLambClub"/>
+                <Button         
+              FontFamily="MaterialSymbols"            
+              FontSize="35"
+              Grid.Column="1"
+              Background="Gray"
+              TextColor="Blue"
+              Text="{StaticResource IconDeveloper_guide}"
+              Command="{Binding InstructionsCommand}"/>
+                <Label 
+         Grid.ColumnSpan="3"
+         Grid.Row="1"
+         Text="Welcome to TheLambClub"
+         TextColor="Orange"
+         FontSize="45"
+         HorizontalOptions="Center"
+         HorizontalTextAlignment="Center"
+         FontAttributes="Bold"
+         Margin="0,60,0,0"/>
+            </Grid>
+       
             <Button
             Command="{Binding StartGameCommand}"
             Text="Create game"
@@ -25,7 +40,7 @@
             <Button
             Command="{Binding ShowNumericPromptCommand}"
             HorizontalOptions="Fill"
-            Background="Red"
+            Background="Orange"
             TextColor="black"
             Text="Enter code for private room" />
     </StackLayout>
