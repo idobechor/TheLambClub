@@ -3,6 +3,7 @@ using System.Windows.Input;
 using TheLambClub.Models;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
@@ -26,15 +27,14 @@ namespace TheLambClub.ViewModel
 
         private void OnAuthComplete(object? sender, EventArgs e)
         {
-            MainThread.InvokeOnMainThreadAsync(() =>
+            if (Application.Current != null)
             {
-                if (Application.Current != null)
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Application.Current.MainPage = new AppShell();
-                }
-            });
+                    Application.Current.MainPage = new HomePageView();
+                });
+            }
         }
-
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
