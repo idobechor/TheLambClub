@@ -6,13 +6,28 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="HomePageView"
-    x:DataType="vm:HomePageVM">
-
+    x:DataType="vm:HomePageVM"
+    BackgroundColor="Black">
+    <Border Background="Gray" Margin="40">
     <StackLayout>
-        <Label Text="HomePage" TextColor="black" FontSize="40" />
-        <Button
+            <Button         
+            FontFamily="MaterialSymbols"            
+            FontSize="35"
+            Background="Gray"
+             TextColor="Blue"
+            Text="{StaticResource IconDeveloper_guide}"
+             Command="{Binding InstructionsCommand}"/>
+            <Button
             Command="{Binding StartGameCommand}"
-            Text="start game"
-            TextColor="black" />
+            Text="Create game"
+            TextColor="black"
+            Background="Red"/>
+            <Button
+            Command="{Binding ShowNumericPromptCommand}"
+            HorizontalOptions="Fill"
+            Background="Red"
+            TextColor="black"
+            Text="Enter code for private room" />
     </StackLayout>
+    </Border>
 </ContentPage>
