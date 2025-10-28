@@ -11,7 +11,7 @@ namespace TheLambClub
           InitializeComponent(); 
             User user = new();
             Page page = user.IsRegistered ? new LoginPage() : new RegisterPage();
-            MainPage = new HomePageView();
+            MainPage = page;
         }      
     }
 }
