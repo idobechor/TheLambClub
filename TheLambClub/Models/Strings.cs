@@ -31,6 +31,8 @@
         public const string InvalidEmailAddress = "InvalidEmailAddress";
         public const string EmailExistsErrMsg = "This email is already in use";
         public const string UnknownRegistrationFailedError = "Unknown Error";
+        public const string UserNotFound = "INVALID_LOGIN_CREDENTIALS";
+        public const string UserNotFoundmsg = "User not found.";
 
 
 

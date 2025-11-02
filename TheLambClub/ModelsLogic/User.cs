@@ -34,6 +34,8 @@ namespace TheLambClub.ModelsLogic
                     result= Strings.InvalidEmailErrMessage;
                 if (msg.Contains(Strings.WeakPassword))
                     result= Strings.WeakPasswordErrMessage;
+                if(msg.Contains(Strings.UserNotFound))
+                    result= Strings.UserNotFoundmsg;
             }
             return result;
         }
@@ -61,13 +63,15 @@ namespace TheLambClub.ModelsLogic
         public override void Login(bool IsChecked)
         {
             if (IsChecked)
-            { 
-            Preferences.Set(Keys.UserNameKey, UserName);
+            {           
+             Preferences.Set(Keys.UserNameKey, UserName);
             Preferences.Set(Keys.PasswordNameKey, Password);
             Preferences.Set(Keys.EmailNameKey, Email);
             }
             else
              Preferences.Clear();
+
+            fbd.SignInWithEmailAndPasswordAsync(Email, Password, OnComplete);
         }
       
         public override bool CanLogin()

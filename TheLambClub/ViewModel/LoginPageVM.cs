@@ -9,7 +9,6 @@ namespace TheLambClub.ViewModel
         public ICommand LoginCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
         private bool IsCheckedValue;
-
         public bool IsChecked
         {
             get => IsCheckedValue;
