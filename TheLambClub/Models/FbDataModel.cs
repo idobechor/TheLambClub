@@ -7,11 +7,12 @@ namespace TheLambClub.Models
     abstract class FbDataModel
     {
         protected FirebaseAuthClient facl;
-        protected IFirestore fdb;
+        protected IFirestore fs;
         public abstract string DisplayName { get; }
         public abstract string UserId { get; }
         public abstract void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void SignInWithEmailAndPasswordAsync(string email, string password, Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract string SetDocument(object obj, string collectonName, string id, Action<System.Threading.Tasks.Task> OnComplete);
         public FbDataModel() 
         {
             FirebaseAuthConfig fac = new()
@@ -21,7 +22,7 @@ namespace TheLambClub.Models
                 Providers = [new EmailProvider()]
             };
             facl = new FirebaseAuthClient(fac);
-            fdb = CrossCloudFirestore.Current.Instance;
+            fs = CrossCloudFirestore.Current.Instance;
         }
     }
 }

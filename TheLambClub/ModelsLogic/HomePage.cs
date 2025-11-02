@@ -11,18 +11,7 @@ using TheLambClub.Views;
 namespace TheLambClub.ModelsLogic
 {
     internal class HomePage:HomePageModel
-    {
-        public override void MoveToGamePage()
-        {
-            if (Application.Current != null)
-            {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Application.Current.MainPage = new RuningGameView();
-                });
-            }
-        }
-    
+    {    
         public override void ShowNumericPromptCasting(object obj)
         {
             ShowNumericPrompt(obj);

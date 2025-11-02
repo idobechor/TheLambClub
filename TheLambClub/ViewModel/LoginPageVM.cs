@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using TheLambClub.ModelsLogic;
 using TheLambClub.Models;
+using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
@@ -18,6 +19,17 @@ namespace TheLambClub.ViewModel
         {
             LoginCommand=new Command(Login,CanLogin);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
+            user.OnAuthComplete += OnAuthComplete;
+        }
+        private void OnAuthComplete(object? sender, EventArgs e)
+        {
+            if (Application.Current != null)
+            {
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Application.Current.MainPage = new HomePageView();
+                });
+            }
         }
         private void ToggleIsPassword()
         {

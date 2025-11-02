@@ -14,6 +14,12 @@ namespace TheLambClub.ModelsLogic
         {
             await facl.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(OnComplete);
         }
+        public override string SetDocument(object obj, string collectonName, string id, Action<System.Threading.Tasks.Task> OnComplete)
+        {
+            IDocumentReference dr = string.IsNullOrEmpty(id) ? fs.Collection(collectonName).Document() : fs.Collection(collectonName).Document(id);
+            dr.SetAsync(obj).ContinueWith(OnComplete);
+            return dr.Id;
+        }
         public override string DisplayName
         {
             get

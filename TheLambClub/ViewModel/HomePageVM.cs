@@ -1,23 +1,28 @@
 ﻿using System.Windows.Input;
+using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.ViewModel
 {
-    internal class HomePageVM
+    internal class HomePageVM: ObservableObject
     {
+        private Games games = new();
         private readonly HomePage homePage = new();
         public ICommand ShowNumericPromptCommand { get; private set; }
         public ICommand InstructionsCommand { get; private set; }
-        public ICommand StartGameCommand { get => new Command(MoveToGamePage); }
+        public ICommand AddGameCommand => new Command(AddGame);
+        public bool IsBusy => games.IsBusy;
+        private void AddGame()
+        {
+            games.AddGame();
+            OnPropertyChanged(nameof(IsBusy));
+        }
         public HomePageVM()
         {
             ShowNumericPromptCommand = new Command(ShowNumericPromptCasting);
             InstructionsCommand = new Command(ShowInstructionsPrompt);
-        }       
-        private void MoveToGamePage()
-        {
-            homePage.MoveToGamePage();
-        }
+            games.OnGameAdded += OnGameAdded;
+        }           
         public void ShowNumericPromptCasting(object obj)
         {
             homePage.ShowNumericPromptCasting(obj);
@@ -25,6 +30,11 @@ namespace TheLambClub.ViewModel
         public void ShowInstructionsPrompt(object obj)
         {
             homePage.ShowInstructionsPrompt(obj);
+        }
+
+        private void OnGameAdded(object? sender, bool e)
+        {
+            OnPropertyChanged(nameof(IsBusy));
         }
     }
 }
