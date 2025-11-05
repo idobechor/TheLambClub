@@ -44,6 +44,27 @@
             Background="Orange"
             TextColor="black"
             Text="Enter code for private room" />
-    </StackLayout>
+            <ListView ItemsSource="{Binding GamesList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="m:GameModel">
+                        <ViewCell>
+                            <Grid ColumnDefinitions="*,2*,0.5*">
+                                <Label
+                              Grid.Column="0"
+                              Margin="20,0,0,0"
+                              FontAttributes="Bold"
+                              FontSize="20"
+                              HorizontalTextAlignment="Start"
+                              Text="{Binding HostName}" />
+                                <Label
+                              Grid.Column="1"
+                              FontSize="20"
+                              Text="{Binding Created}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </Border>
 </ContentPage>

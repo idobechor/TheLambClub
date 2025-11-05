@@ -20,6 +20,22 @@ namespace TheLambClub.ModelsLogic
             dr.SetAsync(obj).ContinueWith(OnComplete);
             return dr.Id;
         }
+        public override IListenerRegistration AddSnapshotListener(string collectonName, Plugin.CloudFirestore.QuerySnapshotHandler OnChange)
+        {
+            ICollectionReference cr = fs.Collection(collectonName);
+            return cr.AddSnapshotListener(OnChange);
+        }
+        public override IListenerRegistration AddSnapshotListener(string collectonName, string id, Plugin.CloudFirestore.DocumentSnapshotHandler OnChange)
+        {
+            IDocumentReference cr = fs.Collection(collectonName).Document(id);
+            return cr.AddSnapshotListener(OnChange);
+        }
+        public async void GetDocumentsWhereEqualTo(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete)
+        {
+            ICollectionReference cr = fs.Collection(collectonName);
+            IQuerySnapshot qs = await cr.WhereEqualsTo(fName, fValue).GetAsync();
+            OnComplete(qs);
+        }
         public override string DisplayName
         {
             get

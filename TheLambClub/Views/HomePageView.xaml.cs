@@ -4,9 +4,21 @@ namespace TheLambClub.Views;
 
 public partial class HomePageView : ContentPage
 {
-	public HomePageView()
+    private readonly HomePageVM hpVM = new();
+    public HomePageView()
 	{
 		InitializeComponent();
-        BindingContext = new HomePageVM();
+        BindingContext = hpVM;
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        hpVM.AddSnapshotListener();
+    }
+
+    protected override void OnDisappearing()
+    {
+        hpVM.RemoveSnapshotListener();
+        base.OnDisappearing();
     }
 }
