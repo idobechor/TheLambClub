@@ -19,9 +19,9 @@ namespace TheLambClub.Models
         public bool IsFull { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
         [Ignored]
-        public static string MaxNumOfPlayersStr  { get; set; }= $" max of players:{MaxNumOfPlayers} in a game";
+        public  string MaxNumOfPlayersStr  { get; set; } = string.Empty;
         [Ignored]
-        public static string CurrentNumOfPlayersStr { get; set; } = $" current players{MaxNumOfPlayers}";
+        public  string CurrentNumOfPlayersStr { get; set; } = string.Empty;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
     }
 }

@@ -7,13 +7,13 @@ namespace TheLambClub.ViewModel
 {
     internal partial class LoginPageVM : ObservableObject
     {
+        private readonly User user = new();
         public ICommand LoginCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }
-        private bool IsCheckedValue;
         public bool IsChecked
         {
-            get => IsCheckedValue;
-            set => IsCheckedValue = value;
+            get => user.IsChecked;
+            set => user.IsChecked = value;
         }
         public LoginPageVM() 
         {
@@ -38,14 +38,13 @@ namespace TheLambClub.ViewModel
         }
         private void Login()
         {
-            user.Login(IsCheckedValue);
+            user.Login();
         }
         public bool CanLogin()
         {
            return user.CanLogin();           
         }
         public bool IsPassword { get; set; } = true;
-        private readonly User user = new();
         public string Password 
         { get=> user.Password;
             set

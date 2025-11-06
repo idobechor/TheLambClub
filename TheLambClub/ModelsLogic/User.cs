@@ -15,7 +15,8 @@ namespace TheLambClub.ModelsLogic
         {            
                 if (task.IsCompletedSuccessfully)
                 {
-                     SaveToPreferences();
+                if (IsChecked)
+                    SaveToPreferences();
                      OnAuthComplete?.Invoke(this, EventArgs.Empty);
                 }
                 else if (task.Exception != null)
@@ -60,7 +61,7 @@ namespace TheLambClub.ModelsLogic
         {
             return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age)) && !string.IsNullOrWhiteSpace(Email) && double.TryParse(Age, out double ageNumber);
         }
-        public override void Login(bool IsChecked)
+        public override void Login()
         {
             if (IsChecked)
             {           

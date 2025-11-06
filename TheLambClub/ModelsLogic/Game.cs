@@ -8,7 +8,8 @@ namespace TheLambClub.ModelsLogic
         {
             HostName = new User().UserName;
             Created = DateTime.Now;
-            CurrentNumOfPlayersStr = $" max of players:{MaxNumOfPlayers} in a game";
+            MaxNumOfPlayersStr = $" max of players: {MaxNumOfPlayers} in a game";
+            CurrentNumOfPlayersStr = $" current players: {CurrentNumOfPlayers}";
             IsFull = false;
             CurrentNumOfPlayers = 1;
         }
