@@ -15,6 +15,10 @@
         public const string Email = "Email";
         public const string Age = "Age";
         public const string Ok = "Ok";      
+        public const string PrivateRoomButtonTxt = "private room";      
+        public const string CreateGameButtonTxt = "Create game";      
+        public const string WelcomeTxt = "Hello {0} Welcome to TheLambClub";      
+        public const string TheLambClub = "TheLambClub";      
         public const string customRoomCodeTitleTxt = "custom room code";      
         public const string customRoomCodeTxt = "please the code to sign";      
         public const string InsructionsTxtTitle = "Insructions";

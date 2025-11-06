@@ -9,11 +9,13 @@ namespace TheLambClub.ViewModel
     internal class HomePageVM: ObservableObject
     {
         private Games games = new();
+        private User user = new();
         private readonly HomePage homePage = new();
         public ICommand ShowNumericPromptCommand { get; private set; }
         public ICommand InstructionsCommand { get; private set; }
         public ICommand AddGameCommand => new Command(AddGame);
         public ObservableCollection<Game>? GamesList => games.GamesList;
+        public string UserName => user.UserName;
         public bool IsBusy => games.IsBusy;
         private void AddGame()
         {

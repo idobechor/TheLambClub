@@ -58,7 +58,7 @@ namespace TheLambClub.ModelsLogic
 
         public override bool CanRegister()
         {
-            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age)) && !string.IsNullOrWhiteSpace(Email) && double.TryParse(Age, out double ageNumber)&&true;
+            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age)) && !string.IsNullOrWhiteSpace(Email) && double.TryParse(Age, out double ageNumber);
         }
         public override void Login(bool IsChecked)
         {
