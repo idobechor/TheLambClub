@@ -1,10 +1,8 @@
-﻿using Firebase.Auth;
-using Firebase.Auth.Providers;
-using Plugin.CloudFirestore;
+﻿using Plugin.CloudFirestore;
 using TheLambClub.Models;
 namespace TheLambClub.ModelsLogic
 {
-    internal class FbData : FbDataModel
+    public class FbData : FbDataModel
     {   
         public override async void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete)
         {

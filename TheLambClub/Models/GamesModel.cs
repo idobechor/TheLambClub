@@ -10,13 +10,15 @@ using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.Models
 {
-    internal class GamesModel
+    public class GamesModel
     {
         protected IListenerRegistration? ilr;
         protected FbData fbd = new();
+        protected Game? currentGame = new();
         public bool IsBusy { get; set; }
-        public EventHandler<bool>? OnGameAdded;
+        public EventHandler<Game>? OnGameAdded;
         public ObservableCollection<Game>? GamesList { get; set; } = [];
+        public Game? CurrentGame { get => currentGame; set => currentGame = value; }
         public EventHandler? OnGamesChanged;
     }
 }

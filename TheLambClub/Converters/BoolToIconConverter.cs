@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace LoginApp.Converters
 {
-	internal class BoolToIconConverter : IValueConverter
+	public class BoolToIconConverter : IValueConverter
 	{
 
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

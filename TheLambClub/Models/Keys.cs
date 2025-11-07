@@ -1,6 +1,6 @@
 ﻿namespace TheLambClub.Models
 {
-    internal static class Keys
+    public static class Keys
     {
         public const string UserNameKey = "Username";
         public const string PasswordNameKey = "Password";

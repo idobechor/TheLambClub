@@ -7,7 +7,7 @@ using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
-    internal class RegisterPageVM: ObservableObject
+    public class RegisterPageVM: ObservableObject
     {
         public ICommand RegisterCommand { get; }
         public ICommand ToggleIsPasswordCommand { get; }

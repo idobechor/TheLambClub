@@ -4,7 +4,7 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    internal class User : UserModels
+    public class User : UserModels
     {
         public override void Register()
         {

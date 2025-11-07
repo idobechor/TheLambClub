@@ -5,7 +5,7 @@ using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
-    internal partial class LoginPageVM : ObservableObject
+    public partial class LoginPageVM : ObservableObject
     {
         private readonly User user = new();
         public ICommand LoginCommand { get; }
@@ -27,7 +27,7 @@ namespace TheLambClub.ViewModel
             {
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Application.Current.MainPage = new HomePageView();
+                    Application.Current.MainPage = new AppShell();
                 });
             }
         }

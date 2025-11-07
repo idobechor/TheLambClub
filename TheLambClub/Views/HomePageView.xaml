@@ -44,7 +44,7 @@
                 HorizontalOptions="Fill"
                 Text="{x:Static m:Strings.PrivateRoomButtonTxt}"
                 TextColor="black" />
-            <ListView ItemsSource="{Binding GamesList}">
+            <ListView ItemsSource="{Binding GamesList}" SelectedItem="{Binding SelectedItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:GameModel">
                         <ViewCell>

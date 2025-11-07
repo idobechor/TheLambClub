@@ -2,9 +2,9 @@
 
 namespace TheLambClub.ModelsLogic
 {
-    internal class Game : GameModel
+    public class Game : GameModel
     {
-        internal Game()
+        public Game()
         {
             HostName = new User().UserName;
             Created = DateTime.Now;
@@ -13,6 +13,8 @@ namespace TheLambClub.ModelsLogic
             IsFull = false;
             CurrentNumOfPlayers = 1;
         }
+
+        public override string OpponentName => IsHost? GuestName: HostName;
         public override void SetDocument(Action<System.Threading.Tasks.Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);

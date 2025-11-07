@@ -4,7 +4,7 @@ using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.Models
 {
-    internal abstract class UserModels
+    public abstract class UserModels
     {
         public EventHandler? OnAuthComplete;
         protected FbData fbd = new();

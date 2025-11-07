@@ -3,13 +3,14 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
+using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
-    internal class HomePageVM: ObservableObject
+    public class HomePageVM: ObservableObject
     {
-        private Games games = new();
-        private User user = new();
+        private readonly Games games = new();
+        private readonly User user = new();
         private readonly HomePage homePage = new();
         public ICommand ShowNumericPromptCommand { get; private set; }
         public ICommand InstructionsCommand { get; private set; }
@@ -17,6 +18,18 @@ namespace TheLambClub.ViewModel
         public ObservableCollection<Game>? GamesList => games.GamesList;
         public string UserName => user.UserName;
         public bool IsBusy => games.IsBusy;
+        public Game SelectedItem 
+        {
+           get =>games.CurrentGame!;
+           set
+            {                 
+                games.CurrentGame = value;
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                });
+            }
+        }
         private void AddGame()
         {
             games.AddGame();
@@ -38,16 +51,20 @@ namespace TheLambClub.ViewModel
             homePage.ShowInstructionsPrompt(obj);
         }
 
-        private void OnGameAdded(object? sender, bool e)
+        private void OnGameAdded(object? sender, Game game)
         {
             OnPropertyChanged(nameof(IsBusy));
+            MainThread.InvokeOnMainThreadAsync( () =>
+            {
+                Shell.Current.Navigation.PushAsync(new GamePage(game), true);
+            });
         }
-        internal void AddSnapshotListener()
+        public void AddSnapshotListener()
         {
             games.AddSnapshotListener();
         }
 
-        internal void RemoveSnapshotListener()
+        public void RemoveSnapshotListener()
         {
             games.RemoveSnapshotListener();
         }
