@@ -27,7 +27,7 @@ namespace TheLambClub.ViewModel
             {
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Application.Current.MainPage = new HomePageView();
+                    Application.Current.MainPage = new AppShell();
                 });
             }
         }

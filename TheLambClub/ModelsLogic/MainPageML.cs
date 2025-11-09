@@ -10,7 +10,7 @@ using TheLambClub.Views;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class HomePage:HomePageModel
+    public class MainPageML:MainPageModel
     {    
         public override void ShowNumericPromptCasting(object obj)
         {
