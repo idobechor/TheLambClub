@@ -1,16 +1,10 @@
-﻿using Microsoft.Maui.Controls;
-using Plugin.CloudFirestore;
-using System;
-using System.Collections.Generic;
+﻿using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.Models
 {
-    public class GamesModel
+    public abstract class GamesModel
     {
         protected IListenerRegistration? ilr;
         protected FbData fbd = new();
@@ -20,5 +14,8 @@ namespace TheLambClub.Models
         public ObservableCollection<Game>? GamesList { get; set; } = [];
         public Game? CurrentGame { get => currentGame; set => currentGame = value; }
         public EventHandler? OnGamesChanged;
-    }
+        public abstract void AddSnapshotListener();
+        public abstract void RemoveSnapshotListener();
+
+	}
 }

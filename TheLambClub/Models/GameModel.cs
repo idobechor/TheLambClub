@@ -1,17 +1,16 @@
-﻿using Plugin.CloudFirestore.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Plugin.CloudFirestore;
+using Plugin.CloudFirestore.Attributes;
 using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.Models
 {
     public abstract class GameModel
     {
+        protected IListenerRegistration? ilr;
         protected const int MaxNumOfPlayers = 6;
         protected FbData fbd = new();
+        public EventHandler? OnGameChanged;
         public string HostName { get; set; } = string.Empty;
         public string GuestName { get; set; } = string.Empty;
         public DateTime Created { get; set; }
@@ -28,7 +27,9 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract string OpponentName { get;  } 
         [Ignored]
-        public bool IsHost { get; set; } 
+        public bool IsHostUser { get; set; } 
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
+        public abstract void AddSnapShotListener();
+        public abstract void RemoveSnapShotListener();
     }
 }

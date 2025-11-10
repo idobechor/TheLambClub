@@ -1,15 +1,16 @@
 ﻿using Plugin.CloudFirestore;
 using TheLambClub.Models;
-
 namespace TheLambClub.ModelsLogic
 {
     public class Games : GamesModel
     {
         public void AddGame()
         {
-            IsBusy = true;     
-            CurrentGame = new();
-            CurrentGame.IsHost= true;
+            IsBusy = true;
+            CurrentGame = new()
+            {
+                IsHostUser = true
+            };
             CurrentGame.SetDocument(OnComplete);
         }
         private void OnComplete(Task task)
@@ -17,11 +18,11 @@ namespace TheLambClub.ModelsLogic
             IsBusy = false;
             OnGameAdded?.Invoke(this, CurrentGame!);
         }
-        public void AddSnapshotListener()
+        public override void AddSnapshotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, OnChange!);
         }
-        public void RemoveSnapshotListener()
+        public override void RemoveSnapshotListener()
         {
             ilr?.Remove();
         }

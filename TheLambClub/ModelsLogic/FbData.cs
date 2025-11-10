@@ -34,6 +34,12 @@ namespace TheLambClub.ModelsLogic
             IQuerySnapshot qs = await cr.WhereEqualsTo(fName, fValue).GetAsync();
             OnComplete(qs);
         }
+        public override async void UpdateFields(string collectonName, string id,Dictionary<string,object>dict, Action<Task> OnComplete)
+        {
+            IDocumentReference dr = fs.Collection(collectonName).Document(id);
+            await dr.UpdateAsync(dict).ContinueWith(OnComplete);
+
+        }
         public override string DisplayName
         {
             get
