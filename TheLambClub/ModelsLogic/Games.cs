@@ -1,4 +1,7 @@
-﻿using Plugin.CloudFirestore;
+﻿
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using Plugin.CloudFirestore;
 using TheLambClub.Models;
 namespace TheLambClub.ModelsLogic
 {
@@ -11,8 +14,18 @@ namespace TheLambClub.ModelsLogic
             {
                 IsHostUser = true
             };
+            currentGame?.OnGameDeleted += OnGameDeleted;
             CurrentGame.SetDocument(OnComplete);
         }
+
+        private void OnGameDeleted(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
+            });
+        }
+
         private void OnComplete(Task task)
         {
             IsBusy = false;

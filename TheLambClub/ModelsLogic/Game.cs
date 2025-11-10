@@ -1,4 +1,5 @@
-﻿using Plugin.CloudFirestore;
+﻿
+using Plugin.CloudFirestore;
 using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
@@ -28,22 +29,30 @@ namespace TheLambClub.ModelsLogic
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
+      
+        public override void RemoveSnapShotListener()
+        {
+            ilr?.Remove();
+            DeleteDocument(OnComplete);
+        }
+
+        private void OnComplete(Task task)
+        {
+            if(task.IsCompletedSuccessfully)
+               OnGameDeleted?.Invoke(this, EventArgs.Empty);
+        }
 
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-             IsFull= updatedGame.IsFull;
-             GuestName= updatedGame.GuestName;
-             OnGameChanged?.Invoke(this, EventArgs.Empty);
+                IsFull = updatedGame.IsFull;
+                GuestName = updatedGame.GuestName;
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public override void RemoveSnapShotListener()
-        {
-            ilr?.Remove();
-        }
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
             IsFull = true;
@@ -59,6 +68,11 @@ namespace TheLambClub.ModelsLogic
                 { nameof(IsFull), IsFull }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
+
+        public override void DeleteDocument(Action<Task> OnComplete)
+        {
+            fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
         }
     }
 }

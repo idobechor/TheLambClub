@@ -10,7 +10,10 @@ namespace TheLambClub.Models
         protected IListenerRegistration? ilr;
         protected const int MaxNumOfPlayers = 6;
         protected FbData fbd = new();
+        [Ignored]
         public EventHandler? OnGameChanged;
+        [Ignored]
+        public EventHandler? OnGameDeleted;
         public string HostName { get; set; } = string.Empty;
         public string GuestName { get; set; } = string.Empty;
         public DateTime Created { get; set; }
@@ -31,5 +34,6 @@ namespace TheLambClub.Models
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
+        public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
     }
 }

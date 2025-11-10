@@ -38,5 +38,6 @@
         public const string UserNotFound = "INVALID_LOGIN_CREDENTIALS";
         public const string UserNotFoundmsg = "User not found";
         public const string JoinGameErr="Error joining game";
+        public const string GameDeleted = "Deleted";
     }
 }
