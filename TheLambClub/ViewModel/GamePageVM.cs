@@ -9,7 +9,8 @@ namespace TheLambClub.ViewModel
     {
         private readonly Game game;
         public string MyName => game.MyName;
-        public string OpponentName => game.OpponentName;
+        public string OpponentsNames => game.OpponentsNames;
+
         public GamePageVM(Game game)
         {
             game.OnGameChanged += OnGameChanged;
@@ -20,7 +21,7 @@ namespace TheLambClub.ViewModel
 
         private void OnGameChanged(object? sender, EventArgs e)
         { 
-        OnPropertyChanged(nameof(OpponentName));
+        OnPropertyChanged(nameof(OpponentsNames));
         }
 
         private void OnComplete(Task task)

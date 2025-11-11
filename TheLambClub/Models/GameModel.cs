@@ -15,7 +15,7 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameDeleted;
         public string HostName { get; set; } = string.Empty;
-        public string GuestName { get; set; } = string.Empty;
+        public string[] Players { get; set; }= new string[MaxNumOfPlayers];
         public DateTime Created { get; set; }
         public bool IsFull { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
@@ -28,7 +28,7 @@ namespace TheLambClub.Models
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
         [Ignored]
-        public abstract string OpponentName { get;  } 
+        public abstract string OpponentsNames { get;  }
         [Ignored]
         public bool IsHostUser { get; set; } 
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);

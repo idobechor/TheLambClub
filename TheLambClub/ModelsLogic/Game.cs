@@ -16,7 +16,20 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
         }
 
-        public override string OpponentName => IsHostUser? GuestName: HostName;
+        public override string OpponentsNames =>  GetNoneHostOpponentName();
+
+        private string GetNoneHostOpponentName()
+        {
+            string players= string.Empty;
+            foreach (string player in Players)
+            {
+                if (player != MyName)
+                    players+= player+" ";
+            }
+            if (MyName!=HostName)
+                players += HostName;
+            return players;
+        }
 
 
         public override void SetDocument(Action<Task> OnComplete)
@@ -48,15 +61,17 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 IsFull = updatedGame.IsFull;
-                GuestName = updatedGame.GuestName;
+                Players = updatedGame.Players;
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            IsFull = true;
-            GuestName=MyName;
+            Players[CurrentNumOfPlayers-1]= MyName;
+            CurrentNumOfPlayers++;
+            if (CurrentNumOfPlayers == MaxNumOfPlayers)
+                IsFull = true;
             UpdateFireBaseJoinGame(OnComplete);
         }
 
@@ -64,8 +79,9 @@ namespace TheLambClub.ModelsLogic
         {
             Dictionary<string, object> dict = new()
             {
-                { nameof(GuestName), GuestName },
-                { nameof(IsFull), IsFull }
+                { nameof(Players), Players },
+                { nameof(IsFull), IsFull },
+                {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
