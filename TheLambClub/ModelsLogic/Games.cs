@@ -10,7 +10,7 @@ namespace TheLambClub.ModelsLogic
         public void AddGame()
         {
             IsBusy = true;
-            CurrentGame = new()
+            CurrentGame = new(SelectedNumberOfPlayers)
             {
                 IsHostUser = true
             };
@@ -25,7 +25,10 @@ namespace TheLambClub.ModelsLogic
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
             });
         }
+        public Games()
+        {
 
+        }
         private void OnComplete(Task task)
         {
             IsBusy = false;

@@ -11,16 +11,7 @@ using TheLambClub.Views;
 namespace TheLambClub.ModelsLogic
 {
     public class MainPageML:MainPageModel
-    {    
-        public override void ShowNumericPromptCasting(object obj)
-        {
-            ShowNumericPrompt(obj);
-        }
-        private async void ShowNumericPrompt(object obj)
-        {
-            string result = await Application.Current!.MainPage!.DisplayPromptAsync(Strings.customRoomCodeTitleTxt,Strings.customRoomCodeTxt,  maxLength: 6, keyboard: Keyboard.Numeric);
-        }
-     
+    {      
         public override void ShowInstructionsPrompt(object obj)
         {
             Application.Current!.MainPage!.DisplayAlert(Strings.InsructionsTxtTitle, Strings.InsructionsTxt, Strings.Ok);

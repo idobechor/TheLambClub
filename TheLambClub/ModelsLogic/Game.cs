@@ -1,4 +1,6 @@
 ﻿
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using TheLambClub.Models;
 
@@ -6,22 +8,25 @@ namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
-        public Game()
+        public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
             HostName = new User().UserName;
             Created = DateTime.Now;
-            MaxNumOfPlayersStr = $" max of players: {MaxNumOfPlayers} in a game";
-            CurrentNumOfPlayersStr = $" current players: {CurrentNumOfPlayers}";
+            NumberOfPlayers = selectedNumberOfPlayers;
             IsFull = false;
             CurrentNumOfPlayers = 1;
+            MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
+            Players = new string[MaxNumOfPlayers];
         }
+        public Game()
+        {
+        }
+        public override string OpponentsNames =>  GetNoneMeOpponentName();
 
-        public override string OpponentsNames =>  GetNoneHostOpponentName();
-
-        private string GetNoneHostOpponentName()
+        private string GetNoneMeOpponentName()
         {
             string players= string.Empty;
-            foreach (string player in Players)
+            foreach (string player in Players!)
             {
                 if (player != MyName)
                     players+= player+" ";
@@ -30,8 +35,6 @@ namespace TheLambClub.ModelsLogic
                 players += HostName;
             return players;
         }
-
-
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
@@ -68,7 +71,7 @@ namespace TheLambClub.ModelsLogic
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            Players[CurrentNumOfPlayers-1]= MyName;
+            Players?[CurrentNumOfPlayers-1]= MyName;
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
                 IsFull = true;
@@ -79,7 +82,7 @@ namespace TheLambClub.ModelsLogic
         {
             Dictionary<string, object> dict = new()
             {
-                { nameof(Players), Players },
+                { nameof(Players), Players! },
                 { nameof(IsFull), IsFull },
                 {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };

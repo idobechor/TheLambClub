@@ -11,14 +11,13 @@
     IsBusy="{Binding IsBusy}" >
     <Border Margin="40" Background="Gray">
         <StackLayout>
-            <Grid ColumnDefinitions="auto,auto,4*,auto" RowDefinitions="*,*">
+            <Grid ColumnDefinitions="auto,auto,4*,auto" RowDefinitions="auto,auto">
                 <Label Text="{x:Static m:Strings.TheLambClub}" TextColor="Orange" />
                 <Button
                     Grid.Column="1"
                     Background="Gray"
                     Command="{Binding InstructionsCommand}"
                     FontFamily="MaterialSymbols"
-                    FontSize="35"
                     Text="{StaticResource IconDeveloper_guide}"
                     TextColor="Blue" />
                 <Label
@@ -26,24 +25,26 @@
                     Grid.ColumnSpan="3"
                     Margin="0,60,0,0"
                     FontAttributes="Bold"
-                    FontSize="45"
+                    FontSize="35"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
                     Text="{Binding UserName, StringFormat={x:Static m:Strings.WelcomeTxt}}"
                     TextColor="Orange" />
             </Grid>
-
             <Button
                 Background="Red"
                 Command="{Binding AddGameCommand}"
                 Text="{x:Static m:Strings.CreateGameButtonTxt}"
                 TextColor="black" />
-            <Button
-                Background="Orange"
-                Command="{Binding ShowNumericPromptCommand}"
-                HorizontalOptions="Fill"
-                Text="{x:Static m:Strings.PrivateRoomButtonTxt}"
-                TextColor="black" />
+            <Picker
+                Title="{x:Static m:Strings.PickerTitle}"
+                FontSize="20"
+                Grid.Column="1"
+                HorizontalTextAlignment="Center"
+                ItemDisplayBinding="{Binding DisplayName}"
+                ItemsSource="{Binding NumberOfPlayersList}"
+                SelectedItem="{Binding SelectedNumberOfPlayers}" />
+            
             <ListView ItemsSource="{Binding GamesList}" SelectedItem="{Binding SelectedItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:GameModel">
@@ -61,15 +62,10 @@
                                 FontSize="20"
                                 Text="{Binding Created}" />
                                 <Label
-                        Grid.Column="2"
-                        FontSize="10"
-                        TextColor="White"
-                        Text="{Binding CurrentNumOfPlayersStr}" />
-                                <Label
-                        Grid.Column="3"
-                        FontSize="10"
-                        TextColor="White"
-                        Text="{Binding MaxNumOfPlayersStr}" />
+                                Grid.Column="2"
+                                FontSize="20"
+                                HorizontalOptions="Center"
+                                Text="{Binding NumOfPlayersName}" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

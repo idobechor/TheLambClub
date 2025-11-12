@@ -39,5 +39,6 @@
         public const string UserNotFoundmsg = "User not found";
         public const string JoinGameErr="Error joining game";
         public const string GameDeleted = "Deleted";
+        public const string PickerTitle = "number of players";
     }
 }
