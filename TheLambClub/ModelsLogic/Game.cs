@@ -67,6 +67,15 @@ namespace TheLambClub.ModelsLogic
                 Players = updatedGame.Players;
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
+            else
+            {
+
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Shell.Current.Navigation.PopAsync();
+                    Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
+                });
+            }
         }
 
         public void UpdateGuestUser(Action<Task> OnComplete)
