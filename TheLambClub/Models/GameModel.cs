@@ -11,12 +11,14 @@ namespace TheLambClub.Models
         protected IListenerRegistration? ilr;
         private readonly Games Games = new();       
         protected FbData fbd = new();
+        protected Player[] ?PlayersArr;
+        protected Board GameBoard=new();
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
         public EventHandler? OnGameDeleted;
         public string HostName { get; set; } = string.Empty;
-        public string[]? Players { get; set; }
+        public string[]? PlayersNames { get; set; }
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public bool IsFull { get; set; }

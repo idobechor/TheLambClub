@@ -16,24 +16,24 @@ namespace TheLambClub.ModelsLogic
             IsFull = false;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
-            Players = new string[MaxNumOfPlayers];
+            PlayersNames = new string[MaxNumOfPlayers];
+            PlayersArr = new Player[MaxNumOfPlayers];
         }
         public Game()
         {
         }
         public override string OpponentsNames =>  GetNoneMeOpponentName();
-
         private string GetNoneMeOpponentName()
         {
-            string players= string.Empty;
-            foreach (string player in Players!)
+            string Players= string.Empty;
+            foreach (string player in PlayersNames!)
             {
                 if (player != MyName)
-                    players+= player+" ";
+                    Players+= player+" ";
             }
             if (MyName!=HostName)
-                players += HostName;
-            return players;
+                Players += HostName;
+            return Players;
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -64,7 +64,7 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 IsFull = updatedGame.IsFull;
-                Players = updatedGame.Players;
+                PlayersNames = updatedGame.PlayersNames;
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
@@ -80,7 +80,7 @@ namespace TheLambClub.ModelsLogic
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            Players?[CurrentNumOfPlayers-1]= MyName;
+            PlayersNames?[CurrentNumOfPlayers-1]= MyName;
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
                 IsFull = true;
@@ -91,7 +91,7 @@ namespace TheLambClub.ModelsLogic
         {
             Dictionary<string, object> dict = new()
             {
-                { nameof(Players), Players! },
+                { nameof(PlayersNames), PlayersNames! },
                 { nameof(IsFull), IsFull },
                 {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };
