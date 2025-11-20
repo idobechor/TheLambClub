@@ -14,11 +14,11 @@ namespace TheLambClub.ModelsLogic
             int card2NumOfPairs = 0;
             bool hasStraight = true;
             int[] sortedArr = GetSortedDistinctRanks(b.Cards);
-            for (int i = 0; i < sortedArr.Length-1; i++)
+            for (int i = 0; i < sortedArr.Length - 1; i++)
             {
-                if (sortedArr[i] != sortedArr[i+1])
+                if (sortedArr[i] != sortedArr[i + 1])
                 {
-                    hasStraight= false;
+                    hasStraight = false;
                     break;
                 }
             }
@@ -49,22 +49,22 @@ namespace TheLambClub.ModelsLogic
             {
                 LevelOfHand = LevelsOfHands.Pair;
             }
-             if (numOfPairs == 2)
+            if (numOfPairs == 2)
             {
                 LevelOfHand = LevelsOfHands.TwoPair;
             }
-             if (card1NumOfPairs == 2 || card2NumOfPairs == 2)
+            if (card1NumOfPairs == 2 || card2NumOfPairs == 2)
             {
                 LevelOfHand = LevelsOfHands.ThreeOfAKind;
             }
-             if(hasStraight)
-             {
+            if (hasStraight)
+            {
                 LevelOfHand = LevelsOfHands.Straight;
-             }
-             if (sumNumOfSameShape >= 5)
-             {
+            }
+            if (sumNumOfSameShape >= 5)
+            {
                 LevelOfHand = LevelsOfHands.Flush;
-             }
+            }
             else
             {
                 LevelOfHand = LevelsOfHands.HighCard;
@@ -73,10 +73,11 @@ namespace TheLambClub.ModelsLogic
         public int[] GetSortedDistinctRanks(Card[] hand)
         {
             return hand
-                .Select(c => (int)c.Value)   
-                .Distinct()                 
-                .OrderBy(value => value)    
-                .ToArray();                 
+                .Select(c => (int)c.Value)
+                .Distinct()
+                .OrderBy(value => value)
+                .ToArray();
         }
+
     }
 }

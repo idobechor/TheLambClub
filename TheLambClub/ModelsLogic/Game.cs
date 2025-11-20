@@ -58,25 +58,7 @@ namespace TheLambClub.ModelsLogic
                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
-        {
-            Game? updatedGame = snapshot?.ToObject<Game>();
-            if (updatedGame != null)
-            {
-                IsFull = updatedGame.IsFull;
-                PlayersNames = updatedGame.PlayersNames;
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
-            }
-            else
-            {
-
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Shell.Current.Navigation.PopAsync();
-                    Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
-                });
-            }
-        }
+       
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
@@ -101,6 +83,26 @@ namespace TheLambClub.ModelsLogic
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
+        }
+
+        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
+        {
+            Game? updatedGame = snapshot?.ToObject<Game>();
+            if (updatedGame != null)
+            {
+                IsFull = updatedGame.IsFull;
+                PlayersNames = updatedGame.PlayersNames;
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+
+                MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Shell.Current.Navigation.PopAsync();
+                    Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
+                });
+            }
         }
     }
 }

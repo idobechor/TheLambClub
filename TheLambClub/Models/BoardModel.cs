@@ -2,9 +2,16 @@
 
 namespace TheLambClub.Models
 {
-    public class BoardModel
+    public abstract class BoardModel
     {
+        private readonly SetOfCards setOfCards = new();
         public Card[] Cards = new Card[5];
-        public int CurrentCardIndex = 0;
+        public int CurrentCardIndex = 3;
+        public BoardModel() 
+        {
+            Cards[0]= new SetOfCards().GetRandomCard();
+            Cards[1]= new SetOfCards().GetRandomCard();
+            Cards[2]= new SetOfCards().GetRandomCard();
+        }
     }
 }
