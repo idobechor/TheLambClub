@@ -1,0 +1,49 @@
+<ContentView
+    x:Class="TheLambClub.Views.PlayerView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+     x:DataType="vm:PlayerVM">
+
+    <Frame
+        Padding="10"
+        CornerRadius="12"
+        BackgroundColor="#eeeeee"
+        HasShadow="True"
+        Margin="5">
+
+        <VerticalStackLayout Spacing="4">
+            <Label 
+                Text="{Binding Name}"
+                TextColor="Black"
+                FontAttributes="Bold"
+                FontSize="20" />
+            <Grid ColumnDefinitions="*,*">
+            <ImageButton
+             WidthRequest="100"
+             HeightRequest="100"
+             Margin="0,10,0,10"
+             BackgroundColor="Transparent"
+             Padding="0"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             Aspect="AspectFit"
+            Source="{Binding card1}" 
+             SemanticProperties.Description="opened card" />
+            <ImageButton
+                Grid.Column="1"
+             WidthRequest="100"
+             HeightRequest="100"
+             Margin="0,10,0,10"
+             BackgroundColor="Transparent"
+             Padding="0"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             Aspect="AspectFit"
+             Source="{Binding card2}"  
+             SemanticProperties.Description="opened card" />
+            </Grid>
+        </VerticalStackLayout>
+
+    </Frame>
+</ContentView>

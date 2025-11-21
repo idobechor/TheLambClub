@@ -8,8 +8,8 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
+        private readonly Board board = new();
         public string MyName => game.MyName;
-        public string OpponentsNames => game.OpponentsNames;
 
         public GamePageVM(Game game)
         {
@@ -18,12 +18,36 @@ namespace TheLambClub.ViewModel
             if (!game.IsHostUser)
                 game.UpdateGuestUser(OnComplete);
         }
-
-        private void OnGameChanged(object? sender, EventArgs e)
-        { 
-        OnPropertyChanged(nameof(OpponentsNames));
+        public PlayerVM Player1
+        {
+            get => new PlayerVM(game.Player1!);
         }
 
+        
+        private void OnGameChanged(object? sender, EventArgs e)
+        { 
+         //OnPropertyChanged(nameof(OpponentsNames));
+        }
+        public ImageSource? boardCard1
+        {
+            get => board.Cards[0].Source;
+        }
+        public ImageSource? boardCard2
+        {
+            get => board.Cards[1].Source;
+        }
+        public ImageSource? boardCard3
+        {
+            get => board.Cards[2].Source;
+        }
+        public ImageSource? boardCard4
+        {
+            get => board.Cards[3].Source;
+        }
+        public ImageSource? boardCard5
+        {
+            get => board.Cards[4].Source;
+        }     
         private void OnComplete(Task task)
         {
             if(!task.IsCompletedSuccessfully)

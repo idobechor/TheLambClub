@@ -2,16 +2,27 @@
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using TheLambClub.ModelsLogic;
+using static TheLambClub.Models.CardModel;
 
 namespace TheLambClub.Models
 {
     public abstract class GameModel
     {
-
+        protected Card openedCard=new(Shapes.Diamond, 4);
+        [Ignored]
+        public ImageSource? OpendCardImageSource
+        {
+            get
+            {
+                return openedCard?.Source;
+            }
+        }
+        [Ignored]
+        public Player? Player1;
         protected IListenerRegistration? ilr;
         private readonly Games Games = new();       
         protected FbData fbd = new();
-        protected Player[] ?PlayersArr;
+        protected List<Player> ?Players;
         protected Board GameBoard=new();
         [Ignored]
         public EventHandler? OnGameChanged;
@@ -27,8 +38,6 @@ namespace TheLambClub.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
-        [Ignored]
-        public abstract string OpponentsNames { get;  }
         [Ignored]
         public bool IsHostUser { get; set; }
         [Ignored]

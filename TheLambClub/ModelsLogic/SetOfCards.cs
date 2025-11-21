@@ -2,7 +2,7 @@
 
 namespace TheLambClub.ModelsLogic
 {
-    internal class SetOfCards:SetOfCardsModel
+    public class SetOfCards:SetOfCardsModel
     {
         public SetOfCards()
         {

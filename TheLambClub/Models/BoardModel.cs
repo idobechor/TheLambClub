@@ -12,6 +12,8 @@ namespace TheLambClub.Models
             Cards[0]= new SetOfCards().GetRandomCard();
             Cards[1]= new SetOfCards().GetRandomCard();
             Cards[2]= new SetOfCards().GetRandomCard();
+            Cards[3]= new SetOfCards().GetRandomCard();
+            Cards[4]= new SetOfCards().GetRandomCard();
         }
     }
 }

@@ -8,10 +8,13 @@ namespace TheLambClub.Models
         Random rnd = new Random();
         public Card card1;
         public Card card2;
-        public PlayerModel()
+        public string Name { get; set; }
+        public PlayerModel(string name)
         {
             card1 = setCards.GetRandomCard();
             card2 = setCards.GetRandomCard();
+            Name = name;
+
         }
         public int SumOfMoney { get; set; }
         public int CurrentBet { get; set; }

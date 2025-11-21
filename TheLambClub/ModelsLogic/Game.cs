@@ -17,24 +17,23 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             PlayersNames = new string[MaxNumOfPlayers];
-            PlayersArr = new Player[MaxNumOfPlayers];
+            Players = [];
+            createPlayers();
+        }
+
+        private void createPlayers()
+        {
+            Players!.Add(new Player(HostName));
+            foreach (string playerName in PlayersNames!)
+            {
+                Player player = new(playerName);
+                Players!.Add(player);
+            }
+            Player1 = Players[0]; 
         }
         public Game()
         {
-        }
-        public override string OpponentsNames =>  GetNoneMeOpponentName();
-        private string GetNoneMeOpponentName()
-        {
-            string Players= string.Empty;
-            foreach (string player in PlayersNames!)
-            {
-                if (player != MyName)
-                    Players+= player+" ";
-            }
-            if (MyName!=HostName)
-                Players += HostName;
-            return Players;
-        }
+        }       
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
