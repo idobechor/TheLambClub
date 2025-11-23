@@ -18,10 +18,7 @@ namespace TheLambClub.Models
                 return openedCard?.Source;
             }
         }
-        //[Ignored]
-        //public Player? Player1;
-        //[Ignored]
-        //public Player? Player2;
+
         protected IListenerRegistration? ilr;
         private readonly Games Games = new();       
         protected FbData fbd = new();

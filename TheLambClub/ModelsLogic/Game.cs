@@ -31,8 +31,7 @@ namespace TheLambClub.ModelsLogic
                     Players!.Add(player);
                 }
             }
-            //Player1 = Players[0]; 
-            //Player2 = Players[1];
+
         }
         public Game()
         {
@@ -66,11 +65,11 @@ namespace TheLambClub.ModelsLogic
                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
-       
+
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            PlayersNames?[CurrentNumOfPlayers-1]= MyName;
+            PlayersNames?[CurrentNumOfPlayers - 1] = MyName;
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
                 IsFull = true;

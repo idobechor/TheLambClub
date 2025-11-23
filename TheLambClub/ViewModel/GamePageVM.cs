@@ -12,35 +12,14 @@ namespace TheLambClub.ViewModel
         private readonly Board board = new();
         public string MyName => game.MyName;
         public ObservableCollection<Player> Players => game.Players;
-        private readonly SeatsArrangement seatsArrangement = new();
         public GamePageVM(Game game)
         {
             game.OnGameChanged += OnGameChanged;
             this.game = game;
             if (!game.IsHostUser)
                 game.UpdateGuestUser(OnComplete);
-            ArrangePlayerSeats();
         }
 
-        private void ArrangePlayerSeats()
-        {
-            double width = 400;
-            double height = 600;
-            seatsArrangement.ArrangeSeats(Players, width, height);
-            foreach (var player in Players)
-            {
-                OnPropertyChanged(nameof(player.X));
-                OnPropertyChanged(nameof(player.Y));
-            }
-        }
-        //public PlayerVM Player1
-        //{
-        //    get => new PlayerVM(game.Player1!);
-        //}
-        //public PlayerVM Player2
-        //{
-        //    get => new PlayerVM(game.Player2!);
-        //}
 
 
         private void OnGameChanged(object? sender, EventArgs e)

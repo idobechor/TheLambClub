@@ -8,8 +8,6 @@ namespace TheLambClub.Models
         Random rnd = new Random();
         public Card card1 { get; set; }
         public Card card2 { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
         public string Name { get; set; }
         public PlayerModel(string name)
         {
