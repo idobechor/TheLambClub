@@ -1,6 +1,7 @@
 ﻿
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
+using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
 using static TheLambClub.Models.CardModel;
 
@@ -17,12 +18,15 @@ namespace TheLambClub.Models
                 return openedCard?.Source;
             }
         }
-        [Ignored]
-        public Player? Player1;
+        //[Ignored]
+        //public Player? Player1;
+        //[Ignored]
+        //public Player? Player2;
         protected IListenerRegistration? ilr;
         private readonly Games Games = new();       
         protected FbData fbd = new();
-        protected List<Player> ?Players;
+        [Ignored]
+        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
         protected Board GameBoard=new();
         [Ignored]
         public EventHandler? OnGameChanged;

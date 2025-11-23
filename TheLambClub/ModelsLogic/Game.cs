@@ -26,14 +26,23 @@ namespace TheLambClub.ModelsLogic
             Players!.Add(new Player(HostName));
             foreach (string playerName in PlayersNames!)
             {
-                Player player = new(playerName);
-                Players!.Add(player);
+                if (playerName != null){
+                    Player player = new(playerName);
+                    Players!.Add(player);
+                }
             }
-            Player1 = Players[0]; 
+            //Player1 = Players[0]; 
+            //Player2 = Players[1];
         }
         public Game()
         {
-        }       
+
+        }
+
+        public void Init()
+        {
+            createPlayers();
+        }
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);

@@ -36,7 +36,7 @@ public class MainPageVM : ObservableObject
                 }
             }
         }
-        private void AddGame()
+    private void AddGame()
     {
         games.AddGame();
         OnPropertyChanged(nameof(IsBusy));
