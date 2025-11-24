@@ -55,7 +55,6 @@ namespace TheLambClub.ModelsLogic
                 if (game != null)
                 {
                     game.Id = ds.Id;
-                    game.Init();
                     GamesList.Add(game);
                 }
             }
