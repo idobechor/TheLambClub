@@ -46,9 +46,9 @@ namespace TheLambClub.ModelsLogic
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
         }
-        private void OnComplete(IQuerySnapshot qs)
+        private void OnComplete(IQuerySnapshot qs) 
         {
-            GamesList!.Clear();
+            GamesList!.Clear(); // clean list
             foreach (IDocumentSnapshot ds in qs.Documents)
             {
                 Game? game = ds.ToObject<Game>();
