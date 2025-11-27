@@ -18,33 +18,30 @@ namespace TheLambClub.ModelsLogic
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             PlayersNames = new string[MaxNumOfPlayers];
             Players = [];
-            
+            createPlayers();
         }
 
-        public void createPlayers()
+        protected override void createPlayers()
         {
-            Players!.Add(new Player()); 
-            //if (Players[0]!=null)
-            //{
-            //    Player1 = Players[0];
-            //}
-            //if (Players.Count==2&& !(Players[1].Name==null))
-            //{
-            //    Player2 = Players[1];
-            //}
-            //if (Players.Count==3&& !(Players[2].Name==null))
-            //{
-            ////    Player3 = Players[2];
-            //}
+            Players!.Add(new Player(HostName));
+            foreach (string playerName in PlayersNames!)
+            {
+                if (playerName != null){
+                    Player player = new(playerName);
+                    Players!.Add(player);
+                }
+            }
 
         }
         public Game()
         {
-            Players = [];
-           
+
         }
 
-      
+        public override void Init()
+        {
+            createPlayers();
+        }
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
@@ -58,16 +55,14 @@ namespace TheLambClub.ModelsLogic
       
         public override void RemoveSnapShotListener()
         {
-            ilr?.Remove();
-            action=Actions.Deleted;
-            DeleteDocument(OnComplete);
+            //ilr?.Remove();
+            //DeleteDocument(OnComplete);
         }
 
         private void OnComplete(Task task)
         {
             if(task.IsCompletedSuccessfully)
-                if (action == Actions.Deleted)
-                    OnGameDeleted?.Invoke(this, EventArgs.Empty);
+               OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -90,7 +85,6 @@ namespace TheLambClub.ModelsLogic
                 {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
-            action=Actions.Deleted;
         }
 
         public override void DeleteDocument(Action<Task> OnComplete)

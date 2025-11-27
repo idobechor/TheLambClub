@@ -7,7 +7,7 @@ namespace TheLambClub.ModelsLogic
 {
     public class Games : GamesModel
     {
-        public void AddGame()
+        public override void AddGame()
         {
             IsBusy = true;
             CurrentGame = new(SelectedNumberOfPlayers)
@@ -29,7 +29,7 @@ namespace TheLambClub.ModelsLogic
         {
 
         }
-        private void OnComplete(Task task)
+        protected override void OnComplete(Task task)
         {
             IsBusy = false;
             OnGameAdded?.Invoke(this, CurrentGame!);
@@ -55,6 +55,7 @@ namespace TheLambClub.ModelsLogic
                 if (game != null)
                 {
                     game.Id = ds.Id;
+                    game.Init();
                     GamesList.Add(game);
                 }
             }

@@ -5,15 +5,15 @@ namespace TheLambClub.Models
     public abstract class PlayerModel
     {
         private readonly SetOfCards setCards = new();
-        Random rnd = new Random();
+
         public Card card1 { get; set; }
         public Card card2 { get; set; }
-        public string Name { get; set; }
-        public PlayerModel()
+        public string Name { get; set; } 
+        public PlayerModel(string name)
         {
             card1 = setCards.GetRandomCard();
             card2 = setCards.GetRandomCard();
-            Name = new User().UserName;
+            Name = name;
 
         }
         public int SumOfMoney { get; set; }

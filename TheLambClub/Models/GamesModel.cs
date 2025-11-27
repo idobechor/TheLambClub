@@ -19,6 +19,9 @@ namespace TheLambClub.Models
         public EventHandler? OnGamesChanged;
         public abstract void AddSnapshotListener();
         public abstract void RemoveSnapshotListener();
+        public abstract void AddGame();
+        protected abstract void OnComplete(Task task);
 
-	}
+
+    }
 }

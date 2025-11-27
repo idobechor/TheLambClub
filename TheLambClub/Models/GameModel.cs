@@ -9,17 +9,7 @@ namespace TheLambClub.Models
 {
     public abstract class GameModel
     {
-        protected enum Actions { Changed,Deleted}
-        protected Actions action= Actions.Changed;
-        protected Card openedCard=new(Shapes.Diamond, 4);
-        [Ignored]
-        public ImageSource? OpendCardImageSource
-        {
-            get
-            {
-                return openedCard?.Source;
-            }
-        }
+      
 
         protected IListenerRegistration? ilr;
         private readonly Games Games = new();       
@@ -47,15 +37,11 @@ namespace TheLambClub.Models
         public string NumOfPlayersName => $"{MaxNumOfPlayers }";
         [Ignored]
         public NumberOfPlayers? NumberOfPlayers { get; set; }
-        [Ignored]
-        public Player ?Player1 { get; set; }
-        [Ignored]
-        public Player ?Player2 { get; set; }
-        [Ignored]
-        public Player ?Player3 { get; set; }
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
+        protected abstract void createPlayers();
+        public abstract void Init();
     }
 }

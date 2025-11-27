@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
+using TheLambClub.Views;
 
 namespace TheLambClub
 {
