@@ -52,11 +52,11 @@ namespace TheLambClub.ModelsLogic
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
-      
+
         public override void RemoveSnapShotListener()
         {
-            //ilr?.Remove();
-            //DeleteDocument(OnComplete);
+            ilr?.Remove();
+            DeleteDocument(OnComplete);
         }
 
         private void OnComplete(Task task)
