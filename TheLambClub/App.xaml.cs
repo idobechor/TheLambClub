@@ -9,9 +9,7 @@ namespace TheLambClub
         public App()
         {
           InitializeComponent(); 
-            User user = new();
-            Page page = user.IsRegistered ? new LoginPage() : new RegisterPage();
-            MainPage = page;
+          MainPage = new PickRegisterOrLoginPage();
         }      
     }
 }

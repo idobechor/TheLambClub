@@ -111,6 +111,9 @@
     <MauiXaml Update="Resources\Styles\MyStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\PickRegisterOrLoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\PlayerView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

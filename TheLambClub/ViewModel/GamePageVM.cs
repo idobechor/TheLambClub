@@ -13,7 +13,7 @@ namespace TheLambClub.ViewModel
         public string MyName => game.MyName;
         public ObservableCollection<Player> Players => game.Players;
        
-        public GamePageVM(Game game, Grid grdGame)
+        public GamePageVM(Game game)
         {
             game.OnGameChanged += OnGameChanged;
             this.game = game;
