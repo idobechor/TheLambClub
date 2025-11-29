@@ -18,11 +18,14 @@ namespace TheLambClub.Models
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
         protected Board GameBoard=new();
         [Ignored]
-        public EventHandler? OnGameChanged;
-        [Ignored]
         public EventHandler? OnGameDeleted;
+        [Ignored]
+        public List<Player> OtherPlayers { get; set; } = new List<Player>();
+        [Ignored]
+        public Player CurrentPlayer { get; set; }
         public string HostName { get; set; } = string.Empty;
         public string[]? PlayersNames { get; set; }
+        public string[]? PlayersIds { get; set; }
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public bool IsFull { get; set; }

@@ -13,29 +13,29 @@ public class MainPageVM : ObservableObject
     private readonly Games games = new();
     private readonly User user = new();
     private readonly MainPageML mainPageML = new();
-        public ObservableCollection<NumberOfPlayers>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
-        public NumberOfPlayers SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; set => games.SelectedNumberOfPlayers = value; }
+    public ObservableCollection<NumberOfPlayers>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
+    public NumberOfPlayers SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; set => games.SelectedNumberOfPlayers = value; }
     public ICommand InstructionsCommand { get; private set; }
     public ICommand AddGameCommand => new Command(AddGame);
     public ObservableCollection<Game>? GamesList => games.GamesList;
-        public string UserName => user.UserName;       
-        public bool IsBusy => games.IsBusy;
-        public Game? SelectedItem
-        {
-            get => games.CurrentGame;
+    public string UserName => user.UserName;       
+    public bool IsBusy => games.IsBusy;
+    public Game? SelectedItem
+    {
+        get => games.CurrentGame;
 
-            set
+        set
+        {
+            if (value != null)
             {
-                if (value != null)
+                games.CurrentGame = value;
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    games.CurrentGame = value;
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Shell.Current.Navigation.PushAsync(new GamePage(value), true);
-                    });
-                }
+                    Shell.Current.Navigation.PushAsync(new GamePage(value), true);
+                });
             }
         }
+    }
     private void AddGame()
     {
         games.AddGame();

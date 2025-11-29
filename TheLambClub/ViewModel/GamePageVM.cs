@@ -12,21 +12,18 @@ namespace TheLambClub.ViewModel
         private readonly Board board = new();
         public string MyName => game.MyName;
         public ObservableCollection<Player> Players => game.Players;
-       
+        public ObservableCollection<Player> OtherPlayers => new ObservableCollection<Player>(game.OtherPlayers);
+
+        public PlayerVM CurrentPlayer => new PlayerVM(game.CurrentPlayer);
+
+
         public GamePageVM(Game game)
         {
-            game.OnGameChanged += OnGameChanged;
             this.game = game;
             if (!game.IsHostUser)
-                game.UpdateGuestUser(OnComplete);
+                game.UpdateGuestUser(OnComplete);           
         }
 
-
-
-        private void OnGameChanged(object? sender, EventArgs e)
-        { 
-         //OnPropertyChanged(nameof(OpponentsNames));
-        }
         public ImageSource? boardCard1
         {
             get => board.Cards[0].Source;

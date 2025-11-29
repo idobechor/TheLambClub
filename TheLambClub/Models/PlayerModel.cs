@@ -9,11 +9,13 @@ namespace TheLambClub.Models
         public Card card1 { get; set; }
         public Card card2 { get; set; }
         public string Name { get; set; } 
-        public PlayerModel(string name)
+        public string Id { get; set; } 
+        public PlayerModel(string name, string id)
         {
             card1 = setCards.GetRandomCard();
             card2 = setCards.GetRandomCard();
             Name = name;
+            Id = id;
 
         }
         public int SumOfMoney { get; set; }

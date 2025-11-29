@@ -2,6 +2,8 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
+using Plugin.CloudFirestore.Attributes;
+using System.Collections.Immutable;
 using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
@@ -17,18 +19,28 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             PlayersNames = new string[MaxNumOfPlayers];
+            PlayersIds = new string[MaxNumOfPlayers];
             Players = [];
+
             createPlayers();
         }
 
+
+
         protected override void createPlayers()
         {
-            Players!.Add(new Player(HostName));
+            int i = 0;
             foreach (string playerName in PlayersNames!)
             {
                 if (playerName != null){
-                    Player player = new(playerName);
+                    Player player = new(playerName, PlayersIds[i++]);
                     Players!.Add(player);
+                    if (player.Id == fbd.UserId){
+                        CurrentPlayer = player;
+                    } else
+                    {
+                        OtherPlayers.Add(player);
+                    }
                 }
             }
 
@@ -69,7 +81,11 @@ namespace TheLambClub.ModelsLogic
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
+            if (PlayersIds?.First(id => id == fbd.UserId) != null){
+                return; // already joined
+            }
             PlayersNames?[CurrentNumOfPlayers - 1] = MyName;
+            PlayersIds?[CurrentNumOfPlayers - 1] = fbd.UserId;
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
                 IsFull = true;
@@ -81,6 +97,7 @@ namespace TheLambClub.ModelsLogic
             Dictionary<string, object> dict = new()
             {
                 { nameof(PlayersNames), PlayersNames! },
+                { nameof(PlayersIds), PlayersIds! },
                 { nameof(IsFull), IsFull },
                 {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };
@@ -99,7 +116,7 @@ namespace TheLambClub.ModelsLogic
             {
                 IsFull = updatedGame.IsFull;
                 PlayersNames = updatedGame.PlayersNames;
-                OnGameChanged?.Invoke(this, EventArgs.Empty);
+                PlayersIds = updatedGame.PlayersIds;
             }
             else
             {

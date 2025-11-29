@@ -9,20 +9,24 @@
     Title="GamePage"
     x:DataType="vm:GamePageVM">
 
-    <!--<CollectionView ItemsSource="{Binding Players}">
-        <CollectionView.ItemsLayout>
-            <GridItemsLayout Orientation="Vertical" Span="2" />
-        </CollectionView.ItemsLayout>
-
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <views:PlayerView Player="{Binding}"
-                              HeightRequest="150" />
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>-->
     <VerticalStackLayout>
-        <Grid x:Name="grdGame"/>
-        <Label Text="{Binding MyName}"/>
+        <CollectionView ItemsSource="{Binding OtherPlayers}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <views:PlayerView Player="{Binding}"
+                              HeightRequest="150" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        <Frame
+            BackgroundColor="DarkGreen"
+            CornerRadius="100"
+            HeightRequest="160"
+            WidthRequest="300" />
+        <views:PlayerView Player="{Binding CurrentPlayer}" HeightRequest="150" />
     </VerticalStackLayout>
 </ContentPage>
