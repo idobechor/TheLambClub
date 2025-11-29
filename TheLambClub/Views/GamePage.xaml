@@ -9,8 +9,8 @@
     Title="GamePage"
     x:DataType="vm:GamePageVM">
 
-    <VerticalStackLayout>
-        <CollectionView ItemsSource="{Binding OtherPlayers}">
+    <Grid RowDefinitions="auto,auto,auto">
+        <CollectionView ItemsSource="{Binding OtherPlayers}" >
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="2" />
                 </CollectionView.ItemsLayout>
@@ -25,8 +25,9 @@
         <Frame
             BackgroundColor="DarkGreen"
             CornerRadius="100"
+            Grid.Row="1"
             HeightRequest="160"
             WidthRequest="300" />
-        <views:PlayerView Player="{Binding CurrentPlayer}" HeightRequest="150" />
-    </VerticalStackLayout>
+        <views:PlayerView Player="{Binding CurrentPlayer}" HeightRequest="150" Grid.Row="0" />
+    </Grid>
 </ContentPage>

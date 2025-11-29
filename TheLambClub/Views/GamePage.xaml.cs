@@ -16,6 +16,7 @@ public partial class GamePage : ContentPage
     {
         base.OnAppearing();
         gpVM.AddSnapshotListener();
+
     }
 
     protected override void OnDisappearing()

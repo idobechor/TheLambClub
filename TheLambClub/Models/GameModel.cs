@@ -9,10 +9,9 @@ namespace TheLambClub.Models
 {
     public abstract class GameModel
     {
-      
-
+        [Ignored]
         protected IListenerRegistration? ilr;
-        private readonly Games Games = new();       
+        [Ignored]      
         protected FbData fbd = new();
         [Ignored]
         public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();

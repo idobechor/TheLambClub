@@ -10,15 +10,21 @@ namespace TheLambClub.ViewModel
     {
         private readonly Game game;
         private readonly Board board = new();
-        public string MyName => game.MyName;
-        public ObservableCollection<Player> Players => game.Players;
-        public ObservableCollection<Player> OtherPlayers => new ObservableCollection<Player>(game.OtherPlayers);
+        public string MyName;
+        public ObservableCollection<Player> Players;
+        public ObservableCollection<Player> OtherPlayers { get; set; }
 
-        public PlayerVM CurrentPlayer => new PlayerVM(game.CurrentPlayer);
+        public PlayerVM CurrentPlayer { get; set; }
 
 
         public GamePageVM(Game game)
         {
+            CurrentPlayer = new PlayerVM(game.CurrentPlayer);
+            board = new Board();
+            MyName = game.MyName;
+            Players = new ObservableCollection<Player> (game.Players);
+            OtherPlayers = new ObservableCollection<Player>(game.OtherPlayers);
+       
             this.game = game;
             if (!game.IsHostUser)
                 game.UpdateGuestUser(OnComplete);           
@@ -53,7 +59,7 @@ namespace TheLambClub.ViewModel
         public void AddSnapshotListener()
         {
             game.AddSnapShotListener();
-            }
+        }
 
         public void RemoveSnapshotListener()
         {

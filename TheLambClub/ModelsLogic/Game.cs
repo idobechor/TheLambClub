@@ -20,19 +20,27 @@ namespace TheLambClub.ModelsLogic
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             PlayersNames = new string[MaxNumOfPlayers];
             PlayersIds = new string[MaxNumOfPlayers];
+            FillDummes();
             Players = [];
-
+            OtherPlayers = [];
             createPlayers();
         }
 
-
+        private void FillDummes()
+        {
+            for (int i = 0; i < MaxNumOfPlayers; i++) 
+            {
+                PlayersNames[i] = "";
+                PlayersIds[i] = "";
+            }
+        }
 
         protected override void createPlayers()
         {
             int i = 0;
             foreach (string playerName in PlayersNames!)
             {
-                if (playerName != null){
+                if (playerName != ""){
                     Player player = new(playerName, PlayersIds[i++]);
                     Players!.Add(player);
                     if (player.Id == fbd.UserId){
@@ -42,6 +50,9 @@ namespace TheLambClub.ModelsLogic
                         OtherPlayers.Add(player);
                     }
                 }
+            }
+            if (CurrentPlayer == null){
+                CurrentPlayer = new Player(MyName, fbd.UserId);
             }
 
         }
@@ -81,9 +92,12 @@ namespace TheLambClub.ModelsLogic
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            if (PlayersIds?.First(id => id == fbd.UserId) != null){
-                return; // already joined
+            foreach (string id in PlayersIds)
+            {
+                if (id == fbd.UserId)
+                    return;
             }
+        
             PlayersNames?[CurrentNumOfPlayers - 1] = MyName;
             PlayersIds?[CurrentNumOfPlayers - 1] = fbd.UserId;
             CurrentNumOfPlayers++;
