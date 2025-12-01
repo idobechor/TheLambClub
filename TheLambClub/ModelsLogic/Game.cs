@@ -36,7 +36,7 @@ namespace TheLambClub.ModelsLogic
             IsFull = false;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
-            CurrentPlayerIndex=MaxNumOfPlayers;
+            CurrentPlayerIndex=0;
             PlayersNames = new string[MaxNumOfPlayers];
             PlayersIds = new string[MaxNumOfPlayers];
             FillDummes();
@@ -70,14 +70,14 @@ namespace TheLambClub.ModelsLogic
                     else
                     {
                         OtherPlayers.Add(new PlayerVM(player));
-                    }                  
+                    }       
+                 
                 }            
                 
             }
             if (CurrentPlayer == null){
                 CurrentPlayer = new Player(MyName, fbd.UserId);
             }
-
         }
         public Game()
         {
@@ -165,8 +165,8 @@ namespace TheLambClub.ModelsLogic
             {
                 if (IsFull == false && updatedGame.IsFull == true)
                 {
-                    Console.WriteLine("IsCurrentTurn");
-                    Players[MaxNumOfPlayers - 1].IsCurrentTurn = true;
+                    Players[0].IsCurrentTurn = true;
+                    Console.WriteLine(Players[0].IsCurrentTurn);
                 }
                 IsFull = updatedGame.IsFull;
                 PlayersNames = updatedGame.PlayersNames;
