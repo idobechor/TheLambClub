@@ -9,7 +9,8 @@ namespace TheLambClub.Models
         public Card card1 { get; set; }
         public Card card2 { get; set; }
         public string Name { get; set; } 
-        public string Id { get; set; } 
+        public string Id { get; set; }
+        public bool IsCurrentTurn { get; set; }
         public PlayerModel(string name, string id)
         {
             card1 = setCards.GetRandomCard();
@@ -18,6 +19,7 @@ namespace TheLambClub.Models
             Id = id;
 
         }
+      
         public int SumOfMoney { get; set; }
         public int CurrentBet { get; set; }
         public enum LevelsOfHands

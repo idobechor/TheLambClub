@@ -20,9 +20,14 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
+        public EventHandler? OnGameChanged;
+        [Ignored]
         public ObservableCollection<PlayerVM> OtherPlayers { get; set; } = new ObservableCollection<PlayerVM>();
         [Ignored]
         public Player CurrentPlayer { get; set; }
+        [Ignored]
+        public abstract string CurrentStatus { get; set; }
+        public int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
         public string[]? PlayersNames { get; set; }
         public string[]? PlayersIds { get; set; }
@@ -48,5 +53,6 @@ namespace TheLambClub.Models
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
         protected abstract void createPlayers();
         public abstract void Init();
+        public abstract void NextTurn();
     }
 }

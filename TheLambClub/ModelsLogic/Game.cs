@@ -2,8 +2,6 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
-using Plugin.CloudFirestore.Attributes;
-using System.Collections.Immutable;
 using TheLambClub.Models;
 using TheLambClub.ViewModel;
 
@@ -11,6 +9,25 @@ namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
+        public override string CurrentStatus
+        {
+
+          get => CurrentPlayer.IsCurrentTurn ? "play please" : "please wait";
+            set;
+        }
+     
+
+        public override void NextTurn()
+        {
+
+            Players[CurrentPlayerIndex].IsCurrentTurn = false;
+
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
+
+            Players[CurrentPlayerIndex].IsCurrentTurn = true;
+
+            OnGameChanged?.Invoke(this, EventArgs.Empty);
+        }
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
             HostName = new User().UserName;
@@ -19,6 +36,7 @@ namespace TheLambClub.ModelsLogic
             IsFull = false;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
+            CurrentPlayerIndex=MaxNumOfPlayers;
             PlayersNames = new string[MaxNumOfPlayers];
             PlayersIds = new string[MaxNumOfPlayers];
             FillDummes();
@@ -52,7 +70,7 @@ namespace TheLambClub.ModelsLogic
                     else
                     {
                         OtherPlayers.Add(new PlayerVM(player));
-                    }
+                    }                  
                 }            
                 
             }
@@ -102,12 +120,17 @@ namespace TheLambClub.ModelsLogic
                 if (id == fbd.UserId)
                     return;
             }
-        
-            PlayersNames?[CurrentNumOfPlayers ] = MyName;
-            PlayersIds?[CurrentNumOfPlayers ] = fbd.UserId;
+
+            Console.WriteLine(CurrentNumOfPlayers + "/" + MaxNumOfPlayers);
+            PlayersNames?[CurrentNumOfPlayers] = MyName;
+            PlayersIds?[CurrentNumOfPlayers] = fbd.UserId;
+            Console.WriteLine("init players");
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
+            {
                 IsFull = true;
+            }
+            Console.WriteLine("joining");
             UpdateFireBaseJoinGame(OnComplete);
         }
 
@@ -131,11 +154,24 @@ namespace TheLambClub.ModelsLogic
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
+            if (Players.Count() == MaxNumOfPlayers && CurrentPlayerIndex != updatedGame.CurrentPlayerIndex)
+            {
+                int prevCurrnetPlayerIndex = CurrentPlayerIndex;
+                CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                Players[CurrentPlayerIndex].IsCurrentTurn = true;
+                Players[prevCurrnetPlayerIndex].IsCurrentTurn = false;
+            }
             if (updatedGame != null)
             {
+                if (IsFull == false && updatedGame.IsFull == true)
+                {
+                    Console.WriteLine("IsCurrentTurn");
+                    Players[MaxNumOfPlayers - 1].IsCurrentTurn = true;
+                }
                 IsFull = updatedGame.IsFull;
                 PlayersNames = updatedGame.PlayersNames;
                 PlayersIds = updatedGame.PlayersIds;
+               
             }
             else
             {

@@ -8,7 +8,9 @@
     xmlns:views="clr-namespace:TheLambClub.Views"
     Title="GamePage"
     x:DataType="vm:GamePageVM">
+
     <StackLayout>
+        <Label Text="{Binding CurrentStatus}" TextColor="Black"/>
         <CollectionView ItemsSource="{Binding OtherPlayers}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />
@@ -21,16 +23,19 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Frame
-        BackgroundColor="DarkGreen"
-        CornerRadius="100"
-   
-        HeightRequest="160"
-        WidthRequest="300" />
+ 
 
         <views:PlayerView
-        Player="{Binding CurrentPlayer}"
+        Player="{Binding CurrentPlayerVM}"
         HeightRequest="150"/>
-
+        <Button 
+      IsEnabled="{Binding IsMyTurn}"
+      AbsoluteLayout.LayoutBounds="0.5,0.95,140,45"
+      AbsoluteLayout.LayoutFlags="PositionProportional"
+      BackgroundColor="DarkBlue"
+      Command="{Binding NextTurnCommand}"
+      CornerRadius="15"
+      Text="Next Turn"
+      TextColor="White" />
     </StackLayout>
 </ContentPage>

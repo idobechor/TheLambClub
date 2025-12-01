@@ -7,7 +7,7 @@ namespace TheLambClub.ModelsLogic
         public Player(string playerName, string id) : base(playerName,id)
         {
         }
-
+    
         public override void SetLevelOfHand(Board b)
         {
             int numOfPairs = 0;

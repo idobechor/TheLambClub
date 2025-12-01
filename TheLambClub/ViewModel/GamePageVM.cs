@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 
@@ -13,13 +14,26 @@ namespace TheLambClub.ViewModel
         public string MyName;
         public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
         public ObservableCollection<PlayerVM> OtherPlayers { get=> game.OtherPlayers; set=> game.OtherPlayers=value; }
+        public ICommand NextTurnCommand => new Command(NextTurn);
+        public string CurrentStatus => game.CurrentStatus;
+        public bool IsMyTurn => CurrentPlayer.IsCurrentTurn;
+        public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
+        public PlayerVM CurrentPlayerVM { get; set; }
 
-        public PlayerVM CurrentPlayer { get; set; }
+        private void NextTurn(object obj)
+        {
 
-
+            game.NextTurn();
+            OnPropertyChanged(nameof(CurrentStatus));
+        }
+        private void OnGameChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(Players));
+        }
         public GamePageVM(Game game)
         {
-            CurrentPlayer = new PlayerVM(game.CurrentPlayer);
+            Console.WriteLine("adding player");
+            CurrentPlayerVM = new PlayerVM(game.CurrentPlayer);
             board = new Board();
             MyName = game.MyName;
     
