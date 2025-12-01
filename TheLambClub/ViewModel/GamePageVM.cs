@@ -11,8 +11,8 @@ namespace TheLambClub.ViewModel
         private readonly Game game;
         private readonly Board board = new();
         public string MyName;
-        public ObservableCollection<Player> Players;
-        public ObservableCollection<Player> OtherPlayers { get; set; }
+        public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
+        public ObservableCollection<PlayerVM> OtherPlayers { get=> game.OtherPlayers; set=> game.OtherPlayers=value; }
 
         public PlayerVM CurrentPlayer { get; set; }
 
@@ -22,34 +22,32 @@ namespace TheLambClub.ViewModel
             CurrentPlayer = new PlayerVM(game.CurrentPlayer);
             board = new Board();
             MyName = game.MyName;
-            Players = new ObservableCollection<Player> (game.Players);
-            OtherPlayers = new ObservableCollection<Player>(game.OtherPlayers);
-       
+    
             this.game = game;
             if (!game.IsHostUser)
                 game.UpdateGuestUser(OnComplete);           
         }
 
-        public ImageSource? boardCard1
-        {
-            get => board.Cards[0].Source;
-        }
-        public ImageSource? boardCard2
-        {
-            get => board.Cards[1].Source;
-        }
-        public ImageSource? boardCard3
-        {
-            get => board.Cards[2].Source;
-        }
-        public ImageSource? boardCard4
-        {
-            get => board.Cards[3].Source;
-        }
-        public ImageSource? boardCard5
-        {
-            get => board.Cards[4].Source;
-        }     
+        //public ImageSource? boardCard1
+        //{
+        //    get => board.Cards[0].Source;
+        //}
+        //public ImageSource? boardCard2
+        //{
+        //    get => board.Cards[1].Source;
+        //}
+        //public ImageSource? boardCard3
+        //{
+        //    get => board.Cards[2].Source;
+        //}
+        //public ImageSource? boardCard4
+        //{
+        //    get => board.Cards[3].Source;
+        //}
+        //public ImageSource? boardCard5
+        //{
+        //    get => board.Cards[4].Source;
+        //}     
         private void OnComplete(Task task)
         {
             if(!task.IsCompletedSuccessfully)

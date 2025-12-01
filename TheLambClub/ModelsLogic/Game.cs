@@ -5,6 +5,7 @@ using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.Immutable;
 using TheLambClub.Models;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -40,16 +41,20 @@ namespace TheLambClub.ModelsLogic
             int i = 0;
             foreach (string playerName in PlayersNames!)
             {
-                if (playerName != ""){
+                if (playerName != "")
+                {
                     Player player = new(playerName, PlayersIds[i++]);
                     Players!.Add(player);
-                    if (player.Id == fbd.UserId){
-                        CurrentPlayer = player;
-                    } else
+                    if (player.Id == fbd.UserId)
                     {
-                        OtherPlayers.Add(player);
+                        CurrentPlayer = player;
                     }
-                }
+                    else
+                    {
+                        OtherPlayers.Add(new PlayerVM(player));
+                    }
+                }            
+                
             }
             if (CurrentPlayer == null){
                 CurrentPlayer = new Player(MyName, fbd.UserId);
@@ -98,8 +103,8 @@ namespace TheLambClub.ModelsLogic
                     return;
             }
         
-            PlayersNames?[CurrentNumOfPlayers - 1] = MyName;
-            PlayersIds?[CurrentNumOfPlayers - 1] = fbd.UserId;
+            PlayersNames?[CurrentNumOfPlayers ] = MyName;
+            PlayersIds?[CurrentNumOfPlayers ] = fbd.UserId;
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
                 IsFull = true;

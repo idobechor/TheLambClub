@@ -8,26 +8,29 @@
     xmlns:views="clr-namespace:TheLambClub.Views"
     Title="GamePage"
     x:DataType="vm:GamePageVM">
+    <StackLayout>
+        <CollectionView ItemsSource="{Binding OtherPlayers}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
 
-    <Grid RowDefinitions="auto,auto,auto">
-        <CollectionView ItemsSource="{Binding OtherPlayers}" >
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="2" />
-                </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <views:PlayerView Player="{Binding}" HeightRequest="250" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <views:PlayerView Player="{Binding}"
-                              HeightRequest="150" />
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
         <Frame
-            BackgroundColor="DarkGreen"
-            CornerRadius="100"
-            Grid.Row="1"
-            HeightRequest="160"
-            WidthRequest="300" />
-        <views:PlayerView Player="{Binding CurrentPlayer}" HeightRequest="150" Grid.Row="0" />
-    </Grid>
+        BackgroundColor="DarkGreen"
+        CornerRadius="100"
+   
+        HeightRequest="160"
+        WidthRequest="300" />
+
+        <views:PlayerView
+        Player="{Binding CurrentPlayer}"
+        HeightRequest="150"/>
+
+    </StackLayout>
 </ContentPage>

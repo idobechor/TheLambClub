@@ -3,6 +3,7 @@ using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
+using TheLambClub.ViewModel;
 using static TheLambClub.Models.CardModel;
 
 namespace TheLambClub.Models
@@ -19,7 +20,7 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
-        public List<Player> OtherPlayers { get; set; } = new List<Player>();
+        public ObservableCollection<PlayerVM> OtherPlayers { get; set; } = new ObservableCollection<PlayerVM>();
         [Ignored]
         public Player CurrentPlayer { get; set; }
         public string HostName { get; set; } = string.Empty;
@@ -33,6 +34,8 @@ namespace TheLambClub.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
+        [Ignored]
+        public string HostId { get; set; } 
         [Ignored]
         public bool IsHostUser { get; set; }
         [Ignored]
