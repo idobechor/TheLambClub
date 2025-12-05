@@ -28,7 +28,6 @@ public class MainPageVM : ObservableObject
         {
             if (value != null)
             {
-                    Console.WriteLine("opening game");
                     games.CurrentGame = value;
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {

@@ -49,8 +49,8 @@ namespace TheLambClub.ModelsLogic
         {
             for (int i = 0; i < MaxNumOfPlayers; i++) 
             {
-                PlayersNames[i] = "";
-                PlayersIds[i] = "";
+                PlayersNames![i] = string.Empty;
+                PlayersIds![i] = string.Empty;
             }
         }
 
@@ -59,9 +59,9 @@ namespace TheLambClub.ModelsLogic
             int i = 0;
             foreach (string playerName in PlayersNames!)
             {
-                if (playerName != "")
+                if (playerName != string.Empty)
                 {
-                    Player player = new(playerName, PlayersIds[i++]);
+                    Player player = new(playerName, PlayersIds![i++]);
                     Players!.Add(player);
                     if (player.Id == fbd.UserId)
                     {
@@ -70,10 +70,9 @@ namespace TheLambClub.ModelsLogic
                     else
                     {
                         OtherPlayers.Add(new PlayerVM(player));
-                    }       
-                 
-                }            
-                
+                        
+                    }                       
+                }                            
             }
             if (CurrentPlayer == null){
                 CurrentPlayer = new Player(MyName, fbd.UserId);
@@ -84,9 +83,12 @@ namespace TheLambClub.ModelsLogic
 
         }
 
+
         public override void Init()
         {
             createPlayers();
+            OnOtherPlayersChanged?.Invoke(this, EventArgs.Empty);
+            Console.WriteLine("onOtherChanged");
         }
         public override void SetDocument(Action<Task> OnComplete)
         {
@@ -115,22 +117,19 @@ namespace TheLambClub.ModelsLogic
 
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
-            foreach (string id in PlayersIds)
+            foreach (string id in PlayersIds!)
             {
                 if (id == fbd.UserId)
                     return;
             }
 
-            Console.WriteLine(CurrentNumOfPlayers + "/" + MaxNumOfPlayers);
             PlayersNames?[CurrentNumOfPlayers] = MyName;
             PlayersIds?[CurrentNumOfPlayers] = fbd.UserId;
-            Console.WriteLine("init players");
             CurrentNumOfPlayers++;
             if (CurrentNumOfPlayers == MaxNumOfPlayers)
             {
                 IsFull = true;
             }
-            Console.WriteLine("joining");
             UpdateFireBaseJoinGame(OnComplete);
         }
 
@@ -154,7 +153,7 @@ namespace TheLambClub.ModelsLogic
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
-            if (Players.Count() == MaxNumOfPlayers && CurrentPlayerIndex != updatedGame.CurrentPlayerIndex)
+            if (Players.Count() == MaxNumOfPlayers && CurrentPlayerIndex != updatedGame!.CurrentPlayerIndex)
             {
                 int prevCurrnetPlayerIndex = CurrentPlayerIndex;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
@@ -163,11 +162,10 @@ namespace TheLambClub.ModelsLogic
             }
             if (updatedGame != null)
             {
-                if (IsFull == false && updatedGame.IsFull == true)
-                {
-                    Players[0].IsCurrentTurn = true;
-                    Console.WriteLine(Players[0].IsCurrentTurn);
-                }
+                //if (IsFull == false && updatedGame.IsFull == true)
+                //{
+                //    Players[0].IsCurrentTurn = true;
+                //}
                 IsFull = updatedGame.IsFull;
                 PlayersNames = updatedGame.PlayersNames;
                 PlayersIds = updatedGame.PlayersIds;
@@ -181,6 +179,7 @@ namespace TheLambClub.ModelsLogic
                     Shell.Current.Navigation.PopAsync();
                     Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
                 });
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }
     }

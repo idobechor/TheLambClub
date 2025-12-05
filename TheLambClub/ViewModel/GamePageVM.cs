@@ -13,12 +13,13 @@ namespace TheLambClub.ViewModel
         private readonly Board board = new();
         public string MyName;
         public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
-        public ObservableCollection<PlayerVM> OtherPlayers { get=> game.OtherPlayers; set=> game.OtherPlayers=value; }
+        public ObservableCollection<PlayerVM> OtherPlayers=> game.OtherPlayers;
         public ICommand NextTurnCommand => new Command(NextTurn);
         public string CurrentStatus => game.CurrentStatus;
         public bool IsMyTurn => CurrentPlayer.IsCurrentTurn;
         public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
         public PlayerVM CurrentPlayerVM { get; set; }
+        
 
         private void NextTurn(object obj)
         {
@@ -29,18 +30,33 @@ namespace TheLambClub.ViewModel
         private void OnGameChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Players));
+            //OnPropertyChanged(nameof(OtherPlayers));
+            //OnPropertyChanged(nameof(CurrentPlayer));
         }
         public GamePageVM(Game game)
         {
-            Console.WriteLine("adding player");
             CurrentPlayerVM = new PlayerVM(game.CurrentPlayer);
             board = new Board();
             MyName = game.MyName;
     
             this.game = game;
             if (!game.IsHostUser)
-                game.UpdateGuestUser(OnComplete);           
+                game.UpdateGuestUser(OnComplete);
+
+            game.OnOtherPlayersChanged += OnOtherPlayersChanged;            
         }
+
+        private void OnGameDeleted(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnOtherPlayersChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(OtherPlayers));
+        }
+
+
 
         //public ImageSource? boardCard1
         //{

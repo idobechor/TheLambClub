@@ -22,6 +22,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
+        public EventHandler? OnOtherPlayersChanged;
+        [Ignored]
         public ObservableCollection<PlayerVM> OtherPlayers { get; set; } = new ObservableCollection<PlayerVM>();
         [Ignored]
         public Player CurrentPlayer { get; set; }

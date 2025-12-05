@@ -18,7 +18,6 @@ namespace TheLambClub.ModelsLogic
 
             CurrentGame.PlayersNames?[0] = (new User()).UserName;
             CurrentGame.PlayersIds?[0] = fbd.UserId;
-
             currentGame?.OnGameDeleted += OnGameDeleted;
             CurrentGame.SetDocument(OnComplete);
         }

@@ -10,7 +10,7 @@
         }
         public NumberOfPlayers()
         {
-            NumPlayers = 5;
+            NumPlayers =2;
         }
     }
 }
