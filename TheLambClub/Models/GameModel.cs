@@ -15,8 +15,6 @@ namespace TheLambClub.Models
         [Ignored]      
         protected FbData fbd = new();
         [Ignored]
-        protected Board GameBoard=new();
-        [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
         public EventHandler? OnGameChanged;
@@ -24,6 +22,12 @@ namespace TheLambClub.Models
         public Player CurrentPlayer { get; set; }
         [Ignored]
         public abstract string CurrentStatus { get; set; }
+        [Ignored]
+        public Card[]ViewCard { get; set; } = { new Card(),new Card(),new Card(),new Card(),new Card()};
+        [Ignored]
+        protected  SetOfCards setOfCards { get; }= new SetOfCards();
+        public FBCard[]BoardCards { get; set; }=new FBCard[5];
+        public int RoundNumber{get;set;}
         public int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
         public string[]? PlayersNames { get; set; }
@@ -36,10 +40,9 @@ namespace TheLambClub.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
+        public string? HostId { get; set; }
         [Ignored]
-        public string HostId { get; set; } 
-        [Ignored]
-        public bool IsHostUser { get; set; }
+        public abstract bool IsHost { get; } 
         [Ignored]
         public string NumOfPlayersName => $"{MaxNumOfPlayers }";
         [Ignored]

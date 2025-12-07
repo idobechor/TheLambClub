@@ -13,8 +13,10 @@ namespace TheLambClub.Models
         public bool IsCurrentTurn { get; set; }
         public PlayerModel(string name, string id)
         {
-            card1 = setCards.GetRandomCard();
-            card2 = setCards.GetRandomCard();
+            FBCard c1 = setCards.GetRandomCard();
+            FBCard c2 = setCards.GetRandomCard();
+            card1 = new Card((int)c1.Shape,c1.Value);
+            card2 = new Card((int)c2.Shape,c2.Value);
             Name = name;
             Id = id;
 

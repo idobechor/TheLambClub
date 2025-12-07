@@ -12,6 +12,23 @@
     <VerticalStackLayout>
         <Label Text="{Binding Status}" TextColor="Black"/>
         <Grid x:Name="grdOponnents" />
+        <Frame WidthRequest="240"
+       HeightRequest="120"
+       CornerRadius="999"
+       BackgroundColor="Green"
+       HasShadow="False"
+       Padding="0" >
+            <CollectionView ItemsSource="{Binding BoardCards}"
+                ItemsLayout="HorizontalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:CardModel">
+                        <Image Source="{Binding Source}"
+                   HeightRequest="40"
+                   WidthRequest="40" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
         <VerticalStackLayout Spacing="4">
             <Label 
           Text="{Binding Name}"
@@ -20,7 +37,7 @@
           HorizontalOptions="Center"
           FontAttributes="Bold"
           FontSize="20" />
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
             Margin="10"
             HeightRequest="150">
             <ImageButton 

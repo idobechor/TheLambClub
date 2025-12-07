@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TheLambClub.Models;
@@ -10,7 +11,22 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        private readonly Board board = new();
+        public ObservableCollection<Card> BoardCards
+        {
+            get
+            {
+                return [.. game.BoardCards.Select(c =>
+                {
+                    if (c == null)
+                        return new Card();
+                    return new Card((int)c!.Shape, c!.Value);
+                })];
+                
+            }
+            
+        }
+
+
         public string MyName;
         //public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
         //public ObservableCollection<PlayerVM> OtherPlayers=> game.OtherPlayers;
@@ -19,9 +35,7 @@ namespace TheLambClub.ViewModel
         public bool IsMyTurn => game.IsMyTurn;
         //public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
         //public PlayerVM CurrentPlayerVM { get; set; }
-        private readonly List<Label> lstOponnentsLabels = [];
-
-
+        private readonly List<Label> lstOponnentsLabels = [];        
         private void NextTurn(object obj)
         {
             game.NextTurn();
@@ -29,16 +43,14 @@ namespace TheLambClub.ViewModel
         }
         private void OnGameChanged(object? sender, EventArgs e)
         {
-            Console.WriteLine("OnGameChanged");
             DisplayOponnentsNames();
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(IsMyTurn));
+            OnPropertyChanged(nameof(BoardCards));
             //OnPropertyChanged(nameof(CurrentPlayer));
         }
         public GamePageVM(Game game, Grid grdOponnents)
         {
-
-            board = new Board();
             MyName = game.MyName;
     
             this.game = game;
@@ -50,6 +62,8 @@ namespace TheLambClub.ViewModel
 
             // game.OnOtherPlayersChanged += OnOtherPlayersChanged;            
         }
+
+
 
         private void InitOponnentsGrid(Grid grdOponnents)
         {
@@ -65,7 +79,7 @@ namespace TheLambClub.ViewModel
                 grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
 
                 // ----- Label -----
-                var lbl = new Label
+                Label lbl = new()
                 {
                     Text = "Waiting",
                     TextColor = Colors.Black,
@@ -77,24 +91,24 @@ namespace TheLambClub.ViewModel
                 lstOponnentsLabels.Add(lbl);
 
                 // ----- Images side by side -----
-                var img1 = new Image
+                Image img1 = new Image
                 {
-                    Source = "ace_spade.png",
+                    Source = "backofcard.jpg",
                     HeightRequest = 40,
                     WidthRequest = 40,
                     HorizontalOptions = LayoutOptions.Center
                 };
 
-                var img2 = new Image
+                Image img2 = new Image
                 {
-                    Source = "ace_spade.png",
+                    Source = "backofcard.jpg",
                     HeightRequest = 40,
                     WidthRequest = 40,
                     HorizontalOptions = LayoutOptions.Center
                 };
 
                 // Horizontal container for the two images
-                var imagesRow = new StackLayout
+                StackLayout imagesRow = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
                     HorizontalOptions = LayoutOptions.Center,
@@ -113,7 +127,6 @@ namespace TheLambClub.ViewModel
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void DisplayOponnentsNames()
@@ -121,9 +134,9 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.CurrentPlayer.Id == game.PlayersIds[i])
+                if (game.CurrentPlayer.Id == game.PlayersIds?[i])
                     continue;
-                lstOponnentsLabels[lblIndex].Text = game.PlayersNames[i];
+                lstOponnentsLabels[lblIndex].Text = game.PlayersNames?[i];
                 lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Cyan;
             }
         }

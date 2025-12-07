@@ -35,14 +35,23 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
+        public override bool IsHost
+        {
+            get
+            {
+                return HostId == fbd.UserId;
+            }
+        }
+
         public override void NextTurn()
         {
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
-            UpdateFBTurnUpdate((t) => OnGameChanged?.Invoke(this, EventArgs.Empty));
+            UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
         }
 
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
+            HostId = new User().fbd.UserId; 
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
@@ -53,7 +62,6 @@ namespace TheLambClub.ModelsLogic
             PlayersIds = new string[MaxNumOfPlayers];
             FillDummes();
             CurrentPlayer = new Player(MyName, fbd.UserId);
-            Console.WriteLine("Game constructor");
             createPlayers();
         }
 
@@ -85,7 +93,6 @@ namespace TheLambClub.ModelsLogic
 
         public Game()
         {
-            Console.WriteLine("Game empty constructor");
             createPlayers();
         }
 
@@ -119,8 +126,6 @@ namespace TheLambClub.ModelsLogic
                 if (id == fbd.UserId)
                     return;
             }
-
-            Console.WriteLine("joining game");
             PlayersNames?[CurrentNumOfPlayers] = MyName;
             PlayersIds?[CurrentNumOfPlayers] = fbd.UserId;
             CurrentNumOfPlayers++;
@@ -135,6 +140,7 @@ namespace TheLambClub.ModelsLogic
                 { nameof(PlayersIds), PlayersIds! },
                 { nameof(CurrentNumOfPlayers), CurrentNumOfPlayers },
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+                { nameof(RoundNumber), RoundNumber },
                 { nameof(IsFull), IsFull },
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
@@ -149,27 +155,68 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
 
+        private void UpdateBoard(Action<Task> OnComplete)
+        {
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(BoardCards), BoardCards },
+                { nameof(RoundNumber), RoundNumber },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
+
         public override bool IsFull
         {
             get { return CurrentNumOfPlayers == MaxNumOfPlayers; }
-            set;
-        } 
+
+            set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;           
+        }
 
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
         }
+        private void FillBoard()
+        {
+           if(RoundNumber==1)
+           {
+                BoardCards[0]= setOfCards.GetRandomCard();
+                ViewCard[0] = new Card(((int)BoardCards[0].Shape), BoardCards[0].Value);
+                BoardCards[1]= setOfCards.GetRandomCard();
+                ViewCard[1] = new Card(((int)BoardCards[1].Shape), BoardCards[1].Value);
+                BoardCards[2]= setOfCards.GetRandomCard();
+                ViewCard[2] = new Card(((int)BoardCards[2].Shape), BoardCards[2].Value);
+            }
+           else if(RoundNumber==2)
+            {
+                BoardCards[3] = setOfCards.GetRandomCard();
+                ViewCard[3] = new Card(((int)BoardCards[3].Shape), BoardCards[3].Value);
+            }
+           else if(RoundNumber==3)
+            {
+                BoardCards[4] = setOfCards.GetRandomCard();
+                ViewCard[4] = new Card(((int)BoardCards[4].Shape), BoardCards[4].Value);
+            }
 
+        }
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
-            Console.WriteLine("received game changed");
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
+                Console.WriteLine("on change " + IsHost + " CurrentPlayerIndex: " + CurrentPlayerIndex + " updatedGame.CurrentPlayerIndex " + updatedGame.CurrentPlayerIndex);
+                if (IsHost && CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0)
+                {
+                    RoundNumber++;
+                    FillBoard();
+                    UpdateBoard((t) => { });
+                }
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
                 PlayersNames = updatedGame.PlayersNames;
                 PlayersIds = updatedGame.PlayersIds;
+                RoundNumber = updatedGame.RoundNumber;
+                BoardCards = updatedGame.BoardCards;
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else

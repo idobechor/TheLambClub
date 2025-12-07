@@ -4,12 +4,12 @@ namespace TheLambClub.Models
 {
     public abstract class SetOfCardsModel
     {
-        protected  List<Card> ? cards;
-        protected  List<Card> ? usedCards;
+        protected  List<FBCard> ? cards;
+        protected  List<FBCard> ? usedCards;
         protected Random rnd= new();
-        public abstract Card GetRandomCard();
+        public abstract FBCard GetRandomCard();
         protected abstract void FillPakage();
-        public abstract Card Add(Card card);
-        protected abstract bool IsExist(Card currCard);
+        public abstract FBCard Add(FBCard card);
+        protected abstract bool IsExist(FBCard currCard);
     }
 }

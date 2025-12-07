@@ -8,13 +8,19 @@ namespace TheLambClub.Models
 {
     public class CardModel: ImageButton
     {
-        public CardModel(Shapes shape, int value)
+        public CardModel(int shape, int value)
         {
-            Shape = shape;
+            Shape = (Shapes)shape;
             Value = value;
             if (value > 0)
                 Source = CardsImage[(int)shape, value - 1];
             Aspect = Aspect.AspectFit;
+            HorizontalOptions = new LayoutOptions(LayoutAlignment.Start, false);
+            WidthRequest = 100;
+        }
+        public CardModel()
+        {
+            Source = "backofcard.jpg";
             HorizontalOptions = new LayoutOptions(LayoutAlignment.Start, false);
             WidthRequest = 100;
         }

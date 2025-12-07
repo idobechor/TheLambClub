@@ -7,13 +7,12 @@ namespace TheLambClub.Models
     public abstract class UserModels
     {
         public EventHandler? OnAuthComplete;
-        protected FbData fbd = new();
+        public FbData fbd = new();
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Age { get; set; } = string.Empty;
-        public bool IsChecked { get;set;}=true;
-
+        public bool IsChecked { get;set;}=true;       
         public abstract void Register();
         public abstract void Login();
         public abstract bool CanLogin();

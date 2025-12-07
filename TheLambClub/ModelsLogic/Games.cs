@@ -13,7 +13,7 @@ namespace TheLambClub.ModelsLogic
             IsBusy = true;
             CurrentGame = new(SelectedNumberOfPlayers)
             {
-                IsHostUser = true
+              
             };
 
             CurrentGame.PlayersNames?[0] = (new User()).UserName;
@@ -24,6 +24,7 @@ namespace TheLambClub.ModelsLogic
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
+            Console.WriteLine("on game dalated massage");
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();

@@ -1,4 +1,5 @@
 ﻿using TheLambClub.Models;
+using static TheLambClub.Models.CardModel;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -10,10 +11,10 @@ namespace TheLambClub.ModelsLogic
             usedCards = [];
             FillPakage();
         }
-        protected override bool IsExist(Card currCard)
+        protected override bool IsExist(FBCard currCard)
         {
             bool res = false;
-            foreach (Card card in usedCards!)
+            foreach (FBCard card in usedCards!)
             {
                 if (currCard.Shape == card.Shape && currCard.Value == card.Value)
                 {
@@ -24,23 +25,23 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void FillPakage()
          {
-           foreach (CardModel.Shapes shape in Enum.GetValues(typeof(CardModel.Shapes)))
+           foreach (Shapes shape in Enum.GetValues(typeof(Shapes)))
                for (int value = 1; value <= Card.CardsInShape; value++)
-                  cards!.Add(new Card(shape, value));
+                    cards!.Add(new FBCard(((int)shape), value));
          }
-        public override Card GetRandomCard()
+        public override FBCard GetRandomCard()
         {
-            Card card = null!;
+            FBCard card = null!;
             while (card == null)
                 card = cards![rnd.Next(cards.Count)];
             usedCards!.Add(card);
             return card;
 
         }
-        public override Card Add(Card card)
+        public override FBCard Add(FBCard fbcard)
         {
-            cards!.Add(card);
-            return card;
+            cards!.Add(fbcard);
+            return fbcard;
         }
     }
 }
