@@ -21,27 +21,27 @@
                 FontAttributes="Bold"
                 FontSize="20" />
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
-      Margin="10"
-      HeightRequest="150">
+          Margin="10"
+          HeightRequest="150">  
                 <ImageButton 
-        WidthRequest="120"
-        HeightRequest="120"
-        Margin="10"
-        Padding="0"
-        Aspect="AspectFit"
-        HorizontalOptions="Center"
-        VerticalOptions="Center" 
-        Source="{Binding card1}" />
+            WidthRequest="120"
+            HeightRequest="120"
+            Margin="10"
+            Padding="0"
+            Aspect="AspectFit"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" 
+            Source="{Binding card1}" />
                 <ImageButton 
-        Grid.Column="1"
-        WidthRequest="120"
-        HeightRequest="120"
-        Margin="10"
-        Padding="0"
-        Aspect="AspectFit"
-        HorizontalOptions="Center"
-        VerticalOptions="Center"
-        Source="{Binding card2}" />
+            Grid.Column="1"
+            WidthRequest="120"
+            HeightRequest="120"
+            Margin="10"
+            Padding="0"
+            Aspect="AspectFit"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Source="{Binding card2}" />     
             </Grid>
         </VerticalStackLayout>
 

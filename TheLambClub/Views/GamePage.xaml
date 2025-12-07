@@ -9,9 +9,43 @@
     Title="GamePage"
     x:DataType="vm:GamePageVM">
 
-    <StackLayout>
-        <Label Text="{Binding CurrentStatus}" TextColor="Black"/>
-        <CollectionView ItemsSource="{Binding OtherPlayers}">
+    <VerticalStackLayout>
+        <Label Text="{Binding Status}" TextColor="Black"/>
+        <Grid x:Name="grdOponnents" />
+        <VerticalStackLayout Spacing="4">
+            <Label 
+          Text="{Binding Name}"
+          TextColor="Red"
+          BackgroundColor="AliceBlue"
+          HorizontalOptions="Center"
+          FontAttributes="Bold"
+          FontSize="20" />
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
+            Margin="10"
+            HeightRequest="150">
+            <ImageButton 
+              WidthRequest="120"
+              HeightRequest="120"
+              Margin="10"
+              Padding="0"
+              Aspect="AspectFit"
+              HorizontalOptions="Center"
+              VerticalOptions="Center" 
+              Source="{Binding Card1.Source}" />
+            <ImageButton 
+              Grid.Column="1"
+              WidthRequest="120"
+              HeightRequest="120"
+              Margin="10"
+              Padding="0"
+              Aspect="AspectFit"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              Source="{Binding Card2.Source}" />           
+        </Grid>
+        </VerticalStackLayout>
+ 
+        <!--<CollectionView ItemsSource="{Binding OtherPlayers}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />
             </CollectionView.ItemsLayout>
@@ -22,13 +56,13 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
+       
  
 
         <views:PlayerView
         Player="{Binding CurrentPlayerVM}"
-        HeightRequest="150"/>
-        <Button 
+        HeightRequest="150"/>-->
+      <Button 
       IsEnabled="{Binding IsMyTurn}"
       AbsoluteLayout.LayoutBounds="0.5,0.95,140,45"
       AbsoluteLayout.LayoutFlags="PositionProportional"
@@ -37,5 +71,5 @@
       CornerRadius="15"
       Text="Next Turn"
       TextColor="White" />
-    </StackLayout>
+    </VerticalStackLayout>
 </ContentPage>

@@ -12,48 +12,120 @@ namespace TheLambClub.ViewModel
         private readonly Game game;
         private readonly Board board = new();
         public string MyName;
-        public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
-        public ObservableCollection<PlayerVM> OtherPlayers=> game.OtherPlayers;
+        //public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
+        //public ObservableCollection<PlayerVM> OtherPlayers=> game.OtherPlayers;
         public ICommand NextTurnCommand => new Command(NextTurn);
         public string CurrentStatus => game.CurrentStatus;
-        public bool IsMyTurn => CurrentPlayer.IsCurrentTurn;
-        public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
-        public PlayerVM CurrentPlayerVM { get; set; }
-        
+        public bool IsMyTurn => game.IsMyTurn;
+        //public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
+        //public PlayerVM CurrentPlayerVM { get; set; }
+        private readonly List<Label> lstOponnentsLabels = [];
+
 
         private void NextTurn(object obj)
         {
-
             game.NextTurn();
             OnPropertyChanged(nameof(CurrentStatus));
         }
         private void OnGameChanged(object? sender, EventArgs e)
         {
-            OnPropertyChanged(nameof(Players));
-            //OnPropertyChanged(nameof(OtherPlayers));
+            Console.WriteLine("OnGameChanged");
+            DisplayOponnentsNames();
+            OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(IsMyTurn));
             //OnPropertyChanged(nameof(CurrentPlayer));
         }
-        public GamePageVM(Game game)
+        public GamePageVM(Game game, Grid grdOponnents)
         {
-            CurrentPlayerVM = new PlayerVM(game.CurrentPlayer);
+
             board = new Board();
             MyName = game.MyName;
     
             this.game = game;
-            if (!game.IsHostUser)
-                game.UpdateGuestUser(OnComplete);
+            InitOponnentsGrid(grdOponnents);
+            game.OnGameChanged += OnGameChanged;
+            game.OnGameDeleted += OnGameDeleted;
+            //if (!game.IsHostUser)
+            //    game.UpdateGuestUser(OnComplete);
 
-            game.OnOtherPlayersChanged += OnOtherPlayersChanged;            
+            // game.OnOtherPlayersChanged += OnOtherPlayersChanged;            
         }
+
+        private void InitOponnentsGrid(Grid grdOponnents)
+        {
+            int oponnentsCount = game.MaxNumOfPlayers - 1;
+
+            // 2 rows: Label + Images row
+            grdOponnents.RowDefinitions.Clear();
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // label
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // images row
+
+            for (int i = 0; i < oponnentsCount; i++)
+            {
+                grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+
+                // ----- Label -----
+                var lbl = new Label
+                {
+                    Text = "Waiting",
+                    TextColor = Colors.Black,
+                    FontSize = 16,
+                    Margin = new Thickness(5),
+                    Padding = new Thickness(2),
+                    HorizontalTextAlignment = TextAlignment.Center,
+                };
+                lstOponnentsLabels.Add(lbl);
+
+                // ----- Images side by side -----
+                var img1 = new Image
+                {
+                    Source = "ace_spade.png",
+                    HeightRequest = 40,
+                    WidthRequest = 40,
+                    HorizontalOptions = LayoutOptions.Center
+                };
+
+                var img2 = new Image
+                {
+                    Source = "ace_spade.png",
+                    HeightRequest = 40,
+                    WidthRequest = 40,
+                    HorizontalOptions = LayoutOptions.Center
+                };
+
+                // Horizontal container for the two images
+                var imagesRow = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    HorizontalOptions = LayoutOptions.Center,
+                    Spacing = 3,
+                    Children = { img1, img2 }
+                };
+
+                // ----- Add to grid -----
+                grdOponnents.Add(lbl, i, 0);
+                grdOponnents.Add(imagesRow, i, 1);
+            }
+
+            Console.WriteLine("after build grid");
+        }
+
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void OnOtherPlayersChanged(object? sender, EventArgs e)
+        private void DisplayOponnentsNames()
         {
-            OnPropertyChanged(nameof(OtherPlayers));
+            int lblIndex = 0;
+            for (int i = 0; i < game.CurrentNumOfPlayers; i++)
+            {
+                if (game.CurrentPlayer.Id == game.PlayersIds[i])
+                    continue;
+                lstOponnentsLabels[lblIndex].Text = game.PlayersNames[i];
+                lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Cyan;
+            }
         }
 
 
@@ -92,6 +164,26 @@ namespace TheLambClub.ViewModel
         public void RemoveSnapshotListener()
         {
             game.RemoveSnapShotListener();
+        }
+
+        public string Name
+        {
+            get { return game.CurrentPlayer.Name; }
+        }
+
+        public Card Card1
+        {
+            get { return game.CurrentPlayer.card1; } 
+        }
+
+        public Card Card2
+        {
+            get { return game.CurrentPlayer.card2; }
+        }
+
+        public string Status
+        {
+            get { return game.CurrentStatus; }
         }
     }
 }

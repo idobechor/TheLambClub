@@ -8,8 +8,9 @@ public partial class GamePage : ContentPage
     private readonly GamePageVM gpVM;
     public GamePage(Game game)
 	{
+        Console.WriteLine("MEIR create game page");
 		InitializeComponent();
-        gpVM = new GamePageVM(game);
+        gpVM = new GamePageVM(game, grdOponnents);
         BindingContext = gpVM;
     }
     protected override void OnAppearing()

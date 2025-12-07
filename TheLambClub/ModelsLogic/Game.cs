@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
+using System.Security.Cryptography.Xml;
 using TheLambClub.Models;
 using TheLambClub.ViewModel;
 
@@ -11,37 +12,48 @@ namespace TheLambClub.ModelsLogic
     {
         public override string CurrentStatus
         {
-
-          get => CurrentPlayer.IsCurrentTurn ? "play please" : "please wait";
+            get 
+            { 
+                if (!IsFull)
+                {
+                    return "Waiting for Players";
+                }
+                return "Playing";
+            }
             set;
         }
-     
+
+        public override bool IsMyTurn
+        {
+            get
+            {
+                if (PlayersIds == null)
+                {
+                    return false;
+                }
+                return PlayersIds[CurrentPlayerIndex] == fbd.UserId;
+            }
+        }
 
         public override void NextTurn()
         {
-
-            Players[CurrentPlayerIndex].IsCurrentTurn = false;
-
-            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
-
-            Players[CurrentPlayerIndex].IsCurrentTurn = true;
-
-            OnGameChanged?.Invoke(this, EventArgs.Empty);
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
+            UpdateFBTurnUpdate((t) => OnGameChanged?.Invoke(this, EventArgs.Empty));
         }
+
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
-            IsFull = false;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             CurrentPlayerIndex=0;
             PlayersNames = new string[MaxNumOfPlayers];
             PlayersIds = new string[MaxNumOfPlayers];
             FillDummes();
-            Players = [];
-            OtherPlayers = [];
+            CurrentPlayer = new Player(MyName, fbd.UserId);
+            Console.WriteLine("Game constructor");
             createPlayers();
         }
 
@@ -54,42 +66,29 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
-        protected override void createPlayers()
+        private void createPlayers()
         {
             int i = 0;
-            foreach (string playerName in PlayersNames!)
-            {
-                if (playerName != string.Empty)
+            if (PlayersNames != null) {
+                foreach (string playerName in PlayersNames!)
                 {
-                    Player player = new(playerName, PlayersIds![i++]);
-                    Players!.Add(player);
-                    if (player.Id == fbd.UserId)
+                    if (playerName != string.Empty)
                     {
-                        CurrentPlayer = player;
+                        Player player = new(playerName, PlayersIds![i++]);
+                        Players!.Add(player);
                     }
-                    else
-                    {
-                        OtherPlayers.Add(new PlayerVM(player));
-                        
-                    }                       
-                }                            
+                }
             }
-            if (CurrentPlayer == null){
-                CurrentPlayer = new Player(MyName, fbd.UserId);
-            }
+            
+            CurrentPlayer = new Player(MyName, fbd.UserId);
         }
+
         public Game()
         {
-
-        }
-
-
-        public override void Init()
-        {
+            Console.WriteLine("Game empty constructor");
             createPlayers();
-            OnOtherPlayersChanged?.Invoke(this, EventArgs.Empty);
-            Console.WriteLine("onOtherChanged");
         }
+
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
@@ -113,8 +112,6 @@ namespace TheLambClub.ModelsLogic
                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
-
-
         public void UpdateGuestUser(Action<Task> OnComplete)
         {
             foreach (string id in PlayersIds!)
@@ -123,13 +120,10 @@ namespace TheLambClub.ModelsLogic
                     return;
             }
 
+            Console.WriteLine("joining game");
             PlayersNames?[CurrentNumOfPlayers] = MyName;
             PlayersIds?[CurrentNumOfPlayers] = fbd.UserId;
             CurrentNumOfPlayers++;
-            if (CurrentNumOfPlayers == MaxNumOfPlayers)
-            {
-                IsFull = true;
-            }
             UpdateFireBaseJoinGame(OnComplete);
         }
 
@@ -139,11 +133,27 @@ namespace TheLambClub.ModelsLogic
             {
                 { nameof(PlayersNames), PlayersNames! },
                 { nameof(PlayersIds), PlayersIds! },
+                { nameof(CurrentNumOfPlayers), CurrentNumOfPlayers },
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
                 { nameof(IsFull), IsFull },
-                {  nameof(CurrentNumOfPlayers), CurrentNumOfPlayers }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
+
+        private void UpdateFBTurnUpdate(Action<Task> OnComplete)
+        {
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
+
+        public override bool IsFull
+        {
+            get { return CurrentNumOfPlayers == MaxNumOfPlayers; }
+            set;
+        } 
 
         public override void DeleteDocument(Action<Task> OnComplete)
         {
@@ -152,24 +162,15 @@ namespace TheLambClub.ModelsLogic
 
         private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
+            Console.WriteLine("received game changed");
             Game? updatedGame = snapshot?.ToObject<Game>();
-            if (Players.Count() == MaxNumOfPlayers && CurrentPlayerIndex != updatedGame!.CurrentPlayerIndex)
-            {
-                int prevCurrnetPlayerIndex = CurrentPlayerIndex;
-                CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                Players[CurrentPlayerIndex].IsCurrentTurn = true;
-                Players[prevCurrnetPlayerIndex].IsCurrentTurn = false;
-            }
             if (updatedGame != null)
             {
-                //if (IsFull == false && updatedGame.IsFull == true)
-                //{
-                //    Players[0].IsCurrentTurn = true;
-                //}
-                IsFull = updatedGame.IsFull;
+                CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
+                CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
                 PlayersNames = updatedGame.PlayersNames;
                 PlayersIds = updatedGame.PlayersIds;
-               
+                OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {

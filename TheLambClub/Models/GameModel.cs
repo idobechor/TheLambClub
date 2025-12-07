@@ -15,16 +15,11 @@ namespace TheLambClub.Models
         [Ignored]      
         protected FbData fbd = new();
         [Ignored]
-        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
         protected Board GameBoard=new();
         [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
         public EventHandler? OnGameChanged;
-        [Ignored]
-        public EventHandler? OnOtherPlayersChanged;
-        [Ignored]
-        public ObservableCollection<PlayerVM> OtherPlayers { get; set; } = new ObservableCollection<PlayerVM>();
         [Ignored]
         public Player CurrentPlayer { get; set; }
         [Ignored]
@@ -35,8 +30,8 @@ namespace TheLambClub.Models
         public string[]? PlayersIds { get; set; }
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
-        public bool IsFull { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
+        public abstract bool IsFull { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;
         [Ignored]
@@ -49,12 +44,14 @@ namespace TheLambClub.Models
         public string NumOfPlayersName => $"{MaxNumOfPlayers }";
         [Ignored]
         public NumberOfPlayers? NumberOfPlayers { get; set; }
+        [Ignored]
+        public abstract bool IsMyTurn { get; }
+        [Ignored]
+        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
-        protected abstract void createPlayers();
-        public abstract void Init();
         public abstract void NextTurn();
     }
 }
