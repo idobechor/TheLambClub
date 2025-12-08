@@ -236,7 +236,7 @@ namespace TheLambClub.ModelsLogic
                     FillBoard();
                     UpdateBoard((t) => { });
                 }
-                if (IsHost&& updatedGame.CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers) 
+                if (IsHost&& CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers) 
                 {
                     UpdatePlayersArray(OnComplete);
                 }
