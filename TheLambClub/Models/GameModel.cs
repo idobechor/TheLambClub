@@ -50,7 +50,8 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract bool IsMyTurn { get; }
         [Ignored]
-        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
+        public ObservableCollection<Player> Players { get; set; } = [];
+        public Player[]? PlayersInArray { get; set; }
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
@@ -65,5 +66,7 @@ namespace TheLambClub.Models
         protected abstract void UpdateBoard(Action<Task> OnComplete);
         protected abstract void FillBoard();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
+        protected abstract void FillArrayAndAddCards(Action<Task> OnComplete);
+        protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
     }
 }

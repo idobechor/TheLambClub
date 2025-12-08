@@ -7,7 +7,7 @@ namespace TheLambClub.ModelsLogic
         public Player(string playerName, string id) : base(playerName,id)
         {
         }
-    
+
         //public override void SetLevelOfHand(Board b)
         //{
         //    int numOfPairs = 0;
@@ -73,15 +73,16 @@ namespace TheLambClub.ModelsLogic
         //    {
         //        LevelOfHand = LevelsOfHands.HighCard;
         //    }
+        ////}
+        //public int[] GetSortedDistinctRanks(Card[] hand)
+        //{
+        //    return hand
+        //        .Select(c => (int)c.Value)
+        //        .Distinct()
+        //        .OrderBy(value => value)
+        //        .ToArray();
         //}
-        public int[] GetSortedDistinctRanks(Card[] hand)
-        {
-            return hand
-                .Select(c => (int)c.Value)
-                .Distinct()
-                .OrderBy(value => value)
-                .ToArray();
-        }
+
 
     }
 }

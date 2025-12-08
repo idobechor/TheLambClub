@@ -60,6 +60,7 @@ namespace TheLambClub.ModelsLogic
             CurrentPlayerIndex=0;
             PlayersNames = new string[MaxNumOfPlayers];
             PlayersIds = new string[MaxNumOfPlayers];
+            PlayersInArray = new Player[MaxNumOfPlayers];
             FillDummes();
             CurrentPlayer = new Player(MyName, fbd.UserId);
             CreatePlayers();
@@ -101,6 +102,26 @@ namespace TheLambClub.ModelsLogic
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
 
+        protected override void FillArrayAndAddCards(Action<Task> OnComplete)
+        {
+            PlayersInArray= [.. Players];
+            foreach (Player item in PlayersInArray)
+            {
+                item.FBCard1 = setOfCards.GetRandomCard();
+                item.FBCard2 = setOfCards.GetRandomCard();
+                item.card1 = new((int)item.FBCard1.Shape, item.FBCard1.Value);
+                item.card2 = new((int)item.FBCard2.Shape, item.FBCard2.Value);
+            }
+            UpdatePlayersArray(OnComplete);
+        }
+        protected override void UpdatePlayersArray(Action<Task> OnComplete)
+        {
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(PlayersInArray), PlayersInArray! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
 
         public override void AddSnapShotListener()
         {
@@ -193,6 +214,17 @@ namespace TheLambClub.ModelsLogic
                 BoardCards[4] = setOfCards.GetRandomCard();
             }
         }
+        //protected void AddCardsToPlayers()
+        //{
+        //    for (int i = 0; i < MaxNumOfPlayers; i++)
+        //    {
+        //        if(Players[i]!=null)
+        //        {
+        //            PlayersInArray![i] = Players[i];
+        //        }
+        //    }
+        //}
+
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
@@ -203,6 +235,10 @@ namespace TheLambClub.ModelsLogic
                     RoundNumber++;
                     FillBoard();
                     UpdateBoard((t) => { });
+                }
+                if (IsHost&& updatedGame.CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers) 
+                {
+                    UpdatePlayersArray(OnComplete);
                 }
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
