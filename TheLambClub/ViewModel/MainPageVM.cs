@@ -28,7 +28,6 @@ public class MainPageVM : ObservableObject
         {
             if (value != null)
             {
-                Console.WriteLine("MEIR selected game");
                 games.CurrentGame = value;
                 games.CurrentGame.UpdateGuestUser((t) => { });
                 MainThread.InvokeOnMainThreadAsync(() =>

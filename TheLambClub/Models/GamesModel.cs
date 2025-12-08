@@ -21,6 +21,9 @@ namespace TheLambClub.Models
         public abstract void RemoveSnapshotListener();
         public abstract void AddGame();
         protected abstract void OnComplete(Task task);
+        protected abstract void OnGameDeleted(object? sender, EventArgs e);
+        protected abstract void OnChange(IQuerySnapshot snapshot, Exception error);
+        protected abstract void OnComplete(IQuerySnapshot qs);
 
 
     }

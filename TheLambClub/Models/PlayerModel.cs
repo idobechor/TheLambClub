@@ -38,7 +38,7 @@ namespace TheLambClub.Models
             RoyalFlush
         }
         public LevelsOfHands LevelOfHand { get; set; }
-        public abstract void SetLevelOfHand(Board board);
+        //public abstract void SetLevelOfHand(Board board);
     }
     
 }

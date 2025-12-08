@@ -40,7 +40,7 @@
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
             Margin="10"
             HeightRequest="150">
-            <ImageButton 
+                <ImageButton 
               WidthRequest="120"
               HeightRequest="120"
               Margin="10"
@@ -49,7 +49,7 @@
               HorizontalOptions="Center"
               VerticalOptions="Center" 
               Source="{Binding Card1.Source}" />
-            <ImageButton 
+                <ImageButton 
               Grid.Column="1"
               WidthRequest="120"
               HeightRequest="120"
@@ -58,35 +58,17 @@
               Aspect="AspectFit"
               HorizontalOptions="Center"
               VerticalOptions="Center"
-              Source="{Binding Card2.Source}" />           
-        </Grid>
+              Source="{Binding Card2.Source}" />
+            </Grid>
         </VerticalStackLayout>
- 
-        <!--<CollectionView ItemsSource="{Binding OtherPlayers}">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="2" />
-            </CollectionView.ItemsLayout>
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <views:PlayerView Player="{Binding}" HeightRequest="250" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-       
- 
-
-        <views:PlayerView
-        Player="{Binding CurrentPlayerVM}"
-        HeightRequest="150"/>-->
-      <Button 
+        <Button 
       IsEnabled="{Binding IsMyTurn}"
       AbsoluteLayout.LayoutBounds="0.5,0.95,140,45"
       AbsoluteLayout.LayoutFlags="PositionProportional"
       BackgroundColor="DarkBlue"
       Command="{Binding NextTurnCommand}"
       CornerRadius="15"
-      Text="Next Turn"
+      Text="{x:Static m:Strings.MoveTurnButttonText}" 
       TextColor="White" />
     </VerticalStackLayout>
 </ContentPage>

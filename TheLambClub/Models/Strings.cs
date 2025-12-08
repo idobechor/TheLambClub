@@ -40,5 +40,8 @@
         public const string JoinGameErr="Error joining game";
         public const string GameDeleted = "Deleted";
         public const string PickerTitle = "number of players";
+        public const string WaitingStatus = "Waiting for Players";
+        public const string PlayingStatus = "Playing";
+        public const string MoveTurnButttonText = "Next Turn";
     }
 }

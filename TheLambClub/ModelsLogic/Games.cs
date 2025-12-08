@@ -11,20 +11,15 @@ namespace TheLambClub.ModelsLogic
         {
             int size = (new Game()).MaxNumOfPlayers; 
             IsBusy = true;
-            CurrentGame = new(SelectedNumberOfPlayers)
-            {
-              
-            };
-
+            CurrentGame = new(SelectedNumberOfPlayers);
             CurrentGame.PlayersNames?[0] = (new User()).UserName;
             CurrentGame.PlayersIds?[0] = fbd.UserId;
             currentGame?.OnGameDeleted += OnGameDeleted;
             CurrentGame.SetDocument(OnComplete);
         }
 
-        private void OnGameDeleted(object? sender, EventArgs e)
+        protected override void OnGameDeleted(object? sender, EventArgs e)
         {
-            Console.WriteLine("on game dalated massage");
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
@@ -47,11 +42,11 @@ namespace TheLambClub.ModelsLogic
         {
             ilr?.Remove();
         }
-        private void OnChange(IQuerySnapshot snapshot, Exception error)
+        protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
         }
-        private void OnComplete(IQuerySnapshot qs) 
+        protected override void OnComplete(IQuerySnapshot qs) 
         {
             GamesList!.Clear(); // clean list
             foreach (IDocumentSnapshot ds in qs.Documents)

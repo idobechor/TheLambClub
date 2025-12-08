@@ -16,9 +16,9 @@ namespace TheLambClub.ModelsLogic
             { 
                 if (!IsFull)
                 {
-                    return "Waiting for Players";
+                    return Strings.WaitingStatus;
                 }
-                return "Playing";
+                return Strings.PlayingStatus;
             }
             set;
         }
@@ -62,10 +62,10 @@ namespace TheLambClub.ModelsLogic
             PlayersIds = new string[MaxNumOfPlayers];
             FillDummes();
             CurrentPlayer = new Player(MyName, fbd.UserId);
-            createPlayers();
+            CreatePlayers();
         }
 
-        private void FillDummes()
+        protected override void FillDummes()
         {
             for (int i = 0; i < MaxNumOfPlayers; i++) 
             {
@@ -74,7 +74,7 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
-        private void createPlayers()
+        protected override void CreatePlayers()
         {
             int i = 0;
             if (PlayersNames != null) {
@@ -93,7 +93,7 @@ namespace TheLambClub.ModelsLogic
 
         public Game()
         {
-            createPlayers();
+            CreatePlayers();
         }
 
         public override void SetDocument(Action<Task> OnComplete)
@@ -113,13 +113,13 @@ namespace TheLambClub.ModelsLogic
             DeleteDocument(OnComplete);
         }
 
-        private void OnComplete(Task task)
+        protected override void OnComplete(Task task)
         {
             if(task.IsCompletedSuccessfully)
                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
-        public void UpdateGuestUser(Action<Task> OnComplete)
+        public override void UpdateGuestUser(Action<Task> OnComplete)
         {
             foreach (string id in PlayersIds!)
             {
@@ -132,7 +132,7 @@ namespace TheLambClub.ModelsLogic
             UpdateFireBaseJoinGame(OnComplete);
         }
 
-        private void UpdateFireBaseJoinGame(Action<Task> OnComplete)
+        protected override void UpdateFireBaseJoinGame(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
             {
@@ -146,7 +146,7 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
 
-        private void UpdateFBTurnUpdate(Action<Task> OnComplete)
+        protected override void UpdateFBTurnUpdate(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
             {
@@ -155,7 +155,7 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
 
-        private void UpdateBoard(Action<Task> OnComplete)
+        protected override void UpdateBoard(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
             {
@@ -176,35 +176,28 @@ namespace TheLambClub.ModelsLogic
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
         }
-        private void FillBoard()
+        protected override void FillBoard()
         {
            if(RoundNumber==1)
            {
                 BoardCards[0]= setOfCards.GetRandomCard();
-                ViewCard[0] = new Card(((int)BoardCards[0].Shape), BoardCards[0].Value);
                 BoardCards[1]= setOfCards.GetRandomCard();
-                ViewCard[1] = new Card(((int)BoardCards[1].Shape), BoardCards[1].Value);
                 BoardCards[2]= setOfCards.GetRandomCard();
-                ViewCard[2] = new Card(((int)BoardCards[2].Shape), BoardCards[2].Value);
             }
            else if(RoundNumber==2)
             {
                 BoardCards[3] = setOfCards.GetRandomCard();
-                ViewCard[3] = new Card(((int)BoardCards[3].Shape), BoardCards[3].Value);
             }
            else if(RoundNumber==3)
             {
                 BoardCards[4] = setOfCards.GetRandomCard();
-                ViewCard[4] = new Card(((int)BoardCards[4].Shape), BoardCards[4].Value);
             }
-
         }
-        private void OnChange(IDocumentSnapshot? snapshot, Exception? error)
+        protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                Console.WriteLine("on change " + IsHost + " CurrentPlayerIndex: " + CurrentPlayerIndex + " updatedGame.CurrentPlayerIndex " + updatedGame.CurrentPlayerIndex);
                 if (IsHost && CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0)
                 {
                     RoundNumber++;

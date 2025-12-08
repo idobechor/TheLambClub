@@ -40,7 +40,7 @@ namespace TheLambClub.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
-        public string? HostId { get; set; }
+        public string? HostId { get; set; }=string.Empty;
         [Ignored]
         public abstract bool IsHost { get; } 
         [Ignored]
@@ -56,5 +56,14 @@ namespace TheLambClub.Models
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void NextTurn();
+        protected abstract void FillDummes();
+        protected abstract void CreatePlayers();
+        protected abstract void OnComplete(Task task);
+        public abstract void UpdateGuestUser(Action<Task> OnComplete);
+        protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
+        protected abstract void UpdateFBTurnUpdate(Action<Task> OnComplete);
+        protected abstract void UpdateBoard(Action<Task> OnComplete);
+        protected abstract void FillBoard();
+        protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
     }
 }

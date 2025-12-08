@@ -28,13 +28,9 @@ namespace TheLambClub.ViewModel
 
 
         public string MyName;
-        //public ObservableCollection<Player> Players { get => game.Players; set => game.Players = value; }
-        //public ObservableCollection<PlayerVM> OtherPlayers=> game.OtherPlayers;
         public ICommand NextTurnCommand => new Command(NextTurn);
         public string CurrentStatus => game.CurrentStatus;
         public bool IsMyTurn => game.IsMyTurn;
-        //public Player CurrentPlayer { get=>game.CurrentPlayer; set=>game.CurrentPlayer=value; }
-        //public PlayerVM CurrentPlayerVM { get; set; }
         private readonly List<Label> lstOponnentsLabels = [];        
         private void NextTurn(object obj)
         {
@@ -47,7 +43,6 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(IsMyTurn));
             OnPropertyChanged(nameof(BoardCards));
-            //OnPropertyChanged(nameof(CurrentPlayer));
         }
         public GamePageVM(Game game, Grid grdOponnents)
         {
@@ -56,11 +51,7 @@ namespace TheLambClub.ViewModel
             this.game = game;
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
-            game.OnGameDeleted += OnGameDeleted;
-            //if (!game.IsHostUser)
-            //    game.UpdateGuestUser(OnComplete);
-
-            // game.OnOtherPlayersChanged += OnOtherPlayersChanged;            
+            game.OnGameDeleted += OnGameDeleted;            
         }
 
 
@@ -68,8 +59,6 @@ namespace TheLambClub.ViewModel
         private void InitOponnentsGrid(Grid grdOponnents)
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
-
-            // 2 rows: Label + Images row
             grdOponnents.RowDefinitions.Clear();
             grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // label
             grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // images row
@@ -77,8 +66,6 @@ namespace TheLambClub.ViewModel
             for (int i = 0; i < oponnentsCount; i++)
             {
                 grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-
-                // ----- Label -----
                 Label lbl = new()
                 {
                     Text = "Waiting",
@@ -89,8 +76,6 @@ namespace TheLambClub.ViewModel
                     HorizontalTextAlignment = TextAlignment.Center,
                 };
                 lstOponnentsLabels.Add(lbl);
-
-                // ----- Images side by side -----
                 Image img1 = new Image
                 {
                     Source = "backofcard.jpg",
@@ -106,8 +91,6 @@ namespace TheLambClub.ViewModel
                     WidthRequest = 40,
                     HorizontalOptions = LayoutOptions.Center
                 };
-
-                // Horizontal container for the two images
                 StackLayout imagesRow = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
@@ -115,13 +98,9 @@ namespace TheLambClub.ViewModel
                     Spacing = 3,
                     Children = { img1, img2 }
                 };
-
-                // ----- Add to grid -----
                 grdOponnents.Add(lbl, i, 0);
                 grdOponnents.Add(imagesRow, i, 1);
             }
-
-            Console.WriteLine("after build grid");
         }
 
 
@@ -139,30 +118,7 @@ namespace TheLambClub.ViewModel
                 lstOponnentsLabels[lblIndex].Text = game.PlayersNames?[i];
                 lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Cyan;
             }
-        }
-
-
-
-        //public ImageSource? boardCard1
-        //{
-        //    get => board.Cards[0].Source;
-        //}
-        //public ImageSource? boardCard2
-        //{
-        //    get => board.Cards[1].Source;
-        //}
-        //public ImageSource? boardCard3
-        //{
-        //    get => board.Cards[2].Source;
-        //}
-        //public ImageSource? boardCard4
-        //{
-        //    get => board.Cards[3].Source;
-        //}
-        //public ImageSource? boardCard5
-        //{
-        //    get => board.Cards[4].Source;
-        //}     
+        }     
         private void OnComplete(Task task)
         {
             if(!task.IsCompletedSuccessfully)
