@@ -113,10 +113,10 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.CurrentPlayer.Id == game.PlayersIds?[i])
+                if (game.CurrentPlayer.Id == game.Players?[i].Id)
                     continue;
-                lstOponnentsLabels[lblIndex].Text = game.PlayersNames?[i];
-                lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Cyan;
+                lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
+                lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
             }
         }     
         private void OnComplete(Task task)

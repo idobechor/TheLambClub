@@ -27,11 +27,11 @@ namespace TheLambClub.ModelsLogic
         {
             get
             {
-                if (PlayersIds == null)
+                if (Players == null)
                 {
                     return false;
                 }
-                return PlayersIds[CurrentPlayerIndex] == fbd.UserId;
+                return Players[CurrentPlayerIndex].Id == fbd.UserId;
             }
         }
 
@@ -58,9 +58,6 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             CurrentPlayerIndex=0;
-            PlayersNames = new string[MaxNumOfPlayers];
-            PlayersIds = new string[MaxNumOfPlayers];
-            PlayersInArray = new Player[MaxNumOfPlayers];
             FillDummes();
             CurrentPlayer = new Player(MyName, fbd.UserId);
             CreatePlayers();
@@ -70,25 +67,26 @@ namespace TheLambClub.ModelsLogic
         {
             for (int i = 0; i < MaxNumOfPlayers; i++) 
             {
-                PlayersNames![i] = string.Empty;
-                PlayersIds![i] = string.Empty;
+                //PlayersNames![i] = string.Empty;
+                //PlayersIds![i] = string.Empty;
             }
         }
 
         protected override void CreatePlayers()
         {
-            int i = 0;
-            if (PlayersNames != null) {
-                foreach (string playerName in PlayersNames!)
-                {
-                    if (playerName != string.Empty)
-                    {
-                        Player player = new(playerName, PlayersIds![i++]);
-                        Players!.Add(player);
-                    }
-                }
-            }
-            
+            //int i = 0;
+            //if (PlayersNames != null)
+            //{
+            //    foreach (string playerName in PlayersNames!)
+            //    {
+            //        if (playerName != string.Empty)
+            //        {
+            //            Player player = new(playerName, PlayersIds![i++]);
+            //            Players!.Add(player);
+            //        }
+            //    }
+            //}
+
             CurrentPlayer = new Player(MyName, fbd.UserId);
         }
 
@@ -104,21 +102,20 @@ namespace TheLambClub.ModelsLogic
 
         protected override void FillArrayAndAddCards(Action<Task> OnComplete)
         {
-            PlayersInArray= [.. Players];
-            foreach (Player item in PlayersInArray)
+            foreach (Player item in Players)
             {
                 item.FBCard1 = setOfCards.GetRandomCard();
                 item.FBCard2 = setOfCards.GetRandomCard();
                 item.card1 = new((int)item.FBCard1.Shape, item.FBCard1.Value);
                 item.card2 = new((int)item.FBCard2.Shape, item.FBCard2.Value);
             }
-            UpdatePlayersArray(OnComplete);
+            UpdatePlayersArray(_ => { });
         }
         protected override void UpdatePlayersArray(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
             {
-                { nameof(PlayersInArray), PlayersInArray! },
+                { nameof(Players), Players! },
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
@@ -142,13 +139,13 @@ namespace TheLambClub.ModelsLogic
 
         public override void UpdateGuestUser(Action<Task> OnComplete)
         {
-            foreach (string id in PlayersIds!)
+            foreach (Player player in Players!)
             {
-                if (id == fbd.UserId)
+                if (player.Id == fbd.UserId)
                     return;
             }
-            PlayersNames?[CurrentNumOfPlayers] = MyName;
-            PlayersIds?[CurrentNumOfPlayers] = fbd.UserId;
+            Player newPlayer = new Player(MyName, fbd.UserId);
+            Players[CurrentNumOfPlayers] = newPlayer;
             CurrentNumOfPlayers++;
             UpdateFireBaseJoinGame(OnComplete);
         }
@@ -157,8 +154,7 @@ namespace TheLambClub.ModelsLogic
         {
             Dictionary<string, object> dict = new()
             {
-                { nameof(PlayersNames), PlayersNames! },
-                { nameof(PlayersIds), PlayersIds! },
+                { nameof(Players), Players! },
                 { nameof(CurrentNumOfPlayers), CurrentNumOfPlayers },
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
                 { nameof(RoundNumber), RoundNumber },
@@ -220,7 +216,7 @@ namespace TheLambClub.ModelsLogic
         //    {
         //        if(Players[i]!=null)
         //        {
-        //            PlayersInArray![i] = Players[i];
+        //            Players![i] = Players[i];
         //        }
         //    }
         //}
@@ -238,12 +234,11 @@ namespace TheLambClub.ModelsLogic
                 }
                 if (IsHost&& CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers) 
                 {
-                    UpdatePlayersArray(OnComplete);
+                    FillArrayAndAddCards(OnComplete);
                 }
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                PlayersNames = updatedGame.PlayersNames;
-                PlayersIds = updatedGame.PlayersIds;
+                Players = updatedGame.Players;
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 OnGameChanged?.Invoke(this, EventArgs.Empty);

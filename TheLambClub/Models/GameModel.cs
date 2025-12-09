@@ -30,8 +30,6 @@ namespace TheLambClub.Models
         public int RoundNumber{get;set;}
         public int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
-        public string[]? PlayersNames { get; set; }
-        public string[]? PlayersIds { get; set; }
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
@@ -49,9 +47,9 @@ namespace TheLambClub.Models
         public NumberOfPlayers? NumberOfPlayers { get; set; }
         [Ignored]
         public abstract bool IsMyTurn { get; }
-        [Ignored]
-        public ObservableCollection<Player> Players { get; set; } = [];
-        public Player[]? PlayersInArray { get; set; }
+        //[Ignored]
+        //public ObservableCollection<Player> Players { get; set; } = [];
+        public Player[]? Players { get; set; }
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();

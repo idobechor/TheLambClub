@@ -4,6 +4,7 @@ namespace TheLambClub.ModelsLogic
 {
     public class Player : PlayerModel
     {
+        public Player() : base("", "") { }
         public Player(string playerName, string id) : base(playerName,id)
         {
         }

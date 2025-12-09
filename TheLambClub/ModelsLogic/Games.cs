@@ -9,12 +9,12 @@ namespace TheLambClub.ModelsLogic
     {
         public override void AddGame()
         {
-            int size = (new Game()).MaxNumOfPlayers; 
             IsBusy = true;
             CurrentGame = new(SelectedNumberOfPlayers);
-            CurrentGame.PlayersNames?[0] = (new User()).UserName;
-            CurrentGame.PlayersIds?[0] = fbd.UserId;
+            currentGame?.Players = new Player[SelectedNumberOfPlayers.NumPlayers];
+            currentGame?.Players?[0] = new Player((new User()).UserName, fbd.UserId);
             currentGame?.OnGameDeleted += OnGameDeleted;
+            Console.WriteLine("Add game");
             CurrentGame.SetDocument(OnComplete);
         }
 
