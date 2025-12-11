@@ -21,7 +21,7 @@
             <CollectionView ItemsSource="{Binding BoardCards}"
                 ItemsLayout="HorizontalList">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="m:CardModel">
+                    <DataTemplate x:DataType="m:ViewCardModel">
                         <Image Source="{Binding Source}"
                    HeightRequest="40"
                    WidthRequest="40" />

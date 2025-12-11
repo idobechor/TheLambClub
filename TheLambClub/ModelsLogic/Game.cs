@@ -2,9 +2,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
-using System.Security.Cryptography.Xml;
 using TheLambClub.Models;
-using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -12,8 +10,8 @@ namespace TheLambClub.ModelsLogic
     {
         public override string CurrentStatus
         {
-            get 
-            { 
+            get
+            {
                 if (!IsFull)
                 {
                     return Strings.WaitingStatus;
@@ -51,13 +49,13 @@ namespace TheLambClub.ModelsLogic
 
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
-            HostId = new User().fbd.UserId; 
+            HostId = new User().fbd.UserId;
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
-            CurrentPlayerIndex=0;
+            CurrentPlayerIndex = 0;
             FillDummes();
             CurrentPlayer = new Player(MyName, fbd.UserId);
             CreatePlayers();
@@ -65,7 +63,7 @@ namespace TheLambClub.ModelsLogic
 
         protected override void FillDummes()
         {
-            for (int i = 0; i < MaxNumOfPlayers; i++) 
+            for (int i = 0; i < MaxNumOfPlayers; i++)
             {
                 //PlayersNames![i] = string.Empty;
                 //PlayersIds![i] = string.Empty;
@@ -102,12 +100,10 @@ namespace TheLambClub.ModelsLogic
 
         protected override void FillArrayAndAddCards(Action<Task> OnComplete)
         {
-            foreach (Player item in Players)
+            foreach (Player item in Players!)
             {
                 item.FBCard1 = setOfCards.GetRandomCard();
                 item.FBCard2 = setOfCards.GetRandomCard();
-                item.card1 = new((int)item.FBCard1.Shape, item.FBCard1.Value);
-                item.card2 = new((int)item.FBCard2.Shape, item.FBCard2.Value);
             }
             UpdatePlayersArray(_ => { });
         }
@@ -124,7 +120,7 @@ namespace TheLambClub.ModelsLogic
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
-
+      
         public override void RemoveSnapShotListener()
         {
             ilr?.Remove();
@@ -133,8 +129,8 @@ namespace TheLambClub.ModelsLogic
 
         protected override void OnComplete(Task task)
         {
-            if(task.IsCompletedSuccessfully)
-               OnGameDeleted?.Invoke(this, EventArgs.Empty);
+            if (task.IsCompletedSuccessfully)
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
 
         public override void UpdateGuestUser(Action<Task> OnComplete)
@@ -186,7 +182,7 @@ namespace TheLambClub.ModelsLogic
         {
             get { return CurrentNumOfPlayers == MaxNumOfPlayers; }
 
-            set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;           
+            set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;
         }
 
         public override void DeleteDocument(Action<Task> OnComplete)
@@ -195,17 +191,17 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void FillBoard()
         {
-           if(RoundNumber==1)
-           {
-                BoardCards[0]= setOfCards.GetRandomCard();
-                BoardCards[1]= setOfCards.GetRandomCard();
-                BoardCards[2]= setOfCards.GetRandomCard();
+            if (RoundNumber == 1)
+            {
+                BoardCards[0] = setOfCards.GetRandomCard();
+                BoardCards[1] = setOfCards.GetRandomCard();
+                BoardCards[2] = setOfCards.GetRandomCard();
             }
-           else if(RoundNumber==2)
+            else if (RoundNumber == 2)
             {
                 BoardCards[3] = setOfCards.GetRandomCard();
             }
-           else if(RoundNumber==3)
+            else if (RoundNumber == 3)
             {
                 BoardCards[4] = setOfCards.GetRandomCard();
             }
@@ -232,7 +228,7 @@ namespace TheLambClub.ModelsLogic
                     FillBoard();
                     UpdateBoard((t) => { });
                 }
-                if (IsHost&& CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers) 
+                if (IsHost && CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers)
                 {
                     FillArrayAndAddCards(OnComplete);
                 }

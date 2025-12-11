@@ -12,11 +12,11 @@ namespace TheLambClub.ViewModel
         }
         public ImageSource? card1
         {
-            get => player.card1.Source;
+            get => player.Card1.Source;
         }
         public ImageSource? card2
         {
-            get => player.card2.Source;
+            get => player.Card2.Source;
         }
         public string Name  => player.Name;
 

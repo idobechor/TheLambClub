@@ -10,27 +10,22 @@ namespace TheLambClub.Models
 
         public FBCard FBCard1 { get; set; }
         public FBCard FBCard2 { get; set; }
-
         [Ignored]
-        public Card card1 { get; set; }
+        public ViewCard Card1 { get; set; }
         [Ignored]
-        public Card card2 { get; set; }
+        public ViewCard Card2 { get; set; }
         public string Name { get; set; }
 
         public string Id { get; set; }
         public PlayerModel(string name, string id)
         {
-            FBCard1 = setCards.GetRandomCard();
-            FBCard2 = setCards.GetRandomCard();
-            //card1 = new Card();
-            //card2 = new Card();
+            Card1 = new ViewCard();
+            Card2 = new ViewCard();
             Name = name;
             Id = id;
-
         }
-
-        public int SumOfMoney { get; set; }
-        public int CurrentBet { get; set; }
+        //public int SumOfMoney { get; set; }
+        //public int CurrentBet { get; set; }
         public enum LevelsOfHands
         {
             HighCard,

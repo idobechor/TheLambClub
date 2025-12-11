@@ -1,5 +1,6 @@
 ﻿using TheLambClub.Models;
-using static TheLambClub.Models.CardModel;
+using static TheLambClub.Models.FBCard;
+using static TheLambClub.Models.ViewCardModel;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -26,7 +27,7 @@ namespace TheLambClub.ModelsLogic
         protected override void FillPakage()
          {
            foreach (Shapes shape in Enum.GetValues(typeof(Shapes)))
-               for (int value = 1; value <= Card.CardsInShape; value++)
+               for (int value = 1; value <= ViewCard.CardsInShape; value++)
                     cards!.Add(new FBCard(((int)shape), value));
          }
         public override FBCard GetRandomCard()

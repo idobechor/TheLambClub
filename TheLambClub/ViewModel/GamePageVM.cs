@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TheLambClub.Models;
@@ -11,22 +10,19 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public ObservableCollection<Card> BoardCards
+        public ObservableCollection<ViewCard> BoardCards
         {
             get
             {
                 return [.. game.BoardCards.Select(c =>
                 {
                     if (c == null)
-                        return new Card();
-                    return new Card((int)c!.Shape, c!.Value);
+                        return new ViewCard();
+                    return new ViewCard((int)c!.Shape, c!.Value);
                 })];
                 
-            }
-            
+            }            
         }
-
-
         public string MyName;
         public ICommand NextTurnCommand => new Command(NextTurn);
         public string CurrentStatus => game.CurrentStatus;
@@ -113,7 +109,7 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.CurrentPlayer.Id == game.Players?[i].Id)
+                if (game.CurrentPlayer!.Id == game.Players?[i].Id)
                     continue;
                 lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
                 lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
@@ -137,17 +133,17 @@ namespace TheLambClub.ViewModel
 
         public string Name
         {
-            get { return game.CurrentPlayer.Name; }
+            get { return game.CurrentPlayer!.Name; }
         }
 
-        public Card Card1
+        public ViewCard Card1
         {
-            get { return game.CurrentPlayer.card1; } 
+            get { return game.CurrentPlayer!.Card1; } 
         }
 
-        public Card Card2
+        public ViewCard Card2
         {
-            get { return game.CurrentPlayer.card2; }
+            get { return game.CurrentPlayer!.Card2; }
         }
 
         public string Status

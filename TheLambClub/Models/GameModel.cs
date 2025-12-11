@@ -1,10 +1,7 @@
 ﻿
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
-using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
-using TheLambClub.ViewModel;
-using static TheLambClub.Models.CardModel;
 
 namespace TheLambClub.Models
 {
@@ -19,11 +16,11 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
-        public Player CurrentPlayer { get; set; }
+        public Player ?CurrentPlayer { get; set; }
         [Ignored]
         public abstract string CurrentStatus { get; set; }
         [Ignored]
-        public Card[]ViewCard { get; set; } = { new Card(),new Card(),new Card(),new Card(),new Card()};
+        public ViewCard[]ViewCard { get; set; } = { new ViewCard(),new ViewCard(),new ViewCard(),new ViewCard(),new ViewCard()};
         [Ignored]
         protected  SetOfCards setOfCards { get; }= new SetOfCards();
         public FBCard[]BoardCards { get; set; }=new FBCard[5];

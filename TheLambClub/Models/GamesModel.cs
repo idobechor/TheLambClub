@@ -1,8 +1,7 @@
-﻿using Microsoft.Maui.Controls;
+﻿
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
-
 namespace TheLambClub.Models
 {
     public abstract class GamesModel
