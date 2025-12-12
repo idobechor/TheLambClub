@@ -18,7 +18,7 @@ namespace TheLambClub.ViewModel
                 {
                     if (c == null)
                         return new ViewCard();
-                    return new ViewCard((int)c!.Shape, c!.Value);
+                    return new ViewCard(c);
                 })];
                 
             }            
@@ -138,12 +138,12 @@ namespace TheLambClub.ViewModel
 
         public ViewCard Card1
         {
-            get { return game.CurrentPlayer!.Card1; } 
+            get { return new ViewCard(game.CurrentPlayer!.FBCard1); } 
         }
 
         public ViewCard Card2
         {
-            get { return game.CurrentPlayer!.Card2; }
+            get { return new ViewCard(game.CurrentPlayer!.FBCard2); }
         }
 
         public string Status

@@ -20,8 +20,6 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract string CurrentStatus { get; set; }
         [Ignored]
-        public ViewCard[]ViewCard { get; set; } = { new ViewCard(),new ViewCard(),new ViewCard(),new ViewCard(),new ViewCard()};
-        [Ignored]
         protected  SetOfCards setOfCards { get; }= new SetOfCards();
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}

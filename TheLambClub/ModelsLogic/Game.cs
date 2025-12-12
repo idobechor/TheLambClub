@@ -135,11 +135,13 @@ namespace TheLambClub.ModelsLogic
 
         public override void UpdateGuestUser(Action<Task> OnComplete)
         {
+            Console.WriteLine("Updating guest user" + CurrentNumOfPlayers);
             foreach (Player player in Players!)
             {
-                if (player.Id == fbd.UserId)
+                if (player != null && player.Id == fbd.UserId)
                     return;
             }
+            Console.WriteLine("players initalized");
             Player newPlayer = new Player(MyName, fbd.UserId);
             Players[CurrentNumOfPlayers] = newPlayer;
             CurrentNumOfPlayers++;
@@ -219,17 +221,20 @@ namespace TheLambClub.ModelsLogic
 
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
+            Console.WriteLine("Game OnChange called");
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
                 if (IsHost && CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0)
                 {
+                    Console.WriteLine("Fill board");
                     RoundNumber++;
                     FillBoard();
                     UpdateBoard((t) => { });
                 }
                 if (IsHost && CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers)
                 {
+                    Console.WriteLine("Fill players cards");
                     FillArrayAndAddCards(OnComplete);
                 }
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;

@@ -1,14 +1,17 @@
-﻿namespace TheLambClub.Models
+﻿using TheLambClub.Models;
+
+namespace TheLambClub.ViewModel
 {
-    public class ViewCardModel
+    public class ViewCard : ImageButton
     {
-        public ViewCardModel(int shape, int value)
+        public ViewCard(FBCard card) 
         {
-            if (value > 0)
-                Source = CardsImage[shape, value - 1];
+            Source = "backofcard.jpg";
+            if (card != null && card.Value > 0)
+                Source = CardsImage[(int)card.Shape, card.Value - 1];
             Console.WriteLine("Add to source");
         }
-        public ViewCardModel()
+        public ViewCard()
         {
             Source = "backofcard.jpg";           
         }
@@ -24,6 +27,5 @@
                 return CardsImage.GetLength(1);
             }
         }
-        public string Source { get; set; }
     }
 }

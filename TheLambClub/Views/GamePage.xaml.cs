@@ -11,6 +11,7 @@ public partial class GamePage : ContentPage
         Console.WriteLine("MEIR create game page");
 		InitializeComponent();
         gpVM = new GamePageVM(game, grdOponnents);
+        Console.WriteLine("MEIR create game page1");
         BindingContext = gpVM;
     }
     protected override void OnAppearing()

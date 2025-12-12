@@ -20,5 +20,7 @@ namespace TheLambClub.Models
         public FBCard()
         {
         }
+
+        public const int CardsInShape = 13;
     }
 }
