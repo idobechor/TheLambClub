@@ -1,14 +1,16 @@
 ﻿using Plugin.CloudFirestore;
+using Plugin.CloudFirestore.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.Models
 {
     public class FBCard
-    {
+    {        
         public int Value { get; set; }
         public enum Shapes { Club, Diamond, Heart, Spade };
         public Shapes Shape { get; set; }

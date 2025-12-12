@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using TheLambClub.Models;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -102,8 +103,15 @@ namespace TheLambClub.ModelsLogic
         {
             foreach (Player item in Players!)
             {
-                item.FBCard1 = setOfCards.GetRandomCard();
-                item.FBCard2 = setOfCards.GetRandomCard();
+                Console.WriteLine("item");
+                if(item!=null)
+                {
+                    item.FBCard1 = setOfCards.GetRandomCard();
+                    item.FBCard2 = setOfCards.GetRandomCard();
+                    item.ViewCard1.Source = ViewCard. CardsImage[(int)item.FBCard1.Shape, item.FBCard1.Value - 1];
+                    item.ViewCard2.Source = ViewCard. CardsImage[(int)item.FBCard2.Shape, item.FBCard2.Value - 1];
+                    Console.WriteLine("cards has haded");
+                }
             }
             UpdatePlayersArray(_ => { });
         }
@@ -138,11 +146,12 @@ namespace TheLambClub.ModelsLogic
             Console.WriteLine("Updating guest user" + CurrentNumOfPlayers);
             foreach (Player player in Players!)
             {
-                if (player != null && player.Id == fbd.UserId)
+                if (player!=null&& player!.Id == fbd.UserId)
                     return;
             }
             Console.WriteLine("players initalized");
-            Player newPlayer = new Player(MyName, fbd.UserId);
+            Player newPlayer = new(MyName, fbd.UserId);
+            Console.WriteLine(MyName+",");
             Players[CurrentNumOfPlayers] = newPlayer;
             CurrentNumOfPlayers++;
             UpdateFireBaseJoinGame(OnComplete);
@@ -225,6 +234,7 @@ namespace TheLambClub.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
+                bool gameFull=false;
                 if (IsHost && CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0)
                 {
                     Console.WriteLine("Fill board");
@@ -234,14 +244,19 @@ namespace TheLambClub.ModelsLogic
                 }
                 if (IsHost && CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers)
                 {
+                    gameFull = true;
+                }
+                Players = updatedGame.Players;
+                CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
+                RoundNumber = updatedGame.RoundNumber;
+                BoardCards = updatedGame.BoardCards;
+                CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                if (gameFull)
+                {
                     Console.WriteLine("Fill players cards");
                     FillArrayAndAddCards(OnComplete);
                 }
-                CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
-                CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                Players = updatedGame.Players;
-                RoundNumber = updatedGame.RoundNumber;
-                BoardCards = updatedGame.BoardCards;
+                
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else

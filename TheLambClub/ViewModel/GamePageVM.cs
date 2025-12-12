@@ -39,6 +39,8 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(IsMyTurn));
             OnPropertyChanged(nameof(BoardCards));
+            OnPropertyChanged(nameof(Card1));
+            OnPropertyChanged(nameof(Card2));
         }
         public GamePageVM(Game game, Grid grdOponnents)
         {
@@ -109,10 +111,14 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.CurrentPlayer!.Id == game.Players?[i].Id)
+                if (game.Players![i] != null && game.CurrentPlayer!.Id == game.Players?[i].Id)
                     continue;
-                lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
-                lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
+                if (game.Players?[i]!=null)
+                {
+                    lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
+                    lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
+                }
+               
             }
         }     
         private void OnComplete(Task task)
@@ -136,14 +142,13 @@ namespace TheLambClub.ViewModel
             get { return game.CurrentPlayer!.Name; }
         }
 
-        public ViewCard Card1
+        public ImageSource Card1
         {
-            get { return new ViewCard(game.CurrentPlayer!.FBCard1); } 
+            get {return game.CurrentPlayer!.ViewCard1.Source; } 
         }
-
-        public ViewCard Card2
+        public ImageSource Card2
         {
-            get { return new ViewCard(game.CurrentPlayer!.FBCard2); }
+             get { return game.CurrentPlayer!.ViewCard2.Source; }
         }
 
         public string Status

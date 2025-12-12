@@ -1,5 +1,6 @@
 ﻿using Plugin.CloudFirestore.Attributes;
 using TheLambClub.ModelsLogic;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.Models
 {
@@ -7,15 +8,13 @@ namespace TheLambClub.Models
     {
         [Ignored]
         protected readonly SetOfCards setCards = new();
-
         public FBCard FBCard1 { get; set; }
         public FBCard FBCard2 { get; set; }
-        //[Ignored]
-        //public ViewCard Card1 { get; set; }
-        //[Ignored]
-        //public ViewCard Card2 { get; set; }
         public string Name { get; set; }
-
+        [Ignored]
+        public ViewCard ViewCard1 { get; set; }=new ViewCard();
+        [Ignored]
+        public ViewCard ViewCard2 { get; set; }=new ViewCard();
         public string Id { get; set; }
         public PlayerModel(string name, string id)
         {
