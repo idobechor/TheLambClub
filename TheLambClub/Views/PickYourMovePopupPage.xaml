@@ -5,7 +5,7 @@
                xmlns:vm="clr-namespace:TheLambClub.ViewModel"
                xmlns:m="clr-namespace:TheLambClub.Models"
                x:Class="TheLambClub.Views.PickYourMovePopupPage"
-               x:DataType="vm:PickYourMovePopupVM">
+               x:DataType="vm:PickYourMovePromptPageVM">
     <VerticalStackLayout>
         <Button 
         BackgroundColor="DarkBlue"

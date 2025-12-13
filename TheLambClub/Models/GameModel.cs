@@ -16,9 +16,9 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
-        public Player ?CurrentPlayer { get; set; }
+        public  abstract Player ?CurrentPlayer { get; }
         [Ignored]
-        public abstract string CurrentStatus { get; set; }
+        public abstract string CurrentStatus { get;}
         [Ignored]
         protected  SetOfCards setOfCards { get; }= new SetOfCards();
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
@@ -50,8 +50,8 @@ namespace TheLambClub.Models
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void NextTurn();
+        public abstract void PickedFold();
         protected abstract void FillDummes();
-        protected abstract void CreatePlayers();
         protected abstract void OnComplete(Task task);
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
@@ -61,5 +61,7 @@ namespace TheLambClub.Models
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void FillArrayAndAddCards(Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
+        protected abstract bool IsOneStaying();
+        protected abstract void ChangeIsFoldedToFalse();
     }
 }

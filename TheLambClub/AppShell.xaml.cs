@@ -1,4 +1,6 @@
 ﻿
+using TheLambClub.Views;
+
 namespace TheLambClub
 {
     public partial class AppShell : Shell

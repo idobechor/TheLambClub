@@ -61,7 +61,7 @@
               Source="{Binding Card2.Source}" />
             </Grid>
         </VerticalStackLayout>
-        <Button 
+        <!--<Button 
       IsEnabled="{Binding IsMyTurn}"
       AbsoluteLayout.LayoutBounds="0.5,0.95,140,45"
       AbsoluteLayout.LayoutFlags="PositionProportional"
@@ -69,10 +69,10 @@
       Command="{Binding NextTurnCommand}"
       CornerRadius="15"
       Text="{x:Static m:Strings.MoveTurnButttonText}" 
-      TextColor="White" />
-        <!--<Button
+      TextColor="White" />-->
+        <Button
      Command="{Binding ShowPickYourMovePrompt}"
      HorizontalOptions="Fill"
-     Text="{x:Static m:Strings.PickMoveTxt}" />-->
+     Text="{x:Static m:Strings.PickMoveTxt}" />
     </VerticalStackLayout>
 </ContentPage>

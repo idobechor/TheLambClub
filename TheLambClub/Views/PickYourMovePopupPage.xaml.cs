@@ -1,14 +1,25 @@
 
 using CommunityToolkit.Maui.Views;
+using TheLambClub.ModelsLogic;
 using TheLambClub.ViewModel;
 
 namespace TheLambClub.Views;
 
 public partial class PickYourMovePopupPage  : Popup
 {
-	public PickYourMovePopupPage()
+    private readonly PickYourMovePromptPageVM PromptYourMoveVM;
+    public PickYourMovePopupPage(Game game)
 	{
 		InitializeComponent();
-        BindingContext = new PickYourMovePopupVM();
+       
+        PromptYourMoveVM = new PickYourMovePromptPageVM(game);
+        BindingContext= PromptYourMoveVM;
+        PromptYourMoveVM.RequestClose += OnRequestClose;
+    }
+
+    private void OnRequestClose()
+    {
+        Close(); // closes the popup
+       // ((Command))(new GamePageVM()).ShowPickYourMovePrompt.;
     }
 }

@@ -8,6 +8,7 @@ namespace TheLambClub.Models
     {
         [Ignored]
         protected readonly SetOfCards setCards = new();
+        public bool IsFolded { get; set; }= false;
         public FBCard FBCard1 { get; set; }
         public FBCard FBCard2 { get; set; }
         public string Name { get; set; }

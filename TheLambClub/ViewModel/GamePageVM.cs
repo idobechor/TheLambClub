@@ -11,8 +11,9 @@ namespace TheLambClub.ViewModel
 {
     class GamePageVM : ObservableObject
     {
-        private readonly Game game=new();
-        //public ICommand ShowPickYourMovePrompt { get; private set; }
+        private readonly Game game;
+
+        public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard> BoardCards
         {
             get
@@ -27,35 +28,57 @@ namespace TheLambClub.ViewModel
             }            
         }
         public string MyName=> game.MyName;
-        public ICommand NextTurnCommand => new Command(NextTurn);
-        public string CurrentStatus => game.CurrentStatus;
-        public bool IsMyTurn => game.IsMyTurn;
+        //public ICommand Stay => new Command(StayFunction);
+
+        //private void StayFunction(object obj)
+        //{
+        //    game.NextTurn();
+        //}
+        //public ICommand Fold => new Command(FoldFunction);
+
+        //private void FoldFunction(object obj)
+        //{
+        //    game.PickedFold();
+        //}
+
+        public string CurrentStatus => game.CurrentStatus;      
         private readonly List<Label> lstOponnentsLabels = [];        
-        private void NextTurn(object obj)
-        {
-            game.NextTurn();
-            OnPropertyChanged(nameof(CurrentStatus));
-        }
+        //private void NextTurn(object obj)
+        //{
+        //    game.NextTurn();
+        //    OnPropertyChanged(nameof(CurrentStatus));
+        //}
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
             OnPropertyChanged(nameof(Status));
-            OnPropertyChanged(nameof(IsMyTurn));
+            OnPropertyChanged(nameof(_IsMyTurn));
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
         }
         public GamePageVM(Game game, Grid grdOponnents)
         {
-            //ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction);
+           this.game=game;
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
-            game.OnGameDeleted += OnGameDeleted;            
+            game.OnGameDeleted += OnGameDeleted;
+            ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
+        }
+        public GamePageVM()
+        {                       
+        }
+        private bool _IsMyTurn=> game.IsMyTurn;
+        private bool IsMyTurn(object arg)
+        {
+            return _IsMyTurn;
         }
 
-        private void ShowPickYourMovePromptFunction(object obj)
+        private async void ShowPickYourMovePromptFunction(object obj)
         {
-            Shell.Current.ShowPopup(new PickYourMovePopupPage());
+            await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game));
+            Console.WriteLine("check can excute can? " + ((Command)ShowPickYourMovePrompt).CanExecute(null));
+            ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
 
         private void InitOponnentsGrid(Grid grdOponnents)
@@ -147,50 +170,20 @@ namespace TheLambClub.ViewModel
         }
         public ViewCard Card1
         {
-
             get
             {
-                if (game.Players == null)
-                    return new ViewCard();
-                Player p = null!;
-                foreach (Player player in game.Players!)
-                {
-                    if (player != null && player.Id == new FbData().UserId)
-                    {
-                        p = player;
-                    }
-                }
-           
-                if (p == null || p.FBCard1 == null)
-                {
-                    Console.WriteLine("null");
-                    return new ViewCard(); 
-                }
-                else
-                    Console.WriteLine(p!.FBCard1.Value+" "+p.FBCard1!.Shape);
-                return new ViewCard(p!.FBCard1);
-
+                if ( game.CurrentPlayer==null|| game.CurrentPlayer.FBCard1 == null)
+                    return new ViewCard();         
+                return new ViewCard(game.CurrentPlayer.FBCard1);
             }
         }
         public ViewCard Card2
         {
-
             get
             {
-                if (game.Players == null)
+                if (game.CurrentPlayer == null || game.CurrentPlayer.FBCard2 == null)
                     return new ViewCard();
-                Player p = null!;
-                foreach (Player player in game.Players!)
-                {
-                    if (player != null && player.Id == new FbData().UserId)
-                    {
-                        p = player;
-                    }
-                }
-                if (p == null || p.FBCard2 == null)
-                    return new ViewCard();
-                return new ViewCard(p!.FBCard2);
-
+                return new ViewCard(game.CurrentPlayer.FBCard2);
             }
         }
 

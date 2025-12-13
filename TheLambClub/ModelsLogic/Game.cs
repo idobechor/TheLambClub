@@ -3,12 +3,28 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
 using TheLambClub.Models;
-using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
+        public override Player? CurrentPlayer 
+        {   
+            get 
+            {
+                Player p = null!;
+                if (Players == null)
+                    return p;                
+                foreach (Player player in Players!)
+                {
+                    if (player != null && player.Id == new FbData().UserId)
+                    {
+                        p = player;
+                    }
+                }
+                return p;
+            }
+        }
         public override string CurrentStatus
         {
             get
@@ -19,7 +35,6 @@ namespace TheLambClub.ModelsLogic
                 }
                 return Strings.PlayingStatus;
             }
-            set;
         }
 
         public override bool IsMyTurn
@@ -30,9 +45,10 @@ namespace TheLambClub.ModelsLogic
                 {
                     return false;
                 }
-                return Players[CurrentPlayerIndex].Id == fbd.UserId;
+                return Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
             }
         }
+
 
         public override bool IsHost
         {
@@ -47,7 +63,32 @@ namespace TheLambClub.ModelsLogic
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
         }
-
+        public override void PickedFold()
+        {
+            CurrentPlayer?.IsFolded = true;
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(Players), Players! },
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex }
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
+        protected override void ChangeIsFoldedToFalse()
+        {
+            foreach (Player player in Players!)
+            {
+                if (player != null)
+                {
+                    player.IsFolded = false;
+                }
+            }
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(Players), Players! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        }
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
             HostId = new User().fbd.UserId;
@@ -58,8 +99,6 @@ namespace TheLambClub.ModelsLogic
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             CurrentPlayerIndex = 0;
             FillDummes();
-            CurrentPlayer = new Player(MyName, fbd.UserId);
-            CreatePlayers();
         }
 
         protected override void FillDummes()
@@ -71,27 +110,8 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
-        protected override void CreatePlayers()
-        {
-            //int i = 0;
-            //if (PlayersNames != null)
-            //{
-            //    foreach (string playerName in PlayersNames!)
-            //    {
-            //        if (playerName != string.Empty)
-            //        {
-            //            Player player = new(playerName, PlayersIds![i++]);
-            //            Players!.Add(player);
-            //        }
-            //    }
-            //}
-
-            CurrentPlayer = new Player(MyName, fbd.UserId);
-        }
-
         public Game()
         {
-            CreatePlayers();
         }
 
         public override void SetDocument(Action<Task> OnComplete)
@@ -200,6 +220,14 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void FillBoard()
         {
+            if(RoundNumber==0)
+            {
+                BoardCards[0] = null!;
+                BoardCards[1] = null!;
+                BoardCards[2] = null!;
+                BoardCards[3] = null!;
+                BoardCards[4] = null!;
+            }
             if (RoundNumber == 1)
             {
                 BoardCards[0] = setOfCards.GetRandomCard();
@@ -225,31 +253,54 @@ namespace TheLambClub.ModelsLogic
         //        }
         //    }
         //}
-
+        protected override bool IsOneStaying()
+        {
+            int countNotFolded=0;
+            bool result=false;
+            foreach (Player player in Players!)
+            {
+                if(player != null && !player.IsFolded)
+                {
+                    countNotFolded++;
+                }
+            }
+            result= countNotFolded == 1;
+            return result;
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                bool gameFull=false;
-                if (IsHost && CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0)
-                {
-                    Console.WriteLine("Fill board");
-                    RoundNumber++;
-                    FillBoard();
-                    UpdateBoard((t) => { });
-                }
-                if (IsHost && CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers)
-                {
-                    gameFull = true;
-                }
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;
+                bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
+                
                 Players = updatedGame.Players;
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                if (gameFull)
+                if (IsHost && isEndOfRound)
+                {
+                    RoundNumber++;
+                    FillBoard();
+                    UpdateBoard((t) => { });
+                }
+                if (CurrentPlayer!=null&&IsMyTurn &&CurrentPlayer.IsFolded)
+                {
+                    NextTurn();
+                }
+                if (IsOneStaying() && IsFull)
+                {
+                    ChangeIsFoldedToFalse();
+                    RoundNumber = 0;
+                    FillBoard();
+                    UpdateBoard((t) => { });
+                    FillArrayAndAddCards(OnComplete);
+                
+                }
+                if (IsHost && changedToFull)
                 {
                     Console.WriteLine("Fill players cards");
                     FillArrayAndAddCards(OnComplete);
