@@ -108,8 +108,6 @@ namespace TheLambClub.ModelsLogic
                 {
                     item.FBCard1 = setOfCards.GetRandomCard();
                     item.FBCard2 = setOfCards.GetRandomCard();
-                    item.ViewCard1.Source = ViewCard. CardsImage[(int)item.FBCard1.Shape, item.FBCard1.Value - 1];
-                    item.ViewCard2.Source = ViewCard. CardsImage[(int)item.FBCard2.Shape, item.FBCard2.Value - 1];
                     Console.WriteLine("cards has haded");
                 }
             }

@@ -48,7 +48,7 @@
               Aspect="AspectFit"
               HorizontalOptions="Center"
               VerticalOptions="Center" 
-              Source="{Binding Card1}" />
+              Source="{Binding Card1.Source}" />
                 <ImageButton 
               Grid.Column="1"
               WidthRequest="120"
@@ -58,7 +58,7 @@
               Aspect="AspectFit"
               HorizontalOptions="Center"
               VerticalOptions="Center"
-              Source="{Binding Card2}" />
+              Source="{Binding Card2.Source}" />
             </Grid>
         </VerticalStackLayout>
         <Button 

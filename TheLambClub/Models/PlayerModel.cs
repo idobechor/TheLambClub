@@ -11,10 +11,6 @@ namespace TheLambClub.Models
         public FBCard FBCard1 { get; set; }
         public FBCard FBCard2 { get; set; }
         public string Name { get; set; }
-        [Ignored]
-        public ViewCard ViewCard1 { get; set; }=new ViewCard();
-        [Ignored]
-        public ViewCard ViewCard2 { get; set; }=new ViewCard();
         public string Id { get; set; }
         public PlayerModel(string name, string id)
         {

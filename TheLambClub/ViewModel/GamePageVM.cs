@@ -141,14 +141,53 @@ namespace TheLambClub.ViewModel
         {
             get { return game.CurrentPlayer!.Name; }
         }
+        public ViewCard Card1
+        {
 
-        public ImageSource Card1
-        {
-            get {return game.CurrentPlayer!.ViewCard1.Source; } 
+            get
+            {
+                if (game.Players == null)
+                    return new ViewCard();
+                Player p = null!;
+                foreach (Player player in game.Players!)
+                {
+                    if (player != null && player.Id == new FbData().UserId)
+                    {
+                        p = player;
+                    }
+                }
+           
+                if (p == null || p.FBCard1 == null)
+                {
+                    Console.WriteLine("null");
+                    return new ViewCard(); 
+                }
+                else
+                    Console.WriteLine(p!.FBCard1.Value+" "+p.FBCard1!.Shape);
+                return new ViewCard(p!.FBCard1);
+
+            }
         }
-        public ImageSource Card2
+        public ViewCard Card2
         {
-             get { return game.CurrentPlayer!.ViewCard2.Source; }
+
+            get
+            {
+                if (game.Players == null)
+                    return new ViewCard();
+                Player p = null!;
+                foreach (Player player in game.Players!)
+                {
+                    if (player != null && player.Id == new FbData().UserId)
+                    {
+                        p = player;
+                    }
+                }
+                if (p == null || p.FBCard2 == null)
+                    return new ViewCard();
+                return new ViewCard(p!.FBCard2);
+
+            }
         }
 
         public string Status
