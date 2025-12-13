@@ -70,5 +70,9 @@
       CornerRadius="15"
       Text="{x:Static m:Strings.MoveTurnButttonText}" 
       TextColor="White" />
+        <!--<Button
+     Command="{Binding ShowPickYourMovePrompt}"
+     HorizontalOptions="Fill"
+     Text="{x:Static m:Strings.PickMoveTxt}" />-->
     </VerticalStackLayout>
 </ContentPage>

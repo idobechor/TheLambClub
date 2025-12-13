@@ -1,15 +1,18 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
+using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
     class GamePageVM : ObservableObject
     {
-        private readonly Game game;
+        private readonly Game game=new();
+        //public ICommand ShowPickYourMovePrompt { get; private set; }
         public ObservableCollection<ViewCard> BoardCards
         {
             get
@@ -23,7 +26,7 @@ namespace TheLambClub.ViewModel
                 
             }            
         }
-        public string MyName;
+        public string MyName=> game.MyName;
         public ICommand NextTurnCommand => new Command(NextTurn);
         public string CurrentStatus => game.CurrentStatus;
         public bool IsMyTurn => game.IsMyTurn;
@@ -44,15 +47,16 @@ namespace TheLambClub.ViewModel
         }
         public GamePageVM(Game game, Grid grdOponnents)
         {
-            MyName = game.MyName;
-    
-            this.game = game;
+            //ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction);
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
             game.OnGameDeleted += OnGameDeleted;            
         }
 
-
+        private void ShowPickYourMovePromptFunction(object obj)
+        {
+            Shell.Current.ShowPopup(new PickYourMovePopupPage());
+        }
 
         private void InitOponnentsGrid(Grid grdOponnents)
         {

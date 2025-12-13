@@ -96,6 +96,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\PickYourMovePopupPage.xaml.cs">
+      <DependentUpon>PickYourMovePopupPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <MauiXaml Update="Resources\Styles\Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -112,6 +118,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\PickRegisterOrLoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\PickYourMovePopupPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\RegisterPage.xaml">

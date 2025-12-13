@@ -43,5 +43,8 @@
         public const string WaitingStatus = "Waiting for Players";
         public const string PlayingStatus = "Playing";
         public const string MoveTurnButttonText = "Next Turn";
+        public const string StayBtnTxt = "Stay";
+        public const string FoldBtnTxt = "Fold";
+        public const string PickMoveTxt = "Play Please";
     }
 }
