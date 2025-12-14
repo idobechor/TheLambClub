@@ -45,6 +45,7 @@ namespace TheLambClub.Models
         //[Ignored]
         //public ObservableCollection<Player> Players { get; set; } = [];
         public Player[]? Players { get; set; }
+        protected const int HandComplete = 5;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();

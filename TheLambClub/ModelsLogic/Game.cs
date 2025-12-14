@@ -291,7 +291,7 @@ namespace TheLambClub.ModelsLogic
                 {
                     NextTurn();
                 }
-                if (IsOneStaying() && IsFull)
+                if (IsOneStaying() && IsFull||(RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber== HandComplete))
                 {
                     ChangeIsFoldedToFalse();
                     RoundNumber = 0;
