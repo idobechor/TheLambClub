@@ -275,7 +275,7 @@ namespace TheLambClub.ModelsLogic
             {
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
-                
+                bool EndOfHand = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
                 Players = updatedGame.Players;
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
                 RoundNumber = updatedGame.RoundNumber;
@@ -291,7 +291,7 @@ namespace TheLambClub.ModelsLogic
                 {
                     NextTurn();
                 }
-                if (IsOneStaying() && IsFull||(RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber== HandComplete))
+                if (IsOneStaying() && IsFull|| EndOfHand)
                 {
                     ChangeIsFoldedToFalse();
                     RoundNumber = 0;
