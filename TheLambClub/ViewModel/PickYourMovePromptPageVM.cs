@@ -8,12 +8,15 @@ namespace TheLambClub.ViewModel
     {
         public event Action? RequestClose;
         private readonly Game game;
+        private readonly Player player;
         public PickYourMovePromptPageVM(Game game)
         {
             this.game = game;
         }
         public ICommand Stay => new Command(StayFunction);
-        
+        //public ICommand SubmitBetCommand => new Command(UpDateBet);
+        public double BetAmount{ get; set; }
+
         private void StayFunction(object obj)
         {
             game.NextTurn();

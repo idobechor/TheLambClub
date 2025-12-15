@@ -13,6 +13,7 @@ namespace TheLambClub.Models
         public FBCard FBCard2 { get; set; }
         public string Name { get; set; }
         public string Id { get; set; }
+        public double CurrentBet { get; set; } = 0;
         public PlayerModel(string name, string id)
         {
             //Card1 = new ViewCard();

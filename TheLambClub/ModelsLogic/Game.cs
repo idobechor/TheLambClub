@@ -298,12 +298,12 @@ namespace TheLambClub.ModelsLogic
                     FillBoard();
                     UpdateBoard((t) => { });
                     FillArrayAndAddCards(OnComplete);
-                
+                    Console.WriteLine("give cards");
                 }
                 if (IsHost && changedToFull)
                 {
-                    Console.WriteLine("Fill players cards");
                     FillArrayAndAddCards(OnComplete);
+                    Console.WriteLine("give cards");
                 }
                 
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
