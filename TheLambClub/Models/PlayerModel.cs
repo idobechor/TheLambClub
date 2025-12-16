@@ -16,8 +16,6 @@ namespace TheLambClub.Models
         public double CurrentBet { get; set; } = 0;
         public PlayerModel(string name, string id)
         {
-            //Card1 = new ViewCard();
-            //Card2 = new ViewCard();
             Name = name;
             Id = id;
         }
@@ -36,7 +34,7 @@ namespace TheLambClub.Models
             StraightFlush,
             RoyalFlush
         }
+        [Ignored]
         public LevelsOfHands LevelOfHand { get; set; }
-        //public abstract void SetLevelOfHand(Board board);
     }
 }

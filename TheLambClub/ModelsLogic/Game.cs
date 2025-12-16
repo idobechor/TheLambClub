@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.CloudFirestore;
@@ -91,7 +92,7 @@ namespace TheLambClub.ModelsLogic
         }
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
-            HostId = new User().fbd.UserId;
+
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
@@ -267,6 +268,7 @@ namespace TheLambClub.ModelsLogic
             result= countNotFolded == 1;
             return result;
         }
+
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -292,18 +294,16 @@ namespace TheLambClub.ModelsLogic
                     NextTurn();
                 }
                 if (IsOneStaying() && IsFull|| EndOfHand)
-                {
+                {                  
                     ChangeIsFoldedToFalse();
                     RoundNumber = 0;
                     FillBoard();
                     UpdateBoard((t) => { });
                     FillArrayAndAddCards(OnComplete);
-                    Console.WriteLine("give cards");
                 }
                 if (IsHost && changedToFull)
                 {
                     FillArrayAndAddCards(OnComplete);
-                    Console.WriteLine("give cards");
                 }
                 
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
