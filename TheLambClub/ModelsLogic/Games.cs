@@ -13,7 +13,7 @@ namespace TheLambClub.ModelsLogic
             CurrentGame = new(SelectedNumberOfPlayers);
             currentGame?.Players = new Player[SelectedNumberOfPlayers.NumPlayers];
             currentGame?.Players?[0] = new Player((new User()).UserName, fbd.UserId);
-            currentGame?.HostId = fbd.UserId;//לא בדקתי
+            currentGame?.HostId = fbd.UserId;//לא בדקתhי
             currentGame?.OnGameDeleted += OnGameDeleted;           
             CurrentGame.SetDocument(OnComplete);
         }
