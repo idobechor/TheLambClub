@@ -6,13 +6,13 @@
                xmlns:m="clr-namespace:TheLambClub.Models"
                x:Class="TheLambClub.Views.PickYourMovePopupPage"
                x:DataType="vm:PickYourMovePromptPageVM">
-    <Grid ColumnDefinitions="auto,auto,*,auto" RowDefinitions="*,*">
+    <Grid ColumnDefinitions="auto,auto,auto" RowDefinitions="*,*">
         <Button 
             Grid.RowSpan="2"
         BackgroundColor="DarkBlue"
         Command="{Binding Stay}"
         CornerRadius="15"
-        Text="{x:Static m:Strings.StayBtnTxt}" 
+        Text="{Binding CheckOrFold}" 
         TextColor="White" />
         <Button 
           Grid.RowSpan="2"
@@ -22,15 +22,15 @@
         CornerRadius="15"
         Text="{x:Static m:Strings.FoldBtnTxt}" 
         TextColor="White" />
-        <Label Text="{Binding BetAmount, StringFormat='Bet Amount: ${0}'}"
-           FontSize="20"
-               Grid.Column="2"
-               Grid.Row="1"
-           HorizontalOptions="Center" />
-        <Slider  Grid.Column="2" BackgroundColor="Black" Minimum="10"
-            Maximum="1000"
-            Value="{Binding BetAmount}" />
-        <!--<Button Text="{x:Static m:Strings.SubmitBetBtn }" Grid.Column="3" Grid.RowSpan="2"
-            Command="{Binding SubmitBetCommand}" />-->
+        <VerticalStackLayout Grid.Column="2" Grid.RowSpan="2">
+            <Label Text="{Binding BetAmountStr}"
+             FontSize="20"
+                 Grid.Column="2"
+                 Grid.Row="1"
+             HorizontalOptions="Center" />
+                    <Slider  Grid.Column="2" BackgroundColor="Black" Minimum="10" Maximum="1000" Value="{Binding BetAmount}" />
+                    <Button Text="{x:Static m:Strings.SubmitBetBtn }" Grid.Column="4" Grid.Row="2"
+              Command="{Binding SubmitBetCommand}" />
+        </VerticalStackLayout>
     </Grid>
 </toolkit:Popup>

@@ -37,7 +37,7 @@ namespace TheLambClub.ModelsLogic
             //אם הם באמת שווים
             return 0;
         }
-        protected override bool IsBetter(HandRank other)
+        public override bool IsBetter(HandRank other)
         {
             return Compare(other) > 0;
         }

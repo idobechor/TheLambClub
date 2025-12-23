@@ -16,7 +16,7 @@ namespace TheLambClub.Models
         public int[] Kickers { get; set; } = Array.Empty<int>();//כרגע זה הפיתרון היחידי שמצאתי אם אפשר תתקן        
         public FBCard[] HandCards { get; set; } = Array.Empty<FBCard>();//כרגע זה הפיתרון היחידי שמצאתי אם אפשר תתקן
         public abstract int Compare(HandRank other);
-        protected abstract bool IsBetter(HandRank other);
+        public abstract bool IsBetter(HandRank other);
         protected abstract bool IsEqual(HandRank other);
 
 

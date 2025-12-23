@@ -13,7 +13,7 @@ namespace TheLambClub.ModelsLogic
         /// <summary>
         /// Evaluates the best possible 5-card poker hand from a player's 2 hole cards and 5 board cards
         /// </summary>
-        public  HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
+        public static HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
             
             // Combine all 7 cards

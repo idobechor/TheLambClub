@@ -16,6 +16,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
+        public EventHandler? OnCheckOrCallChanged;
+        [Ignored]
         public  abstract Player ?CurrentPlayer { get; }
         [Ignored]
         public abstract string CurrentStatus { get;}
@@ -42,6 +44,10 @@ namespace TheLambClub.Models
         public NumberOfPlayers? NumberOfPlayers { get; set; }
         [Ignored]
         public abstract bool IsMyTurn { get; }
+        [Ignored]
+        public bool CanICheck { get; set; }=true;
+        [Ignored]
+        public string CheckOrCall { get; set; } = "Check";
         //[Ignored]
         //public ObservableCollection<Player> Players { get; set; } = [];
         public Player[]? Players { get; set; }

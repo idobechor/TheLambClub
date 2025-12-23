@@ -215,6 +215,8 @@ namespace TheLambClub.ModelsLogic
             set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;
         }
 
+        
+
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
@@ -268,7 +270,45 @@ namespace TheLambClub.ModelsLogic
             result= countNotFolded == 1;
             return result;
         }
+        public void BetFunction(object obj)
+        {
 
+            CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
+            
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(Players), Players! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+            NextTurn();
+        }
+        private int BeforeCurrentPlayerIndex()
+        {
+            if (CurrentPlayerIndex==0)
+            {
+                for (int i = MaxNumOfPlayers-1; i >0; i--)
+                {
+                    if (Players[i] !=null&& !Players[i].IsFolded)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return CurrentPlayerIndex-1 ;
+        }
+        public void CallFunction()
+        {
+            if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
+            {
+             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
+            }
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(Players), Players! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+            NextTurn();
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -283,6 +323,17 @@ namespace TheLambClub.ModelsLogic
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                
+                if (IsFull&&Players?[BeforeCurrentPlayerIndex()].CurrentBet!=CurrentPlayer?.CurrentBet )
+                {
+                    CheckOrCall = "call "+ Players?[BeforeCurrentPlayerIndex()].CurrentBet+"$";
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                  
+                }
+                else
+                {
+                    CheckOrCall= "check";
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                 
+                }
                 if (IsHost && isEndOfRound)
                 {
                     RoundNumber++;
@@ -319,5 +370,7 @@ namespace TheLambClub.ModelsLogic
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }
+
+      
     }
 }

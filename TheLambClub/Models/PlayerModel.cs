@@ -14,6 +14,7 @@ namespace TheLambClub.Models
         public string Name { get; set; }
         public string Id { get; set; }
         public double CurrentBet { get; set; } = 0;
+        public double CurrentMoney { get; set; } = 10000;
         public PlayerModel(string name, string id)
         {
             Name = name;
