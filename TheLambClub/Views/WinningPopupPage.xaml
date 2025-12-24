@@ -1,0 +1,22 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+               xmlns:m="clr-namespace:TheLambClub.Models"
+               x:Class="TheLambClub.Views.WinningPopupPage"
+               x:DataType="vm:WinningPopupVM">
+    <VerticalStackLayout Background="Aqua">
+
+        <CollectionView ItemsSource="{Binding PlayersNames}"
+               ItemsLayout="VerticalList">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding}"
+                   FontSize="16"
+                   Margin="8,0"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+
+</toolkit:Popup>

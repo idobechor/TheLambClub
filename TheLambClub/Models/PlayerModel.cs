@@ -15,6 +15,7 @@ namespace TheLambClub.Models
         public string Id { get; set; }
         public double CurrentBet { get; set; } = 0;
         public double CurrentMoney { get; set; } = 10000;
+        public bool IsReRazed { get; set; } = false;
         public PlayerModel(string name, string id)
         {
             Name = name;

@@ -72,10 +72,10 @@ namespace TheLambClub.ModelsLogic
                 return CheckStraight(cards)!;
             
             if (null != CheckThreeOfAKind(cards)!)
-                return CheckFullHouse(cards)!;
+                return CheckThreeOfAKind(cards)!;
             
             if (null != CheckTwoPair(cards)!) 
-                return CheckFullHouse(cards)!;
+                return CheckTwoPair(cards)!;
             
             if (CheckPair(cards)! != null) 
                 return CheckPair(cards)!;

@@ -1,9 +1,11 @@
 ﻿
-using System.Collections.Generic;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using Plugin.CloudFirestore;
+using System.Collections.Generic;
 using TheLambClub.Models;
+using TheLambClub.Views;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -215,7 +217,6 @@ namespace TheLambClub.ModelsLogic
             set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;
         }
 
-        
 
         public override void DeleteDocument(Action<Task> OnComplete)
         {
@@ -270,11 +271,29 @@ namespace TheLambClub.ModelsLogic
             result= countNotFolded == 1;
             return result;
         }
+        protected  int FirstPlayerWhichIsNotFold()
+        {
+            int i = 0;
+            foreach (Player player in Players!)
+            {
+                if(player != null && !player.IsFolded)
+                {
+                    return i;
+                }
+                i++;
+            }
+           return -1;
+        }
         public void BetFunction(object obj)
         {
 
             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            
+            if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
+            {
+                Console.WriteLine("both");
+                CurrentPlayer.IsReRazed = true;
+                CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
+            }
             Dictionary<string, object> dict = new()
             {
                 { nameof(Players), Players! },
@@ -309,21 +328,43 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
             NextTurn();
         }
+        protected bool EveryOneIsNotRerazeing()
+        {
+           
+                foreach (Player player in Players!)
+                {
+                    if (player != null && player.IsReRazed)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
-                bool EndOfHand = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
+                bool EndOfHand = false; // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
                 Players = updatedGame.Players;
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                
+                if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
+                {
+                    CurrentPlayer.IsReRazed = false;
+                    NextTurn();
+                    Dictionary<string, object> dict = new()
+                    {
+                      { nameof(Players), Players! },
+                    };
+                    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+                }
                 if (IsFull&&Players?[BeforeCurrentPlayerIndex()].CurrentBet!=CurrentPlayer?.CurrentBet )
                 {
                     CheckOrCall = "call "+ Players?[BeforeCurrentPlayerIndex()].CurrentBet+"$";
@@ -334,18 +375,22 @@ namespace TheLambClub.ModelsLogic
                     CheckOrCall= "check";
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                 
                 }
+            
+             
                 if (IsHost && isEndOfRound)
                 {
                     RoundNumber++;
                     FillBoard();
                     UpdateBoard((t) => { });
+                    EndOfHand = RoundNumber == HandComplete;
                 }
                 if (CurrentPlayer!=null&&IsMyTurn &&CurrentPlayer.IsFolded)
                 {
                     NextTurn();
                 }
-                if (IsOneStaying() && IsFull|| EndOfHand)
-                {                  
+                if ((IsOneStaying() && IsFull || EndOfHand) && IsHost)
+                {
+                    CalcWinner();
                     ChangeIsFoldedToFalse();
                     RoundNumber = 0;
                     FillBoard();
@@ -371,6 +416,25 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
-      
+        private void CalcWinner()
+        {
+            Dictionary<Player, HandRank> ranks = new Dictionary<Player, HandRank>();
+            foreach (Player player in Players!)
+            {
+                if (player != null && !player.IsFolded)
+                {
+                    HandRank handRank = player.EvaluateBestHand(BoardCards);
+                    ranks.Add(player, handRank);
+                }
+            }
+            Player[] playersArray = new Player[ranks.Count];
+            ranks.Keys.CopyTo(playersArray, 0);
+            Array.Sort(playersArray, (p1, p2) =>
+            {
+                return ranks[p2].Compare(ranks[p1]);
+            });
+            Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
+
+        }
     }
 }

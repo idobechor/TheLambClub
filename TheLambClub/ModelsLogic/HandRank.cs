@@ -45,5 +45,10 @@ namespace TheLambClub.ModelsLogic
         {
             return Compare(other) == 0;
         }
+
+        public override string ToString()
+        {
+            return "HisHandRank"+HandType.ToString();
+        }
     }
 }
