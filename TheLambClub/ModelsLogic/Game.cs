@@ -349,8 +349,7 @@ namespace TheLambClub.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
-                Console.WriteLine(isEndOfRound);
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool EndOfHand = false; // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
                 Players = updatedGame.Players;
@@ -358,6 +357,7 @@ namespace TheLambClub.ModelsLogic
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                Console.WriteLine($"Game OnChange {updatedGame.CurrentPlayerIndex}");
                 //if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
                 //{
                 //    Console.WriteLine("Moving by rerazed");
@@ -401,19 +401,6 @@ namespace TheLambClub.ModelsLogic
                     FillArrayAndAddCards((t) => { });
                 }
 
-                if (IsHost && isEndOfRound)
-                {
-                    RoundNumber++;
-                    FillBoard();
-                    UpdateBoard((t) => { });
-                    EndOfHand = RoundNumber == HandComplete;
-                }
-               
-                
-                if (IsHost && changedToFull)
-                {
-                    FillArrayAndAddCards((t) => { });
-                }
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
                 {
                     NextTurn();
@@ -421,6 +408,19 @@ namespace TheLambClub.ModelsLogic
                     Console.WriteLine("moving turn by folding person");
                 }
 
+                if (IsHost && isEndOfRound)
+                {
+                    RoundNumber++;
+                    FillBoard();
+                    UpdateBoard((t) => { });
+                    EndOfHand = RoundNumber == HandComplete;
+                }
+                
+                if (IsHost && changedToFull)
+                {
+                    FillArrayAndAddCards((t) => { });
+                }
+               
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
