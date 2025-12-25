@@ -43,7 +43,7 @@ namespace TheLambClub.Models
         [Ignored]
         public NumberOfPlayers? NumberOfPlayers { get; set; }
         [Ignored]
-        public abstract bool IsMyTurn { get; }
+        public abstract bool IsMyTurn { get; set; }
         [Ignored]
         public bool CanICheck { get; set; }=true;
         [Ignored]

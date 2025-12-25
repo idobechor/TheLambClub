@@ -2133,7 +2133,8 @@
     <x:String x:Key="IconDomain_add">&#xeb62;</x:String>
     <x:String x:Key="IconDomain_disabled">&#xe0ef;</x:String>
     <x:String x:Key="IconSource_environment">&#xe527;</x:String>
-    <x:String x:Key="IconMoving_ministry">&#xe73e;</x:String>
+    <x:String x:Key="Icon
+              _ministry">&#xe73e;</x:String>
     <x:String x:Key="IconOutpatient">&#xe118;</x:String>
     <x:String x:Key="IconWarehouse">&#xebb8;</x:String>
     <x:String x:Key="IconRoofing">&#xf201;</x:String>

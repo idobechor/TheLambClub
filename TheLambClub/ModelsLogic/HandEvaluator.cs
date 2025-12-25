@@ -15,10 +15,8 @@ namespace TheLambClub.ModelsLogic
         /// </summary>
         public static HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
-            
-            // Combine all 7 cards
-            FBCard[] allCards = new FBCard[7]
-            {
+            FBCard[] allCards =
+            [
                 Card1,
                 Card2,
                 boardCards[0],
@@ -26,16 +24,14 @@ namespace TheLambClub.ModelsLogic
                 boardCards[2],
                 boardCards[3],
                 boardCards[4]
-            };                               
-            // Generate all possible 5-card combinations and find the best
+            ];                               
             FBCard[] firstFive = new FBCard[5];
             for (int i = 0; i < 5; i++)
             {
                 firstFive[i] = allCards[i];
             }
-            HandRank bestHand = EvaluateHighCard(firstFive); // Initialize with first 5
-            
-            // Generate all combinations of 5 cards from the available cards
+            HandRank bestHand = EvaluateHighCard(firstFive); 
+           
             List<List<FBCard>> combinations = GetCombinationsList(allCards, 5);
             
             for (int i = 0; i < combinations.Count; i++)

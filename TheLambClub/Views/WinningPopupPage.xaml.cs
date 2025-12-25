@@ -12,7 +12,5 @@ public partial class WinningPopupPage : Popup
         InitializeComponent();
         winningPopupVM = new WinningPopupVM(Players,ranks);
         BindingContext = winningPopupVM;
-
-
     }
 }

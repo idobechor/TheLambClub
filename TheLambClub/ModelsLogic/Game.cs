@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using Plugin.CloudFirestore;
+using System;
 using System.Collections.Generic;
 using TheLambClub.Models;
 using TheLambClub.Views;
@@ -50,6 +51,7 @@ namespace TheLambClub.ModelsLogic
                 }
                 return Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
             }
+            set;
         }
 
 
@@ -348,6 +350,7 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
+                Console.WriteLine(isEndOfRound);
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool EndOfHand = false; // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
                 Players = updatedGame.Players;
@@ -355,16 +358,17 @@ namespace TheLambClub.ModelsLogic
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
-                if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
-                {
-                    CurrentPlayer.IsReRazed = false;
-                    NextTurn();
-                    Dictionary<string, object> dict = new()
-                    {
-                      { nameof(Players), Players! },
-                    };
-                    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
-                }
+                //if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
+                //{
+                //    Console.WriteLine("Moving by rerazed");
+                //    CurrentPlayer.IsReRazed = false;
+                //    NextTurn();
+                //    Dictionary<string, object> dict = new()
+                //    {
+                //      { nameof(Players), Players! },
+                //    };
+                //    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+                //}
                 if (IsFull&&Players?[BeforeCurrentPlayerIndex()].CurrentBet!=CurrentPlayer?.CurrentBet )
                 {
                     CheckOrCall = "call "+ Players?[BeforeCurrentPlayerIndex()].CurrentBet+"$";
@@ -375,8 +379,28 @@ namespace TheLambClub.ModelsLogic
                     CheckOrCall= "check";
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                 
                 }
-            
-             
+                if ((IsOneStaying() && IsFull || EndOfHand) && IsHost)
+                {
+                    if (IsOneStaying())
+                    {
+                        foreach (Player player in Players!)
+                        {
+                            if (player != null && !player.IsFolded)
+                            {
+                                Shell.Current.ShowPopupAsync(new OnlyOneStayedPopup(player.Name));
+                            }
+                        }
+                        
+                    }
+                    else
+                        CalcWinner();
+                    ChangeIsFoldedToFalse();
+                    RoundNumber = 0;
+                    FillBoard();
+                    UpdateBoard((t) => { });
+                    FillArrayAndAddCards((t) => { });
+                }
+
                 if (IsHost && isEndOfRound)
                 {
                     RoundNumber++;
@@ -384,24 +408,19 @@ namespace TheLambClub.ModelsLogic
                     UpdateBoard((t) => { });
                     EndOfHand = RoundNumber == HandComplete;
                 }
-                if (CurrentPlayer!=null&&IsMyTurn &&CurrentPlayer.IsFolded)
-                {
-                    NextTurn();
-                }
-                if ((IsOneStaying() && IsFull || EndOfHand) && IsHost)
-                {
-                    CalcWinner();
-                    ChangeIsFoldedToFalse();
-                    RoundNumber = 0;
-                    FillBoard();
-                    UpdateBoard((t) => { });
-                    FillArrayAndAddCards(OnComplete);
-                }
+               
+                
                 if (IsHost && changedToFull)
                 {
-                    FillArrayAndAddCards(OnComplete);
+                    FillArrayAndAddCards((t) => { });
                 }
-                
+                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
+                {
+                    NextTurn();
+                    IsMyTurn = false;
+                    Console.WriteLine("moving turn by folding person");
+                }
+
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
