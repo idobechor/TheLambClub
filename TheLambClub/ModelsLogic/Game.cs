@@ -350,8 +350,10 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
-                bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
-                bool EndOfHand = false; // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
+                bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;                 // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
+                string WinnerName=string.Empty;
+                Dictionary<Player, HandRank> ranks = new Dictionary<Player, HandRank>(); ;
+                Player[] playersArray=null!; 
                 Players = updatedGame.Players;
                 CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
                 RoundNumber = updatedGame.RoundNumber;
@@ -387,13 +389,31 @@ namespace TheLambClub.ModelsLogic
                         {
                             if (player != null && !player.IsFolded)
                             {
-                                Shell.Current.ShowPopupAsync(new OnlyOneStayedPopup(player.Name));
+                               WinnerName = player.Name;
                             }
                         }
-                        
+                        Shell.Current.ShowPopupAsync(new OnlyOneStayedPopup(WinnerName));
+
                     }
                     else
-                        CalcWinner();
+                    {
+                        foreach (Player player in Players!)
+                        {
+                            if (player != null && !player.IsFolded)
+                            {
+                                HandRank handRank = player.EvaluateBestHand(BoardCards);
+                                ranks.Add(player, handRank);
+                            }
+                        }
+                         playersArray = new Player[ranks.Count];
+                        ranks.Keys.CopyTo(playersArray, 0);
+                        Array.Sort(playersArray, (p1, p2) =>
+                        {
+                            return ranks[p2].Compare(ranks[p1]);
+                        });
+                        Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
+                    }
+                    EndOfHand = false;
                     ChangeIsFoldedToFalse();
                     RoundNumber = 0;
                     FillBoard();
@@ -405,7 +425,6 @@ namespace TheLambClub.ModelsLogic
                 {
                     NextTurn();
                     IsMyTurn = false;
-                    Console.WriteLine("moving turn by folding person");
                 }
 
                 if (IsHost && isEndOfRound)
@@ -419,13 +438,11 @@ namespace TheLambClub.ModelsLogic
                 if (IsHost && changedToFull)
                 {
                     FillArrayAndAddCards((t) => { });
-                }
-               
+                }              
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-
                 MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     Shell.Current.Navigation.PopAsync();
@@ -435,25 +452,24 @@ namespace TheLambClub.ModelsLogic
             }
         }
 
-        private void CalcWinner()
-        {
-            Dictionary<Player, HandRank> ranks = new Dictionary<Player, HandRank>();
-            foreach (Player player in Players!)
-            {
-                if (player != null && !player.IsFolded)
-                {
-                    HandRank handRank = player.EvaluateBestHand(BoardCards);
-                    ranks.Add(player, handRank);
-                }
-            }
-            Player[] playersArray = new Player[ranks.Count];
-            ranks.Keys.CopyTo(playersArray, 0);
-            Array.Sort(playersArray, (p1, p2) =>
-            {
-                return ranks[p2].Compare(ranks[p1]);
-            });
-            Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
-
-        }
+        //private void CalcWinner()
+        //{
+        //    Dictionary<Player, HandRank> ranks = new Dictionary<Player, HandRank>();
+        //    foreach (Player player in Players!)
+        //    {
+        //        if (player != null && !player.IsFolded)
+        //        {
+        //            HandRank handRank = player.EvaluateBestHand(BoardCards);
+        //            ranks.Add(player, handRank);
+        //        }
+        //    }
+        //    Player[] playersArray = new Player[ranks.Count];
+        //    ranks.Keys.CopyTo(playersArray, 0);
+        //    Array.Sort(playersArray, (p1, p2) =>
+        //    {
+        //        return ranks[p2].Compare(ranks[p1]);
+        //    });
+        //    Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
+        //}
     }
 }

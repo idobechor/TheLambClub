@@ -48,8 +48,8 @@ namespace TheLambClub.Models
         public bool CanICheck { get; set; }=true;
         [Ignored]
         public string CheckOrCall { get; set; } = "Check";
-        //[Ignored]
-        //public ObservableCollection<Player> Players { get; set; } = [];
+        [Ignored]
+        protected bool EndOfHand = false;
         public Player[]? Players { get; set; }
         protected const int HandComplete = 4;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
