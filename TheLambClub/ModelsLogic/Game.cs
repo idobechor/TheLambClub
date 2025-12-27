@@ -431,13 +431,13 @@ namespace TheLambClub.ModelsLogic
                     UpdateBoard((t) => { });
                     FillArrayAndAddCards((t) => { });
                 }
-                if(CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)                   
+                if(CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded)                   
                 {
                     WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
                 }
                 else
                   WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
-                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
+                if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded)
                 {
                     NextTurn();
                     IsMyTurn = false;
