@@ -47,5 +47,6 @@
         public const string FoldBtnTxt = "Fold";
         public const string PickMoveTxt = "Play Please";
         public const string SubmitBetBtn = "Submit Bet";
+        public const string TimeUp = "Time Up";
     }
 }

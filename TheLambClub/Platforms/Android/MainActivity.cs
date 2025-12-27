@@ -10,19 +10,33 @@ namespace TheLambClub
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
     {
-        protected override void OnCreate(Bundle? savedInstanceState)
+        MyTimer? mTimer;
+        override protected void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             WeakReferenceMessenger.Default.Register<AppMessage<TimerSettings>>(this, (r, m) =>
             {
-                OnMessageRecieived(m.Value);
+                OnMessageReceived(m.Value);
+            });
+            WeakReferenceMessenger.Default.Register<AppMessage<bool>>(this, (r, m) =>
+            {
+                OnMessageReceived(m.Value);
             });
         }
 
-        private static void OnMessageRecieived(TimerSettings value)
+        private void OnMessageReceived(bool value)
         {
-            _=new MyTimer (value.TotalTimeInMillSeconds,value.IntervalTimeInMillSeconds).Start ();
-            
+            if (value)
+            {
+                mTimer?.Cancel();
+                mTimer = null;
+            }
+        }
+
+        private void OnMessageReceived(TimerSettings value)
+        {
+            mTimer = new MyTimer(value.TotalTimeInMillSeconds, value.IntervalTimeInMillSeconds);
+            mTimer.Start();
         }
     }
 }

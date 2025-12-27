@@ -74,5 +74,10 @@
      Command="{Binding ShowPickYourMovePrompt}"
      HorizontalOptions="Fill"
      Text="{x:Static m:Strings.PickMoveTxt}" />
+        <Label
+            Margin="50"
+            HorizontalOptions="Center"
+            TextColor="Blue"
+            Text="{Binding TimeLeft}" />
     </VerticalStackLayout>
 </ContentPage>

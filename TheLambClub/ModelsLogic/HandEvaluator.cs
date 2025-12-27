@@ -5,14 +5,8 @@ using static TheLambClub.Models.PlayerModel;
 
 namespace TheLambClub.ModelsLogic
 {
-    /// <summary>
-    /// Evaluates poker hands and determines the best 5-card hand from 7 cards
-    /// </summary>
     public  class HandEvaluator : HandEvaluatorModel
     {
-        /// <summary>
-        /// Evaluates the best possible 5-card poker hand from a player's 2 hole cards and 5 board cards
-        /// </summary>
         public static HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
             FBCard[] allCards =

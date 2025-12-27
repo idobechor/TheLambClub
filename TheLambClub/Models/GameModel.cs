@@ -8,6 +8,8 @@ namespace TheLambClub.Models
     public abstract class GameModel
     {
         [Ignored]
+        public EventHandler? TimeLeftChanged;
+        [Ignored]
         protected IListenerRegistration? ilr;
         [Ignored]      
         protected FbData fbd = new();
@@ -23,6 +25,9 @@ namespace TheLambClub.Models
         public abstract string CurrentStatus { get;}
         [Ignored]
         protected  SetOfCards setOfCards { get; }= new SetOfCards();
+        protected TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
+        [Ignored]
+        public string TimeLeft { get; protected set; } = string.Empty;
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
         public int CurrentPlayerIndex { get; set; }
