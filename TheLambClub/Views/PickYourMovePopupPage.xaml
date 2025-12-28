@@ -6,7 +6,7 @@
                xmlns:m="clr-namespace:TheLambClub.Models"
                x:Class="TheLambClub.Views.PickYourMovePopupPage"
                x:DataType="vm:PickYourMovePromptPageVM">
-    <Grid ColumnDefinitions="auto,auto,auto" RowDefinitions="*,*">
+    <Grid ColumnDefinitions="auto,auto,auto,auto" RowDefinitions="*,*">
         <Button 
             Grid.RowSpan="2"
         BackgroundColor="DarkBlue"
@@ -22,7 +22,7 @@
         CornerRadius="15"
         Text="{x:Static m:Strings.FoldBtnTxt}" 
         TextColor="White" />
-        <VerticalStackLayout Grid.Column="2" Grid.RowSpan="2">
+        <!--<VerticalStackLayout Grid.Column="2" Grid.RowSpan="2">
             <Label Text="{Binding BetAmountStr}"
              FontSize="20"
                  Grid.Column="2"
@@ -30,7 +30,14 @@
              HorizontalOptions="Center" />
                     <Slider  Grid.Column="2" BackgroundColor="Black" Minimum="10" Maximum="1000" Value="{Binding BetAmount}" />
                     <Button Text="{x:Static m:Strings.SubmitBetBtn }" Grid.Column="4" Grid.Row="2"
-              Command="{Binding SubmitBetCommand}" />
-        </VerticalStackLayout>
+              Command="{Binding SubmitBetCommand}" />-->
+        <!--</VerticalStackLayout>-->
+        <Label
+        Margin="50"
+        HorizontalOptions="Center"
+            Grid.Column="3"
+            Grid.RowSpan="2"
+        TextColor="Blue"
+        Text="{Binding TimeLeft}" />
     </Grid>
 </toolkit:Popup>

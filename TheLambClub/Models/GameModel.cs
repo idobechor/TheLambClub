@@ -10,6 +10,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
+        public EventHandler? TimeLeftFinished;
+        [Ignored]
         protected IListenerRegistration? ilr;
         [Ignored]      
         protected FbData fbd = new();

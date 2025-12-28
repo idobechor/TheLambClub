@@ -113,11 +113,22 @@ namespace TheLambClub.ModelsLogic
             {
                 OnMessageReceived(m.Value);
             });
+            Console.WriteLine("Timer Created");
         }
 
         private void OnMessageReceived(long timeLeft)
         {
             TimeLeft = timeLeft == Keys.FinishedSignal ? Strings.TimeUp : double.Round(timeLeft / 1000, 1).ToString();
+            if (timeLeft == Keys.FinishedSignal && CurrentPlayer?.IsFolded == false)
+            {   
+                CurrentPlayer?.IsFolded = true;
+                Console.WriteLine("folded done");
+                UpdatePlayersArray(_ => { });
+                Console.WriteLine("updated fire base");
+                TimeLeftFinished?.Invoke(this, EventArgs.Empty);
+                Console.WriteLine("Event Updated");
+            }
+
             TimeLeftChanged?.Invoke(this, EventArgs.Empty);
         }
         protected override void FillDummes()
@@ -355,22 +366,27 @@ namespace TheLambClub.ModelsLogic
                 return true;
             
         }
+    
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
+                bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;  // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
-                string WinnerName=string.Empty;
-                Dictionary<Player, HandRank> ranks = []; 
-                Player[] playersArray=null!; 
+                bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
+                string WinnerName = string.Empty;
+                Dictionary<Player, HandRank> ranks = [];
+                Player[] playersArray = null!;
                 Players = updatedGame.Players;
-                CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;               
+                CurrentNumOfPlayers = updatedGame.CurrentNumOfPlayers;
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
+                Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
                 //if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
                 //{
                 //    Console.WriteLine("Moving by rerazed");
@@ -382,16 +398,30 @@ namespace TheLambClub.ModelsLogic
                 //    };
                 //    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
                 //}
-                if (IsFull&&Players?[BeforeCurrentPlayerIndex()].CurrentBet!=CurrentPlayer?.CurrentBet )
+                if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded && currentPlayerIndexChange||isGameStarted)
                 {
-                    CheckOrCall = "call "+ Players?[BeforeCurrentPlayerIndex()].CurrentBet+"$";
-                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                  
+                    WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
+                    Console.WriteLine("start timer " + DateTime.Now.ToString());
+                }
+                else if (!IsMyTurn)
+                {
+                    Console.WriteLine("stop timer" + DateTime.Now.ToString());
+                    WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
+                    TimeLeft = string.Empty;
+                    TimeLeftChanged?.Invoke(this, EventArgs.Empty);
+                }
+                int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
+                if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
+                {
+                    CheckOrCall = "call " + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
-                    CheckOrCall= "check";
-                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);                 
+                    CheckOrCall = "check";
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
+
                 if ((IsOneStaying() && IsFull || EndOfHand) && IsHost)
                 {
                     if (IsOneStaying())
@@ -431,13 +461,8 @@ namespace TheLambClub.ModelsLogic
                     UpdateBoard((t) => { });
                     FillArrayAndAddCards((t) => { });
                 }
-                if(CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded)                   
-                {
-                    WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
-                }
-                else
-                  WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
-                if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded)
+
+                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
                 {
                     NextTurn();
                     IsMyTurn = false;

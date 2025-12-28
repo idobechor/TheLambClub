@@ -12,11 +12,7 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;  
-        public string TimeLeft => game.TimeLeft;
-        private void OnTimeLeftChanged(object? sender, EventArgs e)
-        {
-            OnPropertyChanged(nameof(TimeLeft));
-        }
+       
         public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard> BoardCards
         {
@@ -62,13 +58,13 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Card2));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
+     
         public GamePageVM(Game game, Grid grdOponnents)
         {
            this.game=game;
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
-            game.OnGameDeleted += OnGameDeleted;
-            game.TimeLeftChanged += OnTimeLeftChanged;
+            game.OnGameDeleted += OnGameDeleted;           
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
         public GamePageVM()
@@ -144,7 +140,7 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.Players![i] != null && game.CurrentPlayer!.Id == game.Players?[i].Id)
+                if (game.Players?[i] != null && game.CurrentPlayer?.Id == game.Players?[i].Id)
                     continue;
                 if (game.Players?[i]!=null)
                 {

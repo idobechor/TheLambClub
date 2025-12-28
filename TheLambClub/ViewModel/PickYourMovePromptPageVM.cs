@@ -8,7 +8,18 @@ namespace TheLambClub.ViewModel
     {
         public event Action? RequestClose;
         private readonly Game game;
+        public string TimeLeft => game.TimeLeft;
+        private void OnTimeLeftChanged(object? sender, EventArgs e)
+        {
+            Console.WriteLine("OnTimeLeftChanged " + DateTime.Now.ToString());
+            OnPropertyChanged(nameof(TimeLeft));
+            if (TimeLeft == Strings.TimeUp)
+            {
+                RequestClose?.Invoke();
+            }
+        }
         private int _betAmount { get; set; }
+        
         public string CheckOrFold=>game.CheckOrCall;
         public string BetAmountStr =>$"your bet amount is:{_betAmount}";
         public int BetAmount
@@ -27,17 +38,19 @@ namespace TheLambClub.ViewModel
         public PickYourMovePromptPageVM(Game game)
         {
             this.game = game;
-            game.OnCheckOrCallChanged+= POnCheckOrCallChanged;
+            game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
+            game.TimeLeftChanged += OnTimeLeftChanged;
+
         }
 
-        private void POnCheckOrCallChanged(object? sender, EventArgs e)
+        private void OnCheckOrCallChanged(object? sender, EventArgs e)
         {
            OnPropertyChanged(nameof(CheckOrFold));
         }
 
         public ICommand Stay => new Command(StayFunction);
 
-   
+
 
         public ICommand SubmitBetCommand => new Command(BetFunction);
         //public ICommand SubmitBetCommand => new Command(UpDateBet);
