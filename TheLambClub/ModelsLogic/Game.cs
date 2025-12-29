@@ -4,8 +4,6 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
-using System;
-using System.Collections.Generic;
 using TheLambClub.Models;
 using TheLambClub.Views;
 
@@ -128,8 +126,9 @@ namespace TheLambClub.ModelsLogic
                 TimeLeftFinished?.Invoke(this, EventArgs.Empty);
                 Console.WriteLine("Event Updated");
             }
-
+            Console.WriteLine("Before TimeLeftChanged");
             TimeLeftChanged?.Invoke(this, EventArgs.Empty);
+            Console.WriteLine("After TimeLeftChanged");
         }
         protected override void FillDummes()
         {
@@ -456,10 +455,14 @@ namespace TheLambClub.ModelsLogic
                     }
                     EndOfHand = false;
                     ChangeIsFoldedToFalse();
+                    Console.WriteLine("ChangeIsFoldedToFalse");
                     RoundNumber = 0;
                     FillBoard();
+                    Console.WriteLine("FillBoard");
                     UpdateBoard((t) => { });
+                    Console.WriteLine("UpdateBoard");
                     FillArrayAndAddCards((t) => { });
+                    Console.WriteLine("FillArrayAndAddCards");
                 }
 
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)

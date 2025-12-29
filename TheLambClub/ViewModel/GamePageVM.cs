@@ -11,8 +11,7 @@ namespace TheLambClub.ViewModel
 {
     class GamePageVM : ObservableObject
     {
-        private readonly Game game;  
-       
+        private readonly Game game;
         public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard> BoardCards
         {
@@ -56,7 +55,8 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
-            ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
+            
+             //  ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();//מקריס
         }
      
         public GamePageVM(Game game, Grid grdOponnents)

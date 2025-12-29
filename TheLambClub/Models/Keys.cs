@@ -11,6 +11,7 @@
         public const string GamesCollection = "game";
         public const int TimerTotalTime = 11000;
         public const int TimerInterval = 1000;
+        public const int OneHourInMilliseconds = 3600000;
         public const long FinishedSignal = -1000;
     }
 }

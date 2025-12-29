@@ -14,6 +14,18 @@ namespace TheLambClub
         override protected void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            RegisterTimerMessages();
+            StartDeleteFBDocsService();         
+        }
+
+        private void StartDeleteFBDocsService()
+        {
+            Intent = new Android.Content.Intent(this, typeof(DeleteFBDocsService));
+            //חסר
+        }
+
+        private void RegisterTimerMessages()
+        {
             WeakReferenceMessenger.Default.Register<AppMessage<TimerSettings>>(this, (r, m) =>
             {
                 OnMessageReceived(m.Value);

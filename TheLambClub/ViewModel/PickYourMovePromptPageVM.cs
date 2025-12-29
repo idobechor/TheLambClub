@@ -13,10 +13,6 @@ namespace TheLambClub.ViewModel
         {
             Console.WriteLine("OnTimeLeftChanged " + DateTime.Now.ToString());
             OnPropertyChanged(nameof(TimeLeft));
-            if (TimeLeft == Strings.TimeUp)
-            {
-                RequestClose?.Invoke();
-            }
         }
         private int _betAmount { get; set; }
         
