@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 
@@ -9,6 +10,8 @@ namespace TheLambClub.ViewModel
         public event Action? RequestClose;
         private readonly Game game;
         public string TimeLeft => game.TimeLeft;
+        public TimerSettings timerSettings  => game.timerSettings;
+
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
             Console.WriteLine("OnTimeLeftChanged " + DateTime.Now.ToString());
@@ -36,8 +39,17 @@ namespace TheLambClub.ViewModel
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
             game.TimeLeftChanged += OnTimeLeftChanged;
-
+        
+            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
         }
+
+        public void Close()
+        {
+            game.TimeLeftChanged -= OnTimeLeftChanged;
+            WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
+        }
+        
+        
 
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
         {

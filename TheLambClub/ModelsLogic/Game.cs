@@ -4,6 +4,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
+using System;
 using TheLambClub.Models;
 using TheLambClub.Views;
 
@@ -61,7 +62,8 @@ namespace TheLambClub.ModelsLogic
                 return HostId == fbd.UserId;
             }
         }
-        public Game() { RegisterTimer(); }
+        public Game() { } // RegisterTimer();}
+
         public override void NextTurn()
         {
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
@@ -76,7 +78,7 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Players), Players! },
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex }
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
         }
         protected override void ChangeIsFoldedToFalse()
         {
@@ -87,15 +89,10 @@ namespace TheLambClub.ModelsLogic
                     player.IsFolded = false;
                 }
             }
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(Players), Players! },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+        
         }
         public Game(NumberOfPlayers selectedNumberOfPlayers)
         {
-
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
@@ -103,7 +100,6 @@ namespace TheLambClub.ModelsLogic
             MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
             CurrentPlayerIndex = 0;
             FillDummes();
-            RegisterTimer();
         }
         private void RegisterTimer()
         {
@@ -118,13 +114,9 @@ namespace TheLambClub.ModelsLogic
         {
             TimeLeft = timeLeft == Keys.FinishedSignal ? Strings.TimeUp : double.Round(timeLeft / 1000, 1).ToString();
             if (timeLeft == Keys.FinishedSignal && CurrentPlayer?.IsFolded == false)
-            {   
-                CurrentPlayer?.IsFolded = true;
-                Console.WriteLine("folded done");
-                UpdatePlayersArray(_ => { });
-                Console.WriteLine("updated fire base");
-                TimeLeftFinished?.Invoke(this, EventArgs.Empty);
-                Console.WriteLine("Event Updated");
+            {
+                Console.WriteLine("Before picked fold");
+                PickedFold();
             }
             Console.WriteLine("Before TimeLeftChanged");
             TimeLeftChanged?.Invoke(this, EventArgs.Empty);
@@ -146,7 +138,7 @@ namespace TheLambClub.ModelsLogic
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
 
-        protected override void FillArrayAndAddCards(Action<Task> OnComplete)
+        protected override void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete)
         {
             foreach (Player item in Players!)
             {
@@ -158,7 +150,8 @@ namespace TheLambClub.ModelsLogic
                     Console.WriteLine("cards has haded");
                 }
             }
-            UpdatePlayersArray(_ => { });
+            if (upDateFB)
+                UpdatePlayersArray(_ => { });
         }
         protected override void UpdatePlayersArray(Action<Task> OnComplete)
         {
@@ -322,7 +315,7 @@ namespace TheLambClub.ModelsLogic
             {
                 { nameof(Players), Players! },
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
         private int BeforeCurrentPlayerIndex()
@@ -349,9 +342,10 @@ namespace TheLambClub.ModelsLogic
             {
                 { nameof(Players), Players! },
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
+       
         protected bool EveryOneIsNotRerazeing()
         {
            
@@ -365,7 +359,24 @@ namespace TheLambClub.ModelsLogic
                 return true;
             
         }
-    
+        protected void EndHand()
+        {
+            EndOfHand = false;
+            ChangeIsFoldedToFalse();
+            RoundNumber = 0;
+            CurrentPlayerIndex = 0;
+            FillBoard();
+            FillArrayAndAddCards(false,(t) => { });                    
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
+                { nameof(BoardCards), BoardCards },
+                { nameof(RoundNumber), RoundNumber },
+                 { nameof(Players), Players! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -397,18 +408,18 @@ namespace TheLambClub.ModelsLogic
                 //    };
                 //    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
                 //}
-                if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded && currentPlayerIndexChange||isGameStarted)
-                {
-                    WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
-                    Console.WriteLine("start timer " + DateTime.Now.ToString());
-                }
-                else if (!IsMyTurn)
-                {
-                    Console.WriteLine("stop timer" + DateTime.Now.ToString());
-                    WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
-                    TimeLeft = string.Empty;
-                    TimeLeftChanged?.Invoke(this, EventArgs.Empty);
-                }
+                //if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded && (currentPlayerIndexChange || isGameStarted))
+                //{
+                //    WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
+                //    Console.WriteLine("start timer " + DateTime.Now.ToString());
+                //}
+                //else if (!IsMyTurn)
+                //{
+                //    Console.WriteLine("stop timer" + DateTime.Now.ToString());
+                //    WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
+                //    TimeLeft = string.Empty;
+                //    TimeLeftChanged?.Invoke(this, EventArgs.Empty);
+                //}
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
                 if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
                 {
@@ -453,16 +464,7 @@ namespace TheLambClub.ModelsLogic
                         });
                         Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
                     }
-                    EndOfHand = false;
-                    ChangeIsFoldedToFalse();
-                    Console.WriteLine("ChangeIsFoldedToFalse");
-                    RoundNumber = 0;
-                    FillBoard();
-                    Console.WriteLine("FillBoard");
-                    UpdateBoard((t) => { });
-                    Console.WriteLine("UpdateBoard");
-                    FillArrayAndAddCards((t) => { });
-                    Console.WriteLine("FillArrayAndAddCards");
+                    EndHand();
                 }
 
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
@@ -481,8 +483,13 @@ namespace TheLambClub.ModelsLogic
                 
                 if (IsHost && changedToFull)
                 {
-                    FillArrayAndAddCards((t) => { });
+                    FillArrayAndAddCards(true,(t) => { });
                 }              
+                if (!TimerCreated)
+                {
+                    RegisterTimer();
+                    TimerCreated = true;
+                }
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else

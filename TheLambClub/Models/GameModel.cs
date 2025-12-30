@@ -27,7 +27,8 @@ namespace TheLambClub.Models
         public abstract string CurrentStatus { get;}
         [Ignored]
         protected  SetOfCards setOfCards { get; }= new SetOfCards();
-        protected TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
+        [Ignored]
+        public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
         [Ignored]
         public string TimeLeft { get; protected set; } = string.Empty;
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
@@ -57,6 +58,8 @@ namespace TheLambClub.Models
         public string CheckOrCall { get; set; } = "Check";
         [Ignored]
         protected bool EndOfHand = false;
+        [Ignored]
+        protected bool TimerCreated = false;
         public Player[]? Players { get; set; }
         protected const int HandComplete = 4;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
@@ -73,7 +76,7 @@ namespace TheLambClub.Models
         protected abstract void UpdateBoard(Action<Task> OnComplete);
         protected abstract void FillBoard();
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
-        protected abstract void FillArrayAndAddCards(Action<Task> OnComplete);
+        protected abstract void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
