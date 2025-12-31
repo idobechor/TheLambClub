@@ -432,7 +432,7 @@ namespace TheLambClub.ModelsLogic
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
 
-                if ((IsOneStaying() && IsFull || EndOfHand) && IsHost)
+                if ((IsOneStaying() && IsFull || EndOfHand) )
                 {
                     if (IsOneStaying())
                     {
@@ -464,7 +464,8 @@ namespace TheLambClub.ModelsLogic
                         });
                         Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
                     }
-                    EndHand();
+                   if(IsHost)
+                      EndHand();
                 }
 
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
