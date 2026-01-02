@@ -1,9 +1,6 @@
-﻿ using TheLambClub.ModelsLogic;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using TheLambClub.Models;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using TheLambClub.Views;
+using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.ViewModel
 {

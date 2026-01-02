@@ -4,7 +4,6 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
-using System;
 using TheLambClub.Models;
 using TheLambClub.Views;
 
@@ -13,17 +12,18 @@ namespace TheLambClub.ModelsLogic
     public class Game : GameModel
     {
         public override Player? CurrentPlayer 
-        {   
-            get 
+        {
+            get
             {
                 Player p = null!;
-                if (Players == null)
-                    return p;                
-                foreach (Player player in Players!)
+                if (Players != null)
                 {
-                    if (player != null && player.Id == new FbData().UserId)
+                    foreach (Player player in Players!)
                     {
-                        p = player;
+                        if (player != null && player.Id == new FbData().UserId)
+                        {
+                            p = player;
+                        }
                     }
                 }
                 return p;
@@ -45,12 +45,13 @@ namespace TheLambClub.ModelsLogic
         {
             get
             {
-                if (Players == null)
+                bool IsMyTurn = false;
+                if (Players != null)
                 {
-                    return false;
+                    IsMyTurn= Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
                 }
-                return Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
-            }
+                return IsMyTurn;
+            }   
             set;
         }
 
@@ -66,8 +67,8 @@ namespace TheLambClub.ModelsLogic
 
         public override void NextTurn()
         {
-            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
-            UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;//מעביר תור
+            UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));//עידכון fb ומסך
         }
         public override void PickedFold()
         {
@@ -84,10 +85,7 @@ namespace TheLambClub.ModelsLogic
         {
             foreach (Player player in Players!)
             {
-                if (player != null)
-                {
-                    player.IsFolded = false;
-                }
+                player?.IsFolded = false;
             }
         
         }
@@ -101,7 +99,7 @@ namespace TheLambClub.ModelsLogic
             CurrentPlayerIndex = 0;
             FillDummes();
         }
-        private void RegisterTimer()
+        protected override void RegisterTimer()
         {
             WeakReferenceMessenger.Default.Register<AppMessage<long>>(this, (r, m) =>
             {
@@ -110,7 +108,7 @@ namespace TheLambClub.ModelsLogic
             Console.WriteLine("Timer Created");
         }
 
-        private void OnMessageReceived(long timeLeft)
+        protected override void OnMessageReceived(long timeLeft)
         {
             TimeLeft = timeLeft == Keys.FinishedSignal ? Strings.TimeUp : double.Round(timeLeft / 1000, 1).ToString();
             if (timeLeft == Keys.FinishedSignal && CurrentPlayer?.IsFolded == false)
@@ -150,7 +148,7 @@ namespace TheLambClub.ModelsLogic
                     Console.WriteLine("cards has haded");
                 }
             }
-            if (upDateFB)
+            if (upDateFB)   //במקרה של סיום הסבב אני גם ככה מעדכן את השחקנים פיירבייס ולכן לא תמיד אצטרך לעדכן גם פה
                 UpdatePlayersArray(_ => { });
         }
         protected override void UpdatePlayersArray(Action<Task> OnComplete)
@@ -162,12 +160,12 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
 
-        public override void AddSnapShotListener()
+        public override void AddSnapShotListener()//פונקציה שמזהה שינויים בפיירבייס ומגיבה להם
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
       
-        public override void RemoveSnapShotListener()
+        public override void RemoveSnapShotListener()//כשאנחנו יוצאים מהמשחק וסוגרים אותו נסגור  גם את ההזנה לפיירבייס
         {
             ilr?.Remove();
             DeleteDocument(OnComplete);
@@ -181,15 +179,12 @@ namespace TheLambClub.ModelsLogic
 
         public override void UpdateGuestUser(Action<Task> OnComplete)
         {
-            Console.WriteLine("Updating guest user" + CurrentNumOfPlayers);
             foreach (Player player in Players!)
             {
                 if (player!=null&& player!.Id == fbd.UserId)
                     return;
             }
-            Console.WriteLine("players initalized");
             Player newPlayer = new(MyName, fbd.UserId);
-            Console.WriteLine(MyName+",");
             Players[CurrentNumOfPlayers] = newPlayer;
             CurrentNumOfPlayers++;
             UpdateFireBaseJoinGame(OnComplete);
@@ -288,7 +283,7 @@ namespace TheLambClub.ModelsLogic
             result= countNotFolded == 1;
             return result;
         }
-        protected  int FirstPlayerWhichIsNotFold()
+        protected override int FirstPlayerWhichIsNotFold()
         {
             int i = 0;
             foreach (Player player in Players!)
@@ -301,7 +296,7 @@ namespace TheLambClub.ModelsLogic
             }
            return -1;
         }
-        public void BetFunction(object obj)
+        protected override void BetFunction(object obj)
         {
 
             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
@@ -318,21 +313,22 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
-        private int BeforeCurrentPlayerIndex()
+
+        protected override int BeforeCurrentPlayerIndex()
         {
-            if (CurrentPlayerIndex==0)
+            if (CurrentPlayerIndex == 0)
             {
-                for (int i = MaxNumOfPlayers-1; i >0; i--)
+                for (int i = MaxNumOfPlayers - 1; i > 0; i--)
                 {
-                    if (Players[i] !=null&& !Players[i].IsFolded)
+                    if (Players != null && Players[i] != null && !Players[i]!.IsFolded)
                     {
                         return i;
                     }
                 }
             }
-            return CurrentPlayerIndex-1 ;
+            return CurrentPlayerIndex - 1;
         }
-        public void CallFunction()
+        protected override void CallFunction()
         {
             if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
             {
@@ -346,7 +342,7 @@ namespace TheLambClub.ModelsLogic
             NextTurn();
         }
        
-        protected bool EveryOneIsNotRerazeing()
+        protected override bool EveryOneIsNotRerazeing()
         {
            
                 foreach (Player player in Players!)
@@ -359,7 +355,7 @@ namespace TheLambClub.ModelsLogic
                 return true;
             
         }
-        protected void EndHand()
+        protected override void EndHand()//מאפס הכל בסיום הסבב
         {
             EndOfHand = false;
             ChangeIsFoldedToFalse();
@@ -397,29 +393,6 @@ namespace TheLambClub.ModelsLogic
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
-                //if (IsFull && IsMyTurn && CurrentPlayer.IsReRazed)
-                //{
-                //    Console.WriteLine("Moving by rerazed");
-                //    CurrentPlayer.IsReRazed = false;
-                //    NextTurn();
-                //    Dictionary<string, object> dict = new()
-                //    {
-                //      { nameof(Players), Players! },
-                //    };
-                //    fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
-                //}
-                //if (CurrentPlayer != null && IsMyTurn && !CurrentPlayer.IsFolded && (currentPlayerIndexChange || isGameStarted))
-                //{
-                //    WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
-                //    Console.WriteLine("start timer " + DateTime.Now.ToString());
-                //}
-                //else if (!IsMyTurn)
-                //{
-                //    Console.WriteLine("stop timer" + DateTime.Now.ToString());
-                //    WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
-                //    TimeLeft = string.Empty;
-                //    TimeLeftChanged?.Invoke(this, EventArgs.Empty);
-                //}
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
                 if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
                 {
@@ -434,7 +407,7 @@ namespace TheLambClub.ModelsLogic
 
                 if ((IsOneStaying() && IsFull || EndOfHand) )
                 {
-                    if (IsOneStaying())
+                    if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו
                     {
                         foreach (Player player in Players!)
                         {
@@ -503,25 +476,5 @@ namespace TheLambClub.ModelsLogic
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        //private void CalcWinner()
-        //{
-        //    Dictionary<Player, HandRank> ranks = new Dictionary<Player, HandRank>();
-        //    foreach (Player player in Players!)
-        //    {
-        //        if (player != null && !player.IsFolded)
-        //        {
-        //            HandRank handRank = player.EvaluateBestHand(BoardCards);
-        //            ranks.Add(player, handRank);
-        //        }
-        //    }
-        //    Player[] playersArray = new Player[ranks.Count];
-        //    ranks.Keys.CopyTo(playersArray, 0);
-        //    Array.Sort(playersArray, (p1, p2) =>
-        //    {
-        //        return ranks[p2].Compare(ranks[p1]);
-        //    });
-        //    Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
-        //}
     }
 }

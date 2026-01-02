@@ -56,7 +56,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
             
-            ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();//מקריס
+            ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
      
         public GamePageVM(Game game, Grid grdOponnents)

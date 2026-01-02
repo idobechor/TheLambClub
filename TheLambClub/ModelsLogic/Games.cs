@@ -13,7 +13,7 @@ namespace TheLambClub.ModelsLogic
             CurrentGame = new(SelectedNumberOfPlayers);
             currentGame?.Players = new Player[SelectedNumberOfPlayers.NumPlayers];
             currentGame?.Players?[0] = new Player((new User()).UserName, fbd.UserId);
-            currentGame?.HostId = fbd.UserId;//לhא בדקתhי
+            currentGame?.HostId = fbd.UserId;
             currentGame?.OnGameDeleted += OnGameDeleted;           
             CurrentGame.SetDocument(OnComplete);
         }
@@ -44,11 +44,11 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
-            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
+            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);//לוקח את כל המשחקים שחסרים בהם שחקנים כדי להציג אותם
         }
         protected override void OnComplete(IQuerySnapshot qs) 
         {
-            GamesList!.Clear(); // clean list
+            GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)
             {
                 Game? game = ds.ToObject<Game>();

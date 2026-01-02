@@ -80,5 +80,13 @@ namespace TheLambClub.Models
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
+        protected abstract int BeforeCurrentPlayerIndex();
+        protected abstract void CallFunction();
+        protected abstract bool EveryOneIsNotRerazeing();
+        protected abstract void EndHand();
+        protected abstract void BetFunction(object obj);
+        protected abstract int FirstPlayerWhichIsNotFold();
+        protected abstract void OnMessageReceived(long timeLeft);
+        protected abstract void RegisterTimer();
     }
 }
