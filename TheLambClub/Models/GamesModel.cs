@@ -12,8 +12,8 @@ namespace TheLambClub.Models
         public bool IsBusy { get; set; }
         public EventHandler<Game>? OnGameAdded;
         public ObservableCollection<Game>? GamesList { get; set; } = [];
-        public ObservableCollection<NumberOfPlayers>? NumberOfPlayersList { get; set; } = [new NumberOfPlayers(4), new NumberOfPlayers(5), new NumberOfPlayers(6)];
-        public NumberOfPlayers SelectedNumberOfPlayers { get; set; } = new NumberOfPlayers();
+        public ObservableCollection<int>? NumberOfPlayersList { get; set; } = [4, 5, 6];
+        public int SelectedNumberOfPlayers { get; set; } = 4;
         public Game? CurrentGame { get => currentGame; set => currentGame = value; }
         public EventHandler? OnGamesChanged;
         public abstract void AddSnapshotListener();

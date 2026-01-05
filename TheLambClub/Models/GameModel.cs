@@ -49,7 +49,7 @@ namespace TheLambClub.Models
         [Ignored]
         public string NumOfPlayersName => $"{MaxNumOfPlayers }";
         [Ignored]
-        public NumberOfPlayers? NumberOfPlayers { get; set; }
+        public int? NumberOfPlayers { get; set; }
         [Ignored]
         public abstract bool IsMyTurn { get; set; }
         [Ignored]
@@ -81,10 +81,10 @@ namespace TheLambClub.Models
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
         protected abstract int BeforeCurrentPlayerIndex();
-        protected abstract void CallFunction();
+        public abstract void CallFunction();
         protected abstract bool EveryOneIsNotRerazeing();
         protected abstract void EndHand();
-        protected abstract void BetFunction(object obj);
+        public abstract void BetFunction(object obj);
         protected abstract int FirstPlayerWhichIsNotFold();
         protected abstract void OnMessageReceived(long timeLeft);
         protected abstract void RegisterTimer();

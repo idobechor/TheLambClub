@@ -89,13 +89,13 @@ namespace TheLambClub.ModelsLogic
             }
         
         }
-        public Game(NumberOfPlayers selectedNumberOfPlayers)
+        public Game(int selectedNumberOfPlayers)
         {
             HostName = new User().UserName;
             Created = DateTime.Now;
             NumberOfPlayers = selectedNumberOfPlayers;
             CurrentNumOfPlayers = 1;
-            MaxNumOfPlayers = selectedNumberOfPlayers.NumPlayers;
+            MaxNumOfPlayers = selectedNumberOfPlayers;
             CurrentPlayerIndex = 0;
             FillDummes();
         }
@@ -296,7 +296,7 @@ namespace TheLambClub.ModelsLogic
             }
            return -1;
         }
-        protected override void BetFunction(object obj)
+        public override void BetFunction(object obj)
         {
 
             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
@@ -328,7 +328,7 @@ namespace TheLambClub.ModelsLogic
             }
             return CurrentPlayerIndex - 1;
         }
-        protected override void CallFunction()
+        public override void CallFunction()
         {
             if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
             {

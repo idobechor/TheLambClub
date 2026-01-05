@@ -13,8 +13,8 @@ public class MainPageVM : ObservableObject
     private readonly Games games = new();
     private readonly User user = new();
     private readonly MainPageML mainPageML = new();
-    public ObservableCollection<NumberOfPlayers>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
-    public NumberOfPlayers SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; set => games.SelectedNumberOfPlayers = value; }
+    public ObservableCollection<int>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
+    public int SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; set => games.SelectedNumberOfPlayers = value; }
     public ICommand InstructionsCommand { get; private set; }
     public ICommand AddGameCommand => new Command(AddGame);
     public ObservableCollection<Game>? GamesList => games.GamesList;

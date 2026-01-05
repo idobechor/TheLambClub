@@ -11,7 +11,7 @@ namespace TheLambClub.ModelsLogic
         {
             IsBusy = true;
             CurrentGame = new(SelectedNumberOfPlayers);
-            currentGame?.Players = new Player[SelectedNumberOfPlayers.NumPlayers];
+            currentGame?.Players = new Player[SelectedNumberOfPlayers];
             currentGame?.Players?[0] = new Player((new User()).UserName, fbd.UserId);
             currentGame?.HostId = fbd.UserId;
             currentGame?.OnGameDeleted += OnGameDeleted;           
