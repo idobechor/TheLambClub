@@ -405,7 +405,7 @@ namespace TheLambClub.ModelsLogic
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
 
-                if ((IsOneStaying() && IsFull || EndOfHand) )
+                if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
                 {
                     if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו
                     {
