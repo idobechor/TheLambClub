@@ -7,7 +7,7 @@ namespace TheLambClub.ModelsLogic
 {
     public  class HandEvaluator : HandEvaluatorModel
     {
-        public static HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
+        public override HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
             FBCard[] allCards =
             [
@@ -41,7 +41,7 @@ namespace TheLambClub.ModelsLogic
             return bestHand;
         }
         
-        public  static HandRank EvaluateHand(FBCard[] cards)
+        public  override HandRank EvaluateHand(FBCard[] cards)
         {
             if (CheckRoyalFlush(cards)!=null)
                 return CheckRoyalFlush(cards)!;
@@ -72,7 +72,7 @@ namespace TheLambClub.ModelsLogic
             
             return EvaluateHighCard(cards);
         }
-        public static int[] BubbleSort(int[] arr)
+        public override int[] BubbleSort(int[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
             {
@@ -88,7 +88,7 @@ namespace TheLambClub.ModelsLogic
             }
             return arr;
         }
-       public static int[] SortDescending(int[] arr)
+       public override int[] SortDescending(int[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
             {
@@ -104,7 +104,7 @@ namespace TheLambClub.ModelsLogic
             }
             return arr;
         }
-        protected static HandRank? CheckRoyalFlush(FBCard[] cards)
+        protected override HandRank? CheckRoyalFlush(FBCard[] cards)
         {
             HandRank StraightFlush = CheckStraightFlush(cards)!;
             if (StraightFlush == null)
@@ -119,7 +119,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-        protected static HandRank? CheckStraightFlush(FBCard[] cards)
+        protected override HandRank? CheckStraightFlush(FBCard[] cards)
         {
             HandRank flush = CheckFlush(cards)!;
             if (flush == null)
@@ -146,7 +146,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-        protected static HandRank? CheckFourOfAKind(FBCard[] cards)
+        protected override HandRank? CheckFourOfAKind(FBCard[] cards)
         {
             int[]CountArr = new int[13];
             bool foundFour = false;
@@ -200,7 +200,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-           protected static HandRank? CheckFullHouse(FBCard[] cards)
+           protected override HandRank? CheckFullHouse(FBCard[] cards)
         {
             HandRank threeOfAKindRank = CheckThreeOfAKind(cards)!;
             HandRank pair = CheckPair(cards)!;
@@ -211,7 +211,7 @@ namespace TheLambClub.ModelsLogic
                 
                 return new HandRank
                 {
-                    HandType = PlayerModel.LevelsOfHands.FullHouse,
+                    HandType = LevelsOfHands.FullHouse,
                     PrimaryValue = threeOfAKindRank.PrimaryValue,
                     SecondaryValue = pair.PrimaryValue
                 };
@@ -220,7 +220,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
 
-        protected static HandRank? CheckFlush(FBCard[] cards)
+        protected override HandRank? CheckFlush(FBCard[] cards)
         {
             Dictionary<Shapes, int> dict = new Dictionary<Shapes, int>()
                 {
@@ -273,7 +273,7 @@ namespace TheLambClub.ModelsLogic
                 HandCards = finalFlushCards
             };
         }
-        private static FBCard[] SortCardsDescendingBubbleSort(FBCard[] cards)
+        protected override FBCard[] SortCardsDescendingBubbleSort(FBCard[] cards)
         {
             FBCard[] sortedCards = new FBCard[cards.Length];
             Array.Copy(cards, sortedCards, cards.Length);
@@ -302,7 +302,7 @@ namespace TheLambClub.ModelsLogic
 
             return sortedCards;
         }
-        protected static HandRank? CheckStraight(FBCard[] cards)
+        protected override HandRank? CheckStraight(FBCard[] cards)
         {
             //בסטרייט אין לנו שימוש בכפילויות ולכן נרצה להסיר אותם
             List<int> distinctValuesList = new List<int>();
@@ -380,7 +380,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-        protected static HandRank? CheckThreeOfAKind(FBCard[] cards)
+        protected override HandRank? CheckThreeOfAKind(FBCard[] cards)
         {
             int threeOfAKindValue = 0;
             int[] CountArr = new int[13];
@@ -392,7 +392,7 @@ namespace TheLambClub.ModelsLogic
                 CardsValues[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
             }
             for (int i = 0; i < CountArr.Length; i++)
-                CountArr[i] = findPairValue(CardsValues, i + 1);
+                CountArr[i] = FindPairValue(CardsValues, i + 1);
             for (int i = 0; i < CountArr.Length; i++)
             {
                 if (CountArr[i] == 3 && i + 1 > threeOfAKindValue)
@@ -420,7 +420,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-        protected static HandRank? CheckTwoPair(FBCard[] cards)
+        protected override HandRank? CheckTwoPair(FBCard[] cards)
         {
             int FirstPair = 0;
             int SecondPair = 0;
@@ -432,7 +432,7 @@ namespace TheLambClub.ModelsLogic
                 CardsValues[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
             }
             for (int i = 0; i < CountArr.Length; i++)
-                CountArr[i] = findPairValue(CardsValues, i + 1);
+                CountArr[i] = FindPairValue(CardsValues, i + 1);
             for (int i = 0; i < CountArr.Length; i++)
             {
                 if (CountArr[i] == 2)
@@ -476,7 +476,7 @@ namespace TheLambClub.ModelsLogic
             return null;
         }
         
-        protected static HandRank? CheckPair(FBCard[] cards)
+        protected override HandRank? CheckPair(FBCard[] cards)
         {       
             int pair = 0;
             int[] CountArr = new int[13];
@@ -488,7 +488,7 @@ namespace TheLambClub.ModelsLogic
                 CardsValues[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
             }
             for (int i = 0; i < CountArr.Length; i++)
-                CountArr[i]= findPairValue(CardsValues, i+1);
+                CountArr[i]= FindPairValue(CardsValues, i+1);
           for (int i = 0; i < CountArr.Length; i++)
             {
                 if (CountArr[i]==2)
@@ -517,7 +517,7 @@ namespace TheLambClub.ModelsLogic
 
             return null;
         }
-        protected static int findPairValue(int[] cards,int num)
+        protected override int FindPairValue(int[] cards,int num)
         {
             int count = 0;
             foreach (int card in cards) 
@@ -528,7 +528,7 @@ namespace TheLambClub.ModelsLogic
             return count;
         }
 
-        protected static HandRank EvaluateHighCard(FBCard[] cards)
+        protected override HandRank EvaluateHighCard(FBCard[] cards)
         {
             int[] kickersArray = new int[cards.Length];
             //אסים שווים גם 1 וגם 14 ולכן אין ברירה אלה להמיר אותם ל14
@@ -554,12 +554,9 @@ namespace TheLambClub.ModelsLogic
             };
         }
         
-        /// <summary>
-        /// Generates all combinations of k elements from the given array
-        /// </summary>
-        private static List<List<FBCard>> GetCombinationsList(FBCard[] cards, int k)
+        protected override  List<List<FBCard>> GetCombinationsList(FBCard[] cards, int k)
         {
-            List<List<FBCard>> result = new List<List<FBCard>>();
+            List<List<FBCard>> result = [];
             GetCombinationsRecursive(cards, k, 0, new List<FBCard>(), result);
             return result;
         }
@@ -569,7 +566,7 @@ namespace TheLambClub.ModelsLogic
         {
             if (current.Count == k)
             {
-                List<FBCard> combination = new List<FBCard>();
+                List<FBCard> combination = [];
                 for (int i = 0; i < current.Count; i++)
                 {
                     combination.Add(current[i]);

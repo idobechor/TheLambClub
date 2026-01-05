@@ -13,7 +13,7 @@ namespace TheLambClub.Models
         public EventHandler<Game>? OnGameAdded;
         public ObservableCollection<Game>? GamesList { get; set; } = [];
         public ObservableCollection<int>? NumberOfPlayersList { get; set; } = [4, 5, 6];
-        public int SelectedNumberOfPlayers { get; set; } = 4;
+        public int SelectedNumberOfPlayers { get; set; } = 2;
         public Game? CurrentGame { get => currentGame; set => currentGame = value; }
         public EventHandler? OnGamesChanged;
         public abstract void AddSnapshotListener();

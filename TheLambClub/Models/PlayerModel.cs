@@ -38,5 +38,6 @@ namespace TheLambClub.Models
         }
         [Ignored]
         public LevelsOfHands LevelOfHand { get; set; }
+        public abstract HandRank EvaluateBestHand(FBCard[] boardCards);
     }
 }

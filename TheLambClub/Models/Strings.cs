@@ -48,5 +48,6 @@
         public const string PickMoveTxt = "Play Please";
         public const string SubmitBetBtn = "Submit Bet";
         public const string TimeUp = "Time Up";
+        public const string WaitingForPlayers = "Waiting for players";
     }
 }

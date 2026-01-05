@@ -27,26 +27,10 @@ namespace TheLambClub.ViewModel
             }            
         }
         public string MyName=> game.MyName;
-        //public ICommand Stay => new Command(StayFunction);
-
-        //private void StayFunction(object obj)
-        //{
-        //    game.NextTurn();
-        //}
-        //public ICommand Fold => new Command(FoldFunction);
-
-        //private void FoldFunction(object obj)
-        //{
-        //    game.PickedFold();
-        //}
 
         public string CurrentStatus => game.CurrentStatus;      
         private readonly List<Label> lstOponnentsLabels = [];        
-        //private void NextTurn(object obj)
-        //{
-        //    game.NextTurn();
-        //    OnPropertyChanged(nameof(CurrentStatus));
-        //}
+
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
@@ -87,15 +71,15 @@ namespace TheLambClub.ViewModel
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
             grdOponnents.RowDefinitions.Clear();
-            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // label
-            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // images row
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); 
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); 
 
             for (int i = 0; i < oponnentsCount; i++)
             {
                 grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
                 Label lbl = new()
                 {
-                    Text = "Waiting",
+                    Text = Strings.WaitingForPlayers,
                     TextColor = Colors.Black,
                     FontSize = 16,
                     Margin = new Thickness(5),
@@ -103,22 +87,22 @@ namespace TheLambClub.ViewModel
                     HorizontalTextAlignment = TextAlignment.Center,
                 };
                 lstOponnentsLabels.Add(lbl);
-                Image img1 = new Image
+                Image img1 = new()
                 {
-                    Source = "backofcard.jpg",
+                    Source = Keys.BackOfCard,
                     HeightRequest = 40,
                     WidthRequest = 40,
                     HorizontalOptions = LayoutOptions.Center
                 };
 
-                Image img2 = new Image
+                Image img2 = new()
                 {
-                    Source = "backofcard.jpg",
+                    Source = Keys.BackOfCard,
                     HeightRequest = 40,
                     WidthRequest = 40,
                     HorizontalOptions = LayoutOptions.Center
                 };
-                StackLayout imagesRow = new StackLayout
+                StackLayout imagesRow = new()
                 {
                     Orientation = StackOrientation.Horizontal,
                     HorizontalOptions = LayoutOptions.Center,
@@ -150,11 +134,7 @@ namespace TheLambClub.ViewModel
                
             }
         }     
-        private void OnComplete(Task task)
-        {
-            if(!task.IsCompletedSuccessfully)
-                Toast.Make(Strings.JoinGameErr, ToastDuration.Long).Show();
-        }
+
 
         public void AddSnapshotListener()
         {
