@@ -8,7 +8,7 @@ namespace TheLambClub.ViewModel
         {
             if(card==null)
             {
-             Source = "backofcard.jpg";
+             Source = Keys.BackOfCard;
               Console.WriteLine("cards is null");
             }
                            
@@ -18,7 +18,7 @@ namespace TheLambClub.ViewModel
         }
         public ViewCard()
         {
-            Source = "backofcard.jpg";           
+            Source = Keys.BackOfCard;           
         }
         public static readonly string[,] CardsImage = {
         {"ace_club.png","two_club.png","three_club.png","four_club.png","five_club.png","six_club.png","seven_club.png","eight_club.png","nine_club.png","ten_club.png","jack_club.png","queen_club.png","king_club.png"  },

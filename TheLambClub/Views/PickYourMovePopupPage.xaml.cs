@@ -20,7 +20,6 @@ public partial class PickYourMovePopupPage  : Popup
     private void OnRequestClose()
     {
         PromptYourMoveVM.Close();
-        Close(); // closes the popup
-       // ((Command))(new GamePageVM()).ShowPickYourMovePrompt.;
+        Close(); 
     }
 }

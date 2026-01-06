@@ -423,14 +423,15 @@ namespace TheLambClub.ModelsLogic
                 {
                     if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו
                     {
+                        Player[] Winner = new Player[1];
                         foreach (Player player in Players!)
                         {
                             if (player != null && !player.IsFolded)
                             {
-                               WinnerName = player.Name;
+                                Winner[0] = player;
                             }
                         }
-                        Shell.Current.ShowPopupAsync(new OnlyOneStayedPopup(WinnerName));
+                        Shell.Current.ShowPopupAsync(new WinningPopupPage(Winner, null!));
 
                     }
                     else

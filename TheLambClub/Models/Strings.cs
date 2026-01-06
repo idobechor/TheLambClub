@@ -52,5 +52,6 @@
         public const string HisRankIs = "HisHandRank-";
         public const string Call = "call ";
         public const string Check = "Check";
+        public const string IntoruceTheWinner = "The Winner is:";
 }
 }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using TheLambClub.ModelsLogic;
+using TheLambClub.Models;
 
 namespace TheLambClub.ViewModel
 {
@@ -16,11 +17,18 @@ namespace TheLambClub.ViewModel
             get {
                 return [..players.Select(player =>
                  {
-                     if (player==null)
-                         return string.Empty;
+                      string WinnerText = string.Empty;
+                     if(ranks==null)
+                         WinnerText= Models.Strings.IntoruceTheWinner+player.Name;
+                     else
+                     {
+                     if (player!=null)
                      if(Array.IndexOf(players, player)==0)
-                          return "The Winner is:"+player.Name+" "+ranks[player].ToString();
-                     return (Array.IndexOf(players, player)+1)+player.Name+" "+ranks[player].ToString();
+                          WinnerText= Models.Strings.IntoruceTheWinner+player.Name+" "+ranks[player].ToString();
+                     else
+                     WinnerText= (Array.IndexOf(players, player)+1)+player.Name+" "+ranks[player].ToString();
+                     }
+                       return WinnerText;
                  })];
             }
         }
