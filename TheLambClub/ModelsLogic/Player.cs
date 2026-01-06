@@ -10,13 +10,10 @@ namespace TheLambClub.ModelsLogic
         public Player(string playerName, string id) : base(playerName,id)
         {
         }
-       
         public override HandRank EvaluateBestHand(FBCard[] boardCards)
-        {
-            
-            HandRank handRank = new HandEvaluator().EvaluateBestHand(FBCard1, FBCard2, boardCards);           
-            LevelOfHand = handRank.HandType;
-            
+        {            
+            HandRank handRank = new HandEvaluator().EvaluateBestHand(FBCard1!, FBCard2!, boardCards);           
+            LevelOfHand = handRank.HandType;           
             return handRank;
         }
     }

@@ -72,6 +72,5 @@ public class MainPageVM : ObservableObject
     {
         OnPropertyChanged(nameof(GamesList));
     }
-
   }
 }

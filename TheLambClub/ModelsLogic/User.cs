@@ -10,19 +10,18 @@ namespace TheLambClub.ModelsLogic
         {
             fbd.CreateUserWithEmailAndPasswordAsync(Email, Password , UserName, OnComplete);              
         }
-
         private void OnComplete(Task task)
         {            
-                if (task.IsCompletedSuccessfully)
-                {
-                if (IsChecked)
-                    SaveToPreferences();
-                     OnAuthComplete?.Invoke(this, EventArgs.Empty);
-                }
-                else if (task.Exception != null)
-                    ShowAlert(GetFirebaseErrorMessage(task.Exception.Message));                   
-                else
-                    ShowAlert(Strings.UnknownRegistrationFailedError);                         
+            if (task.IsCompletedSuccessfully)
+            {
+            if (IsChecked)
+                SaveToPreferences();
+                    OnAuthComplete?.Invoke(this, EventArgs.Empty);
+            }
+            else if (task.Exception != null)
+                ShowAlert(GetFirebaseErrorMessage(task.Exception.Message));                   
+            else
+                ShowAlert(Strings.UnknownRegistrationFailedError);                         
         }
         public override  string GetFirebaseErrorMessage(string msg)
         {
@@ -40,7 +39,6 @@ namespace TheLambClub.ModelsLogic
             }
             return result;
         }
-
         private static void ShowAlert(string msg)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -48,7 +46,6 @@ namespace TheLambClub.ModelsLogic
                 Toast.Make(msg, ToastDuration.Long).Show();
             });
         }
-
         private void SaveToPreferences()
         {
             Preferences.Set(Keys.UserNameKey, UserName);
@@ -56,7 +53,6 @@ namespace TheLambClub.ModelsLogic
             Preferences.Set(Keys.EmailNameKey, Email);
             Preferences.Set(Keys.AgeNameKey, Age);
         }
-
         public override bool CanRegister()
         {
             return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Age)) && !string.IsNullOrWhiteSpace(Email) && double.TryParse(Age, out double ageNumber);
@@ -74,13 +70,12 @@ namespace TheLambClub.ModelsLogic
 
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, OnComplete);
         }
-      
         public override bool CanLogin()
         {
             return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password)&&!string.IsNullOrWhiteSpace(Email));
         }
   
-        public User()
+        public User()//שומר בפרפרנסס שזה מסמך על המחשב
         {
             UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
             Password = Preferences.Get(Keys.PasswordNameKey, string.Empty);

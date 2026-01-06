@@ -27,7 +27,6 @@ namespace TheLambClub.ViewModel
             }            
         }
         public string MyName=> game.MyName;
-
         public string CurrentStatus => game.CurrentStatus;      
         private readonly List<Label> lstOponnentsLabels = [];        
 
@@ -42,7 +41,6 @@ namespace TheLambClub.ViewModel
             
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
-     
         public GamePageVM(Game game, Grid grdOponnents)
         {
            this.game=game;
@@ -51,22 +49,17 @@ namespace TheLambClub.ViewModel
             game.OnGameDeleted += OnGameDeleted;           
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
-        public GamePageVM()
-        {                       
-        }
         private bool _IsMyTurn=> game.IsMyTurn;
         private bool IsMyTurn(object arg)
         {
             return _IsMyTurn;
         }
-
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game));
             Console.WriteLine("check can excute can? " + ((Command)ShowPickYourMovePrompt).CanExecute(null));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
-
         private void InitOponnentsGrid(Grid grdOponnents)
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
@@ -114,11 +107,9 @@ namespace TheLambClub.ViewModel
             }
         }
 
-
         private void OnGameDeleted(object? sender, EventArgs e)
         {
         }
-
         private void DisplayOponnentsNames()
         {
             int lblIndex = 0;
@@ -134,22 +125,15 @@ namespace TheLambClub.ViewModel
                
             }
         }     
-
-
         public void AddSnapshotListener()
         {
             game.AddSnapShotListener();
         }
-
         public void RemoveSnapshotListener()
         {
             game.RemoveSnapShotListener();
         }
-
-        public string Name
-        {
-            get { return game.CurrentPlayer!.Name; }
-        }
+        public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1
         {
             get
@@ -168,7 +152,6 @@ namespace TheLambClub.ViewModel
                 return new ViewCard(game.CurrentPlayer.FBCard2);
             }
         }
-
         public string Status
         {
             get { return game.CurrentStatus; }

@@ -40,7 +40,6 @@ namespace TheLambClub.ModelsLogic
             
             return bestHand;
         }
-        
         public  override HandRank EvaluateHand(FBCard[] cards)
         {
             bool found=false;
@@ -148,8 +147,7 @@ namespace TheLambClub.ModelsLogic
                           HandCards = cards
                          };
             return handRank;
-        }
-        
+        }  
         protected override HandRank? CheckStraightFlush(FBCard[] cards)
         {
             HandRank flush = CheckFlush(cards)!;
@@ -178,7 +176,6 @@ namespace TheLambClub.ModelsLogic
 
             return handRank;
         }
-        
         protected override HandRank? CheckFourOfAKind(FBCard[] cards)
         {
             HandRank handRank = null!;
@@ -230,8 +227,7 @@ namespace TheLambClub.ModelsLogic
             
             return handRank;
         }
-        
-           protected override HandRank? CheckFullHouse(FBCard[] cards)
+        protected override HandRank? CheckFullHouse(FBCard[] cards)
         {
             HandRank threeOfAKindRank = CheckThreeOfAKind(cards)!;
             HandRank pair = CheckPair(cards)!;
@@ -239,17 +235,15 @@ namespace TheLambClub.ModelsLogic
 
             if (threeOfAKindRank!=null&&pair!=null)
             {               
-             handRank= new HandRank
-             {
-              HandType = LevelsOfHands.FullHouse,
-             PrimaryValue = threeOfAKindRank.PrimaryValue,
-             SecondaryValue = pair.PrimaryValue
-             };
+                handRank= new HandRank
+                {
+                    HandType = LevelsOfHands.FullHouse,
+                    PrimaryValue = threeOfAKindRank.PrimaryValue,
+                    SecondaryValue = pair.PrimaryValue
+                };
             }
-            
             return handRank;
         }
-
         protected override HandRank? CheckFlush(FBCard[] cards)
         {
             Dictionary<Shapes, int> dict = new()
@@ -411,8 +405,7 @@ namespace TheLambClub.ModelsLogic
             }
 
            return handRank;
-        }
-        
+        }   
         protected override HandRank? CheckThreeOfAKind(FBCard[] cards)
         {
             HandRank handRank = null!;
@@ -453,7 +446,6 @@ namespace TheLambClub.ModelsLogic
                 };                      
             return handRank;
         }
-        
         protected override HandRank? CheckTwoPair(FBCard[] cards)
         {
             HandRank handRank = null!;
@@ -510,7 +502,6 @@ namespace TheLambClub.ModelsLogic
             
             return handRank;
         }
-        
         protected override HandRank? CheckPair(FBCard[] cards)
         {     
             HandRank? handRank = null!;
@@ -544,13 +535,11 @@ namespace TheLambClub.ModelsLogic
             if (pair != 0)
                 handRank= new HandRank
                 {
-                HandType = LevelsOfHands.Pair,
-                PrimaryValue = pair,
-                Kickers = kickers,
-                HandCards = cards
+                    HandType = LevelsOfHands.Pair,
+                    PrimaryValue = pair,
+                    Kickers = kickers,
+                    HandCards = cards
                 };
-        
-
             return handRank;
         }
         protected override int FindPairValue(int[] cards,int num)
@@ -588,14 +577,12 @@ namespace TheLambClub.ModelsLogic
                 HandCards = cards
             };
         }
-        
         protected override  List<List<FBCard>> GetCombinationsList(FBCard[] cards, int k)
         {
             List<List<FBCard>> result = [];
             GetCombinationsRecursive(cards, k, 0, new List<FBCard>(), result);
             return result;
         }
-        
         private static void GetCombinationsRecursive(FBCard[] cards, int k, int startIndex, 
             List<FBCard> current, List<List<FBCard>> result)
         {

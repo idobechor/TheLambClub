@@ -18,7 +18,6 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(TimeLeft));
         }
         private int _betAmount { get; set; }
-        
         public string CheckOrFold=>game.CheckOrCall;
         public string BetAmountStr =>Strings.IntoruceYourBet+_betAmount;
         public int BetAmount
@@ -49,8 +48,6 @@ namespace TheLambClub.ViewModel
             WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
         }
         
-        
-
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
         {
            OnPropertyChanged(nameof(CheckOrFold));
@@ -58,10 +55,7 @@ namespace TheLambClub.ViewModel
 
         public ICommand Stay => new Command(StayFunction);
 
-
-
         public ICommand SubmitBetCommand => new Command(BetFunction);
-        //public ICommand SubmitBetCommand => new Command(UpDateBet);
 
         private void StayFunction(object obj)
         {

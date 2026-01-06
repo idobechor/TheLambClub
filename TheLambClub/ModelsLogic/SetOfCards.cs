@@ -38,7 +38,6 @@ namespace TheLambClub.ModelsLogic
                 card = cards![rnd.Next(cards.Count)];
             usedCards!.Add(card);
             return card;
-
         }
         public override FBCard Add(FBCard fbcard)
         {

@@ -17,7 +17,6 @@ namespace TheLambClub.ModelsLogic
             currentGame?.OnGameDeleted += OnGameDeleted;           
             CurrentGame.SetDocument(OnComplete);
         }
-
         protected override void OnGameDeleted(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -27,12 +26,11 @@ namespace TheLambClub.ModelsLogic
         }
         public Games()
         {
-
         }
         protected override void OnComplete(Task task)
         {
             IsBusy = false;
-            OnGameAdded?.Invoke(this, CurrentGame!);
+            OnGameAdded?.Invoke(this, CurrentGame!); // מעדכן את המסך
         }
         public override void AddSnapshotListener()
         {

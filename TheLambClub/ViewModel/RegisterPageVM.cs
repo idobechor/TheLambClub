@@ -21,7 +21,6 @@ namespace TheLambClub.ViewModel
             user.OnAuthComplete += OnAuthComplete;
             
         }
-
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)

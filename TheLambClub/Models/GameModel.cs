@@ -51,7 +51,7 @@ namespace TheLambClub.Models
         [Ignored]
         public int? NumberOfPlayers { get; set; }
         [Ignored]
-        public abstract bool IsMyTurn { get; set; }
+        public abstract bool IsMyTurn { get; }
         [Ignored]
         public bool CanICheck { get; set; }=true;
         [Ignored]
@@ -68,7 +68,6 @@ namespace TheLambClub.Models
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void NextTurn();
         public abstract void PickedFold();
-        protected abstract void FillDummes();
         protected abstract void OnComplete(Task task);
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);

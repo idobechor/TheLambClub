@@ -21,7 +21,7 @@ namespace TheLambClub
         private void StartDeleteFBDocsService()
         {
             Intent = new Android.Content.Intent(this, typeof(DeleteFBDocsService));
-            //חסר
+            StartService(Intent);
         }
 
         private void RegisterTimerMessages()

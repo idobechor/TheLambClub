@@ -11,7 +11,7 @@ namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
-        public override Player? CurrentPlayer 
+        public override Player? CurrentPlayer
         {
             get
             {
@@ -40,7 +40,6 @@ namespace TheLambClub.ModelsLogic
                 return Strings.PlayingStatus;
             }
         }
-
         public override bool IsMyTurn
         {
             get
@@ -48,14 +47,11 @@ namespace TheLambClub.ModelsLogic
                 bool IsMyTurn = false;
                 if (Players != null)
                 {
-                    IsMyTurn= Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
+                    IsMyTurn = Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
                 }
                 return IsMyTurn;
-            }   
-            set;
+            }
         }
-
-
         public override bool IsHost
         {
             get
@@ -63,7 +59,7 @@ namespace TheLambClub.ModelsLogic
                 return HostId == fbd.UserId;
             }
         }
-        public Game() { } // RegisterTimer();}
+        public Game() { }
 
         public override void NextTurn()
         {
@@ -87,7 +83,6 @@ namespace TheLambClub.ModelsLogic
             {
                 player?.IsFolded = false;
             }
-        
         }
         public Game(int selectedNumberOfPlayers)
         {
@@ -97,7 +92,6 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers;
             CurrentPlayerIndex = 0;
-            FillDummes();
         }
         protected override void RegisterTimer()
         {
@@ -107,7 +101,6 @@ namespace TheLambClub.ModelsLogic
             });
             Console.WriteLine("Timer Created");
         }
-
         protected override void OnMessageReceived(long timeLeft)
         {
             TimeLeft = timeLeft == Keys.FinishedSignal ? Strings.TimeUp : double.Round(timeLeft / 1000, 1).ToString();
@@ -120,32 +113,20 @@ namespace TheLambClub.ModelsLogic
             TimeLeftChanged?.Invoke(this, EventArgs.Empty);
             Console.WriteLine("After TimeLeftChanged");
         }
-        protected override void FillDummes()
-        {
-            for (int i = 0; i < MaxNumOfPlayers; i++)
-            {
-                //PlayersNames![i] = string.Empty;
-                //PlayersIds![i] = string.Empty;
-            }
-        }
-
-     
-
         public override void SetDocument(Action<Task> OnComplete)
         {
             Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
         }
 
-        protected override void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete)
+        protected override void FillArrayAndAddCards(bool upDateFB, Action<Task> OnComplete)
         {
             foreach (Player item in Players!)
             {
-                Console.WriteLine("item");
-                if(item!=null)
+                if (item != null)
                 {
                     item.FBCard1 = setOfCards.GetRandomCard();
                     item.FBCard2 = setOfCards.GetRandomCard();
-                    Console.WriteLine("cards has haded");
+                    Console.WriteLine("cards were set");
                 }
             }
             if (upDateFB)   //במקרה של סיום הסבב אני גם ככה מעדכן את השחקנים פיירבייס ולכן לא תמיד אצטרך לעדכן גם פה
@@ -159,29 +140,25 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-
         public override void AddSnapShotListener()//פונקציה שמזהה שינויים בפיירבייס ומגיבה להם
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
-      
         public override void RemoveSnapShotListener()//כשאנחנו יוצאים מהמשחק וסוגרים אותו נסגור  גם את ההזנה לפיירבייס
         {
             ilr?.Remove();
             DeleteDocument(OnComplete);
         }
-
         protected override void OnComplete(Task task)
         {
             if (task.IsCompletedSuccessfully)
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
         }
-
         public override void UpdateGuestUser(Action<Task> OnComplete)
         {
             foreach (Player player in Players!)
             {
-                if (player!=null&& player!.Id == fbd.UserId)
+                if (player != null && player!.Id == fbd.UserId)
                     return;
             }
             Player newPlayer = new(MyName, fbd.UserId);
@@ -189,7 +166,6 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers++;
             UpdateFireBaseJoinGame(OnComplete);
         }
-
         protected override void UpdateFireBaseJoinGame(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
@@ -202,7 +178,6 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-
         protected override void UpdateFBTurnUpdate(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
@@ -211,7 +186,6 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-
         protected override void UpdateBoard(Action<Task> OnComplete)
         {
             Dictionary<string, object> dict = new()
@@ -221,15 +195,7 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-
-        public override bool IsFull
-        {
-            get { return CurrentNumOfPlayers == MaxNumOfPlayers; }
-
-            set => _ = CurrentNumOfPlayers == MaxNumOfPlayers;
-        }
-
-
+        public override bool IsFull { get => CurrentNumOfPlayers == MaxNumOfPlayers; set => _ = CurrentNumOfPlayers == MaxNumOfPlayers; }
         public override void DeleteDocument(Action<Task> OnComplete)
         {
             fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
@@ -259,16 +225,6 @@ namespace TheLambClub.ModelsLogic
                 BoardCards[4] = setOfCards.GetRandomCard();
             }
         }
-        //protected void AddCardsToPlayers()
-        //{
-        //    for (int i = 0; i < MaxNumOfPlayers; i++)
-        //    {
-        //        if(Players[i]!=null)
-        //        {
-        //            Players![i] = Players[i];
-        //        }
-        //    }
-        //}
         protected override bool IsOneStaying()
         {
             int countNotFolded=0;
@@ -280,7 +236,7 @@ namespace TheLambClub.ModelsLogic
                     countNotFolded++;
                 }
             }
-            result= countNotFolded == 1;
+            result=countNotFolded == 1;
             return result;
         }
         protected override int FirstPlayerWhichIsNotFold()
@@ -296,13 +252,11 @@ namespace TheLambClub.ModelsLogic
             }
            return -1;
         }
-        public override void BetFunction(object obj)
+        public override void BetFunction(object obj) // פונקצית הימורים צריך לתקן
         {
-
             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
             if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
             {
-                Console.WriteLine("both");
                 CurrentPlayer.IsReRazed = true;
                 CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
             }
@@ -313,8 +267,7 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
-
-        protected override int BeforeCurrentPlayerIndex()
+        protected override int BeforeCurrentPlayerIndex() // פונקצית הימורים צריך לתקן
         {
             int beforeIndex = -1;
             if (CurrentPlayerIndex == 0)
@@ -338,10 +291,8 @@ namespace TheLambClub.ModelsLogic
                 }
             }
             return beforeIndex;
-
-
         }
-        public override void CallFunction()
+        public override void CallFunction() // פונקצית הימורים צריך לתקן
         {
             if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
             {
@@ -354,20 +305,18 @@ namespace TheLambClub.ModelsLogic
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
-       
         protected override bool EveryOneIsNotRerazeing()
         {
             bool result = true;
 
             foreach (Player player in Players!)
+            {
+                if (player != null && player.IsReRazed)
                 {
-                    if (player != null && player.IsReRazed)
-                    {
                     result= false;
-                    }
                 }
-                return result;
-            
+            }
+            return result;  
         }
         protected override void EndHand()//מאפס הכל בסיום הסבב
         {
@@ -382,10 +331,9 @@ namespace TheLambClub.ModelsLogic
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
                 { nameof(BoardCards), BoardCards },
                 { nameof(RoundNumber), RoundNumber },
-                 { nameof(Players), Players! },
+                { nameof(Players), Players! },
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-
         }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
@@ -397,6 +345,7 @@ namespace TheLambClub.ModelsLogic
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;  // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
+                bool isHandEnded = false;
                 string WinnerName = string.Empty;
                 Dictionary<Player, HandRank> ranks = [];
                 Player[] playersArray = null!;
@@ -418,7 +367,6 @@ namespace TheLambClub.ModelsLogic
                     CheckOrCall = Strings.Check;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
-
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
                 {
                     if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו
@@ -432,7 +380,6 @@ namespace TheLambClub.ModelsLogic
                             }
                         }
                         Shell.Current.ShowPopupAsync(new WinningPopupPage(Winner, null!));
-
                     }
                     else
                     {
@@ -452,25 +399,26 @@ namespace TheLambClub.ModelsLogic
                         });
                         Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
                     }
-                   if(IsHost)
-                      EndHand();
+                    Console.WriteLine("EndHand BeforeIf");
+                    if (IsHost)
+                    {
+                        Console.WriteLine("EndHand");
+                        EndHand();
+                        isHandEnded= true;
+                    }
                 }
-
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
                 {
                     NextTurn();
-                    IsMyTurn = false;
                 }
-
-                if (IsHost && isEndOfRound)
+                if (IsHost && isEndOfRound&&!isHandEnded)
                 {
                     RoundNumber++;
                     FillBoard();
                     UpdateBoard((t) => { });
                     EndOfHand = RoundNumber == HandComplete;
                 }
-                
-                if (IsHost && changedToFull)
+                if (IsHost && changedToFull && !isHandEnded)
                 {
                     FillArrayAndAddCards(true,(t) => { });
                 }              

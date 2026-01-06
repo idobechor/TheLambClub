@@ -9,12 +9,10 @@ namespace TheLambClub.ViewModel
             if(card==null)
             {
              Source = Keys.BackOfCard;
-              Console.WriteLine("cards is null");
             }
                            
             if (card != null && card.Value > 0)
                 Source = CardsImage[(int)card.Shape, card.Value - 1];
-            Console.WriteLine("Source:"+ Source);
         }
         public ViewCard()
         {

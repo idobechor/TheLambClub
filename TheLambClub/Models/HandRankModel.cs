@@ -12,9 +12,9 @@ namespace TheLambClub.Models
         }   
         public LevelsOfHands HandType { get; set; }
         public int PrimaryValue { get; set; }
-        public int SecondaryValue { get; set; }        
-        public int[] Kickers { get; set; } = Array.Empty<int>();//כרגע זה הפיתרון היחידי שמצאתי אם אפשר תתקן        
-        public FBCard[] HandCards { get; set; } = Array.Empty<FBCard>();//כרגע זה הפיתרון היחידי שמצאתי אם אפשר תתקן
+        public int SecondaryValue { get; set; }
+        public int[] Kickers { get; set; }
+        public FBCard[] HandCards { get; set; }
         public abstract int Compare(HandRank other);
         public abstract bool IsBetter(HandRank other);
         protected abstract bool IsEqual(HandRank other);
