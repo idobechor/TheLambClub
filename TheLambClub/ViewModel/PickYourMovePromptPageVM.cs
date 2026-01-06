@@ -20,7 +20,7 @@ namespace TheLambClub.ViewModel
         private int _betAmount { get; set; }
         
         public string CheckOrFold=>game.CheckOrCall;
-        public string BetAmountStr =>$"your bet amount is:{_betAmount}";
+        public string BetAmountStr =>Strings.IntoruceYourBet+_betAmount;
         public int BetAmount
         {
             get => _betAmount;

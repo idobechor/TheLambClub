@@ -53,5 +53,6 @@
         public const string Call = "call ";
         public const string Check = "Check";
         public const string IntoruceTheWinner = "The Winner is:";
-}
+        public const string IntoruceYourBet = "your bet amount is:";
+    }
 }
