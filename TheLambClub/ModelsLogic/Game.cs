@@ -316,17 +316,30 @@ namespace TheLambClub.ModelsLogic
 
         protected override int BeforeCurrentPlayerIndex()
         {
+            int beforeIndex = -1;
             if (CurrentPlayerIndex == 0)
             {
                 for (int i = MaxNumOfPlayers - 1; i > 0; i--)
                 {
                     if (Players != null && Players[i] != null && !Players[i]!.IsFolded)
                     {
-                        return i;
+                        beforeIndex= i;
                     }
                 }
             }
-            return CurrentPlayerIndex - 1;
+            else
+            {
+                for (int i = CurrentPlayerIndex - 1; i >= 0; i--)
+                {
+                    if (Players != null && Players[i] != null && !Players[i]!.IsFolded)
+                    {
+                        beforeIndex= i;
+                    }
+                }
+            }
+            return beforeIndex;
+
+
         }
         public override void CallFunction()
         {
@@ -344,15 +357,16 @@ namespace TheLambClub.ModelsLogic
        
         protected override bool EveryOneIsNotRerazeing()
         {
-           
-                foreach (Player player in Players!)
+            bool result = true;
+
+            foreach (Player player in Players!)
                 {
                     if (player != null && player.IsReRazed)
                     {
-                        return false;
+                    result= false;
                     }
                 }
-                return true;
+                return result;
             
         }
         protected override void EndHand()//מאפס הכל בסיום הסבב
@@ -396,12 +410,12 @@ namespace TheLambClub.ModelsLogic
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
                 if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
                 {
-                    CheckOrCall = "call " + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
+                    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
-                    CheckOrCall = "check";
+                    CheckOrCall = Strings.Check;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
 

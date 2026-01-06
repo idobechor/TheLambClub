@@ -49,5 +49,8 @@
         public const string SubmitBetBtn = "Submit Bet";
         public const string TimeUp = "Time Up";
         public const string WaitingForPlayers = "Waiting for players";
-    }
+        public const string HisRankIs = "HisHandRank-";
+        public const string Call = "call ";
+        public const string Check = "Check";
+}
 }

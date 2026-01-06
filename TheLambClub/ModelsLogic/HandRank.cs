@@ -11,31 +11,37 @@ namespace TheLambClub.ModelsLogic
     {
         public override int Compare(HandRank other)
         {
-            if (other == null) return 1;
-            int myType = (int)HandType;
-            int otherType = (int)other.HandType;
-            if (myType != otherType)
+            int res=0;
+            if (other != null)
             {
-                return myType - otherType;
-            }
-            if (PrimaryValue != other.PrimaryValue)
-            {
-                return PrimaryValue - other.PrimaryValue;
-            }
-            if (SecondaryValue != other.SecondaryValue)
-            {
-                return SecondaryValue - other.SecondaryValue;
-            }
-            int minLength = Math.Min(Kickers.Length, other.Kickers.Length);
-            for (int i = 0; i < minLength; i++)
-            {
-                if (Kickers[i] != other.Kickers[i])
+                int myType = (int)HandType;
+                int otherType = (int)other.HandType;
+                if (myType != otherType)
                 {
-                    return Kickers[i] - other.Kickers[i];
+                    res = myType - otherType;
+                }
+                else if (PrimaryValue != other.PrimaryValue)
+                {
+                    res = PrimaryValue - other.PrimaryValue;
+                }
+                else if (SecondaryValue != other.SecondaryValue)
+                {
+                    res = SecondaryValue - other.SecondaryValue;
+                }
+                else
+                {
+                    int minLength = Math.Min(Kickers.Length, other.Kickers.Length);
+                    for (int i = 0; i < minLength; i++)
+                    {
+                        if (Kickers[i] != other.Kickers[i])
+                        {
+                            res= Kickers[i] - other.Kickers[i];
+                        }
+                    }
                 }
             }
             //אם הם באמת שווים
-            return 0;
+            return res;
         }
         public override bool IsBetter(HandRank other)
         {
@@ -48,7 +54,7 @@ namespace TheLambClub.ModelsLogic
 
         public override string ToString()
         {
-            return "HisHandRank"+HandType.ToString();
+            return Strings.HisRankIs+HandType.ToString();
         }
     }
 }
