@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TheLambClub.Models;
@@ -28,7 +29,8 @@ namespace TheLambClub.ViewModel
         }
         public string MyName=> game.MyName;
         public string CurrentStatus => game.CurrentStatus;      
-        private readonly List<Label> lstOponnentsLabels = [];        
+        private readonly List<Label> lstOponnentsLabels = [];
+        private bool _isPopupOpen=>game.IsPopupOpen;
 
         private void OnGameChanged(object? sender, EventArgs e)
         {
@@ -38,9 +40,20 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
-            
+            game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
+
+        private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
+        {
+            if (_isPopupOpen)
+            {
+                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
+                game.IsPopupOpen = true;
+            }
+          
+        }
+
         public GamePageVM(Game game, Grid grdOponnents)
         {
            this.game=game;
@@ -109,15 +122,18 @@ namespace TheLambClub.ViewModel
 
         private void OnGameDeleted(object? sender, EventArgs e)
         {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shell.Current.Navigation.PopAsync();
+                Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
+            });
         }
         private void DisplayOponnentsNames()
         {
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.Players?[i] != null && game.CurrentPlayer?.Id == game.Players?[i].Id)
-                    continue;
-                if (game.Players?[i]!=null)
+                if (game.Players?[i] != null && game.CurrentPlayer?.Id != game.Players?[i].Id)//אנחנו לא צריכים את השחקן הנוכחי אותו נשים למטה
                 {
                     lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
@@ -138,23 +154,26 @@ namespace TheLambClub.ViewModel
         {
             get
             {
+                ViewCard vc;
                 if ( game.CurrentPlayer==null|| game.CurrentPlayer.FBCard1 == null)
-                    return new ViewCard();         
-                return new ViewCard(game.CurrentPlayer.FBCard1);
+                    vc= new ViewCard();
+                else
+                    vc= new ViewCard(game.CurrentPlayer.FBCard1);
+                return vc;
             }
         }
         public ViewCard Card2
         {
             get
             {
+                ViewCard vc;
                 if (game.CurrentPlayer == null || game.CurrentPlayer.FBCard2 == null)
-                    return new ViewCard();
-                return new ViewCard(game.CurrentPlayer.FBCard2);
+                    vc= new ViewCard();
+                else
+                    vc= new ViewCard(game.CurrentPlayer.FBCard2);
+                return vc;
             }
         }
-        public string Status
-        {
-            get { return game.CurrentStatus; }
-        }
+        public string Status => game.CurrentStatus;
     }
 }

@@ -379,7 +379,8 @@ namespace TheLambClub.ModelsLogic
                                 Winner[0] = player;
                             }
                         }
-                        Shell.Current.ShowPopupAsync(new WinningPopupPage(Winner, null!));
+                        OnwinnerSelected?.Invoke(this, new WinningPopupEvent(Winner, null!));
+                        IsPopupOpen= false;
                     }
                     else
                     {
@@ -397,7 +398,8 @@ namespace TheLambClub.ModelsLogic
                         {
                             return ranks[p2].Compare(ranks[p1]);
                         });
-                        Shell.Current.ShowPopupAsync(new WinningPopupPage(playersArray, ranks));
+                        OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
+                        IsPopupOpen = false;
                     }
                     Console.WriteLine("EndHand BeforeIf");
                     if (IsHost)
@@ -431,11 +433,7 @@ namespace TheLambClub.ModelsLogic
             }
             else
             {
-                MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    Shell.Current.Navigation.PopAsync();
-                    Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
-                });
+               
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }

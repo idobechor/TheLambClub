@@ -44,7 +44,12 @@ namespace TheLambClub.ModelsLogic
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);//לוקח את כל המשחקים שחסרים בהם שחקנים כדי להציג אותם
         }
+        //לוקח את כל המשחקים שה שחסרים בהם שחקנים (IsFull==false) 
+        //יוצר אותם עם הפעולה הבונה הדיפולטית עם הid שלהם מהפייר בייס מוסיף אותם לרשימת המשחקים שמציגים על המשחק ומעדכנת את המסך
         protected override void OnComplete(IQuerySnapshot qs) 
+
+
+
         {
             GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)

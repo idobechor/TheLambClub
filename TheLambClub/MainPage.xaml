@@ -32,7 +32,6 @@
                     TextColor="Orange" />
             </Grid>
             <Button
-                Background="Red"
                 Command="{Binding AddGameCommand}"
                 Text="{x:Static m:Strings.CreateGameButtonTxt}"
                 TextColor="black" />
@@ -40,8 +39,8 @@
                 Title="{x:Static m:Strings.PickerTitle}"
                 FontSize="20"
                 Grid.Column="1"
+                TextColor="Black"
                 HorizontalTextAlignment="Center"
-                ItemDisplayBinding="{Binding DisplayName}"
                 ItemsSource="{Binding NumberOfPlayersList}"
                 SelectedItem="{Binding SelectedNumberOfPlayers}" />
             

@@ -62,6 +62,11 @@ namespace TheLambClub.Models
         protected bool TimerCreated = false;
         public Player[]? Players { get; set; }
         protected const int HandComplete = 4;
+        [Ignored]
+        public EventHandler<WinningPopupEvent>? OnwinnerSelected;
+        [Ignored]
+        public bool IsPopupOpen { get; set; }= false;
+
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
