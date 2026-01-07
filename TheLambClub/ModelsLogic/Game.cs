@@ -250,18 +250,18 @@ namespace TheLambClub.ModelsLogic
         }
         public override void BetFunction(object obj) // פונקצית הימורים צריך לתקן
         {
-            CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
-            {
-                CurrentPlayer.IsReRazed = true;
-                CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
-            }
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(Players), Players! },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            NextTurn();
+            //CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
+            //if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
+            //{
+            //    CurrentPlayer.IsReRazed = true;
+            //    CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
+            //}
+            //Dictionary<string, object> dict = new()
+            //{
+            //    { nameof(Players), Players! },
+            //};
+            //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            //NextTurn();
         }
         protected override int BeforeCurrentPlayerIndex() // פונקצית הימורים צריך לתקן
         {
@@ -290,15 +290,15 @@ namespace TheLambClub.ModelsLogic
         }
         public override void CallFunction() // פונקצית הימורים צריך לתקן
         {
-            if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
-            {
-             CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            }
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(Players), Players! },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            //if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
+            //{
+            // CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
+            //}
+            //Dictionary<string, object> dict = new()
+            //{
+            //    { nameof(Players), Players! },
+            //};
+            //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
         protected override bool EveryOneIsNotRerazeing()
@@ -353,16 +353,16 @@ namespace TheLambClub.ModelsLogic
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
-                if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
-                {
-                    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
-                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
-                }
-                else
-                {
-                    CheckOrCall = Strings.Check;
-                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
-                }
+                //if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
+                //{
+                //    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
+                //    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
+                //}
+                //else
+                //{
+                //    CheckOrCall = Strings.Check;
+                //    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
+                //}
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
                 {
                     if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו

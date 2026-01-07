@@ -14,7 +14,7 @@ namespace TheLambClub.Models
         public ObservableCollection<Game>? GamesList { get; set; } = [];//רשימת השחקנים שמציגים שחסר בהם משתתפים
         public ObservableCollection<int>? NumberOfPlayersList { get; set; } = [4, 5, 6];
         public string DisplayName => $"{SelectedNumberOfPlayers}";
-        public int SelectedNumberOfPlayers { get; set; } = 2;
+        public int SelectedNumberOfPlayers { get; set; } = 0;
         public Game? CurrentGame { get => currentGame; set => currentGame = value; }
         public EventHandler? OnGamesChanged;
         public abstract void AddSnapshotListener();
