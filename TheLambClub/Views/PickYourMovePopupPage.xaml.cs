@@ -10,9 +10,8 @@ public partial class PickYourMovePopupPage  : Popup
     private readonly PickYourMovePromptPageVM PromptYourMoveVM;
     public PickYourMovePopupPage(Game game)
 	{
-		InitializeComponent();
-       
-        PromptYourMoveVM = new PickYourMovePromptPageVM(game);
+		InitializeComponent();   
+        PromptYourMoveVM = new PickYourMovePromptPageVM(game, TimeLeft);
         BindingContext= PromptYourMoveVM;
         PromptYourMoveVM.RequestClose += OnRequestClose;
     }

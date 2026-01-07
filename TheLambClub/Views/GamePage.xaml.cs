@@ -10,14 +10,12 @@ public partial class GamePage : ContentPage
 	{
 		InitializeComponent();
         gpVM = new GamePageVM(game, grdOponnents);
- 
         BindingContext = gpVM;
     }
     protected override void OnAppearing()
     {
         base.OnAppearing();
         gpVM.AddSnapshotListener();
-
     }
 
     protected override void OnDisappearing()

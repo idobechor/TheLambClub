@@ -9,12 +9,25 @@ namespace TheLambClub.ViewModel
     {
         public event Action? RequestClose;
         private readonly Game game;
+        private readonly Label TimeLeftLabel ;
+        private int timeInt;
+
         public string TimeLeft => game.TimeLeft;
         public TimerSettings timerSettings  => game.timerSettings;
 
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
-            Console.WriteLine("OnTimeLeftChanged " + DateTime.Now.ToString());
+            if (int.TryParse(TimeLeft, out timeInt))
+            {
+                if (timeInt <= 10)
+                {
+                    TimeLeftLabel.TextColor = Colors.Red;
+                }
+                else
+                {
+                    TimeLeftLabel.TextColor = Colors.Black;
+                }
+            }
             OnPropertyChanged(nameof(TimeLeft));
         }
         private int _betAmount { get; set; }
@@ -33,12 +46,13 @@ namespace TheLambClub.ViewModel
                 OnPropertyChanged(nameof(BetAmountStr));
             }
         }
-        public PickYourMovePromptPageVM(Game game)
+
+        public PickYourMovePromptPageVM(Game game,Label label)
         {
+            TimeLeftLabel = label;
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
             game.TimeLeftChanged += OnTimeLeftChanged;
-        
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
         }
 

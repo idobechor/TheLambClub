@@ -99,19 +99,15 @@ namespace TheLambClub.ModelsLogic
             {
                 OnMessageReceived(m.Value);
             });
-            Console.WriteLine("Timer Created");
         }
         protected override void OnMessageReceived(long timeLeft)
         {
             TimeLeft = timeLeft == Keys.FinishedSignal ? Strings.TimeUp : double.Round(timeLeft / 1000, 1).ToString();
             if (timeLeft == Keys.FinishedSignal && CurrentPlayer?.IsFolded == false)
             {
-                Console.WriteLine("Before picked fold");
                 PickedFold();
             }
-            Console.WriteLine("Before TimeLeftChanged");
             TimeLeftChanged?.Invoke(this, EventArgs.Empty);
-            Console.WriteLine("After TimeLeftChanged");
         }
         public override void SetDocument(Action<Task> OnComplete)
         {

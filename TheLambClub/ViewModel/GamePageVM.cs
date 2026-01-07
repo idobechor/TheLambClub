@@ -46,7 +46,7 @@ namespace TheLambClub.ViewModel
 
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
-            if (_isPopupOpen)
+            if (!_isPopupOpen)
             {
                 Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
                 game.IsPopupOpen = true;
@@ -62,7 +62,7 @@ namespace TheLambClub.ViewModel
             game.OnGameDeleted += OnGameDeleted;           
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
-        private bool _IsMyTurn=> game.IsMyTurn;
+        private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)
         {
             return _IsMyTurn;
@@ -70,7 +70,6 @@ namespace TheLambClub.ViewModel
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game));
-            Console.WriteLine("check can excute can? " + ((Command)ShowPickYourMovePrompt).CanExecute(null));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
         private void InitOponnentsGrid(Grid grdOponnents)

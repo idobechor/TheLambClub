@@ -32,12 +32,16 @@
                     <Button Text="{x:Static m:Strings.SubmitBetBtn }" Grid.Column="4" Grid.Row="2"
               Command="{Binding SubmitBetCommand}" />-->
         <!--</VerticalStackLayout>-->
-        <Label
-        Margin="50"
+        <Border BackgroundColor="Black"
+         Grid.Column="3"
+        Grid.RowSpan="2">
+            <Label 
+       BackgroundColor="White"     
+        Text="{Binding TimeLeft}"
+        x:Name="TimeLeft"
         HorizontalOptions="Center"
-            Grid.Column="3"
-            Grid.RowSpan="2"
-        TextColor="Blue"
-        Text="{Binding TimeLeft}" />
+        VerticalOptions="Center"
+        FontSize="20"/>
+        </Border>
     </Grid>
 </toolkit:Popup>
