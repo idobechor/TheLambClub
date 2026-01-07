@@ -16,8 +16,7 @@ public class MainPageVM : ObservableObject
             set { games.SelectedNumberOfPlayers = value; (AddGameCommand as Command)?.ChangeCanExecute(); } }
         private bool CanAddGame()
         {
-            Console.WriteLine("SelectedNumberOfPlayers"+ SelectedNumberOfPlayers);
-            return SelectedNumberOfPlayers >=4;
+            return SelectedNumberOfPlayers !=0;
         }
         public ICommand InstructionsCommand { get; private set; }
     public ICommand AddGameCommand {get;}

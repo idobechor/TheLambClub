@@ -87,7 +87,7 @@ namespace TheLambClub.ViewModel
                 {
                     Text = Strings.WaitingForPlayers,
                     TextColor = Colors.Black,
-                    FontSize = 16,
+                    FontSize = 10,
                     Margin = new Thickness(5),
                     Padding = new Thickness(2),
                     HorizontalTextAlignment = TextAlignment.Center,
