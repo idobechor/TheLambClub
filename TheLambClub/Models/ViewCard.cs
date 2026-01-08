@@ -1,6 +1,4 @@
-﻿using TheLambClub.Models;
-
-namespace TheLambClub.ViewModel
+﻿namespace TheLambClub.Models
 {
     public class ViewCard : ImageButton
     {

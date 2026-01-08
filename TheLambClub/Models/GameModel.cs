@@ -3,7 +3,6 @@ using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
-using TheLambClub.ViewModel;
 
 namespace TheLambClub.Models
 {

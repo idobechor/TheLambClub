@@ -2,7 +2,6 @@
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 using TheLambClub.Models;
-using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
