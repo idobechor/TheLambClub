@@ -1,6 +1,5 @@
 ﻿using TheLambClub.Models;
 using static TheLambClub.Models.FBCard;
-using static TheLambClub.ViewModel.ViewCard;
 
 namespace TheLambClub.ModelsLogic
 {

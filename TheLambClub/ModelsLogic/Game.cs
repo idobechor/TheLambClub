@@ -1,11 +1,6 @@
-﻿
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
 using TheLambClub.Models;
-using TheLambClub.Views;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -29,36 +24,18 @@ namespace TheLambClub.ModelsLogic
                 return p;
             }
         }
-        public override string CurrentStatus
-        {
-            get
-            {
-                if (!IsFull)
-                {
-                    return Strings.WaitingStatus;
-                }
-                return Strings.PlayingStatus;
-            }
-        }
+        public override string CurrentStatus => IsFull ? Strings.PlayingStatus : Strings.WaitingStatus;
         public override bool IsMyTurn
         {
             get
             {
                 bool IsMyTurn = false;
-                if (Players != null)
-                {
-                    IsMyTurn = Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
-                }
+                if (Players != null)               
+                    IsMyTurn = Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;               
                 return IsMyTurn;
             }
         }
-        public override bool IsHost
-        {
-            get
-            {
-                return HostId == fbd.UserId;
-            }
-        }
+        public override bool IsHost=> HostId == fbd.UserId;
         public Game() { }
 
         public override void NextTurn()
@@ -120,9 +97,8 @@ namespace TheLambClub.ModelsLogic
             {
                 if (item != null)
                 {
-                    item.FBCard1 = setOfCards.GetRandomCard();
-                    item.FBCard2 = setOfCards.GetRandomCard();
-                    Console.WriteLine("cards were set");
+                    item.FBCard1 = SetOfCards.GetRandomCard();
+                    item.FBCard2 = SetOfCards.GetRandomCard();
                 }
             }
             if (upDateFB)   //במקרה של סיום הסבב אני גם ככה מעדכן את השחקנים פיירבייס ולכן לא תמיד אצטרך לעדכן גם פה
@@ -208,17 +184,17 @@ namespace TheLambClub.ModelsLogic
             }
             if (RoundNumber == 1)
             {
-                BoardCards[0] = setOfCards.GetRandomCard();
-                BoardCards[1] = setOfCards.GetRandomCard();
-                BoardCards[2] = setOfCards.GetRandomCard();
+                BoardCards[0] = SetOfCards.GetRandomCard();
+                BoardCards[1] = SetOfCards.GetRandomCard();
+                BoardCards[2] = SetOfCards.GetRandomCard();
             }
             else if (RoundNumber == 2)
             {
-                BoardCards[3] = setOfCards.GetRandomCard();
+                BoardCards[3] = SetOfCards.GetRandomCard();
             }
             else if (RoundNumber == 3)
             {
-                BoardCards[4] = setOfCards.GetRandomCard();
+                BoardCards[4] = SetOfCards.GetRandomCard();
             }
         }
         protected override bool IsOneStaying()
@@ -397,10 +373,8 @@ namespace TheLambClub.ModelsLogic
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
                         IsPopupOpen = false;
                     }
-                    Console.WriteLine("EndHand BeforeIf");
                     if (IsHost)
                     {
-                        Console.WriteLine("EndHand");
                         EndHand();
                         isHandEnded= true;
                     }

@@ -10,7 +10,6 @@ public class MainPageVM : ObservableObject
 {
     private readonly Games games = new();
     private readonly User user = new();
-    private readonly MainPageML mainPageML = new();
     public ObservableCollection<int>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
     public int SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; 
             set { games.SelectedNumberOfPlayers = value; (AddGameCommand as Command)?.ChangeCanExecute(); } }
@@ -47,14 +46,14 @@ public class MainPageVM : ObservableObject
     }
     public MainPageVM()
     {
-            AddGameCommand = new Command(AddGame, CanAddGame);
+        AddGameCommand = new Command(AddGame, CanAddGame);
         InstructionsCommand = new Command(ShowInstructionsPrompt);
         games.OnGameAdded += OnGameAdded;
         games.OnGamesChanged += OnGamesChanged;
-    }
+        }
     public void ShowInstructionsPrompt(object obj)
     {
-        mainPageML.ShowInstructionsPrompt(obj);
+      Application.Current!.MainPage!.DisplayAlert(Strings.InsructionsTxtTitle, Strings.InsructionsTxt, Strings.Ok);
     }
 
     private void OnGameAdded(object? sender, Game game)

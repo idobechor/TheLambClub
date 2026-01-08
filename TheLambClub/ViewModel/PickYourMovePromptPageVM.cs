@@ -28,7 +28,11 @@ namespace TheLambClub.ViewModel
                     TimeLeftLabel.TextColor = Colors.Black;
                 }
             }
-            OnPropertyChanged(nameof(TimeLeft));
+            else
+            {
+                RequestClose?.Invoke();
+            }
+                OnPropertyChanged(nameof(TimeLeft));
         }
         private int _betAmount { get; set; }
         public string CheckOrFold=>game.CheckOrCall;

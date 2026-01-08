@@ -42,8 +42,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Card2));
             game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
-        }
-
+        } 
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
             if (!_isPopupOpen)

@@ -8,6 +8,8 @@ namespace TheLambClub.Models
     public abstract class GameModel
     {
         [Ignored]
+        public EventHandler<WinningPopupEvent>? OnwinnerSelected;
+        [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
         public EventHandler? TimeLeftFinished;
@@ -26,11 +28,11 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract string CurrentStatus { get;}
         [Ignored]
-        protected  SetOfCards setOfCards { get; }= new SetOfCards();
+        protected  SetOfCards SetOfCards { get; }= new SetOfCards();
         [Ignored]
         public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
         [Ignored]
-        public string TimeLeft { get; protected set; } = string.Empty;
+        public string TimeLeft { get; protected set; } = string.Empty;     
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
         public int CurrentPlayerIndex { get; set; }
@@ -55,15 +57,13 @@ namespace TheLambClub.Models
         [Ignored]
         public bool CanICheck { get; set; }=true;
         [Ignored]
-        public string CheckOrCall { get; set; } = "Check";
+        public string CheckOrCall { get; set; } = Strings.Check;
         [Ignored]
         protected bool EndOfHand = false;
         [Ignored]
         protected bool TimerCreated = false;
         public Player[]? Players { get; set; }
-        protected const int HandComplete = 4;
-        [Ignored]
-        public EventHandler<WinningPopupEvent>? OnwinnerSelected;
+        protected const int HandComplete = 4;       
         [Ignored]
         public bool IsPopupOpen { get; set; }= false;
 

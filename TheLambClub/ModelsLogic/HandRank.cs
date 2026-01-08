@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheLambClub.Models;
+﻿using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
@@ -39,9 +34,8 @@ namespace TheLambClub.ModelsLogic
                         }
                     }
                 }
-            }
-            //אם הם באמת שווים
-            return res;
+            }           
+            return res; //אם הם באמת שווים
         }
         public override bool IsBetter(HandRank other)
         {

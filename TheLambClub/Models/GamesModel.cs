@@ -12,7 +12,7 @@ namespace TheLambClub.Models
         public bool IsBusy { get; set; }
         public EventHandler<Game>? OnGameAdded;
         public ObservableCollection<Game>? GamesList { get; set; } = [];//רשימת השחקנים שמציגים שחסר בהם משתתפים
-        public ObservableCollection<int>? NumberOfPlayersList { get; set; } = [4, 5, 6];
+        public ObservableCollection<int>? NumberOfPlayersList { get; set; } = [2, 5, 6];
         public string DisplayName => $"{SelectedNumberOfPlayers}";
         public int SelectedNumberOfPlayers { get; set; } = 0;
         public Game? CurrentGame { get => currentGame; set => currentGame = value; }
