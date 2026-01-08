@@ -69,7 +69,6 @@ namespace TheLambClub.ViewModel
                 user.Email = value;
                 (LoginCommand as Command)?.ChangeCanExecute();
             }
-
         }
     }
 }

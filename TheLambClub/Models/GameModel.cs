@@ -1,7 +1,9 @@
 ﻿
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
+using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.Models
 {
@@ -66,6 +68,12 @@ namespace TheLambClub.Models
         protected const int HandComplete = 4;       
         [Ignored]
         public bool IsPopupOpen { get; set; }= false;
+        [Ignored]
+        public abstract ObservableCollection<ViewCard> ?BoardViewCards { get; }
+        [Ignored]
+        public abstract ViewCard ?ViewCard1 { get; }
+        [Ignored]
+        public abstract ViewCard ?ViewCard2 { get; }
 
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();

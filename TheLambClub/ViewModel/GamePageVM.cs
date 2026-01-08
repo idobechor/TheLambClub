@@ -13,25 +13,26 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public Command ShowPickYourMovePrompt { get; }
-        public ObservableCollection<ViewCard> BoardCards
-        {
-            get
-            {
-                return [.. game.BoardCards.Select(c =>
-                {
-                    if (c == null)
-                        return new ViewCard();
-                    return new ViewCard(c);
-                })];
-                
-            }            
-        }
-        public string MyName=> game.MyName;
+        public string Name => game.CurrentPlayer!.Name;
+        public ViewCard Card1 => game.ViewCard1!;
+
+        public ViewCard Card2 => game.ViewCard2!;
+
+        public string Status => game.CurrentStatus;
+        public Command ShowPickYourMovePrompt { get; }     
+        public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
+       public string MyName=> game.MyName;
         public string CurrentStatus => game.CurrentStatus;      
         private readonly List<Label> lstOponnentsLabels = [];
         private bool _isPopupOpen=>game.IsPopupOpen;
-
+        public GamePageVM(Game game, Grid grdOponnents)
+        {
+            this.game = game;
+            InitOponnentsGrid(grdOponnents);
+            game.OnGameChanged += OnGameChanged;
+            game.OnGameDeleted += OnGameDeleted;
+            ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
+        }
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
@@ -50,15 +51,6 @@ namespace TheLambClub.ViewModel
                 Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
                 game.IsPopupOpen = true;
             }         
-        }
-
-        public GamePageVM(Game game, Grid grdOponnents)
-        {
-           this.game=game;
-            InitOponnentsGrid(grdOponnents);
-            game.OnGameChanged += OnGameChanged;
-            game.OnGameDeleted += OnGameDeleted;           
-            ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
         private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)
@@ -145,31 +137,5 @@ namespace TheLambClub.ViewModel
         {
             game.RemoveSnapShotListener();
         }
-        public string Name => game.CurrentPlayer!.Name;
-        public ViewCard Card1
-        {
-            get
-            {
-                ViewCard vc;
-                if ( game.CurrentPlayer==null|| game.CurrentPlayer.FBCard1 == null)
-                    vc= new ViewCard();
-                else
-                    vc= new ViewCard(game.CurrentPlayer.FBCard1);
-                return vc;
-            }
-        }
-        public ViewCard Card2
-        {
-            get
-            {
-                ViewCard vc;
-                if (game.CurrentPlayer == null || game.CurrentPlayer.FBCard2 == null)
-                    vc= new ViewCard();
-                else
-                    vc= new ViewCard(game.CurrentPlayer.FBCard2);
-                return vc;
-            }
-        }
-        public string Status => game.CurrentStatus;
     }
 }

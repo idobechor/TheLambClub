@@ -1,11 +1,49 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
+using System.Collections.ObjectModel;
 using TheLambClub.Models;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
+        public override ObservableCollection<ViewCard>? BoardViewCards
+        {
+            get
+            {
+                return [.. BoardCards.Select(c =>
+                {
+                    if (c == null)
+                        return new ViewCard();
+                    return new ViewCard(c);
+                })];
+
+            }
+        }
+        public override ViewCard? ViewCard1
+        { get
+            {
+                ViewCard vc;
+                if (CurrentPlayer == null || CurrentPlayer.FBCard1 == null)
+                    vc = new ViewCard();
+                else
+                    vc = new ViewCard(CurrentPlayer.FBCard1);
+                return vc;
+            }
+        }
+        public override ViewCard? ViewCard2
+        { get
+            {
+                ViewCard vc;
+                if (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)
+                    vc = new ViewCard();
+                else
+                    vc = new ViewCard(CurrentPlayer.FBCard2);
+                return vc;
+            }
+        }
+
         public override Player? CurrentPlayer
         {
             get
