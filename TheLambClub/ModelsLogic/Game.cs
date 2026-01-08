@@ -40,8 +40,8 @@ namespace TheLambClub.ModelsLogic
 
         public override void NextTurn()
         {
-            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;//מעביר תור
-            UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));//עידכון fb ומסך
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
+            UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
         }
         public override void PickedFold()
         {
@@ -314,7 +314,7 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&& EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isHandEnded = false;
@@ -329,7 +329,7 @@ namespace TheLambClub.ModelsLogic
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
-                //if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)
+                //if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)//קשור להימורים שעדיין לא ממשתי
                 //{
                 //    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
                 //    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
