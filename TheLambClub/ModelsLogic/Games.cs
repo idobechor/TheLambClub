@@ -30,7 +30,7 @@ namespace TheLambClub.ModelsLogic
         protected override void OnComplete(Task task)
         {
             IsBusy = false;
-            OnGameAdded?.Invoke(this, CurrentGame!); // מעדכן את המסך
+            OnGameAdded?.Invoke(this, CurrentGame!); 
         }
         public override void AddSnapshotListener()
         {
@@ -42,14 +42,9 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void OnChange(IQuerySnapshot snapshot, Exception error)
         {
-            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);//לוקח את כל המשחקים שחסרים בהם שחקנים כדי להציג אותם
-        }
-        //לוקח את כל המשחקים שה שחסרים בהם שחקנים (IsFull==false) 
-        //יוצר אותם עם הפעולה הבונה הדיפולטית עם הid שלהם מהפייר בייס מוסיף אותם לרשימת המשחקים שמציגים על המשחק ומעדכנת את המסך
+            fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
+        } 
         protected override void OnComplete(IQuerySnapshot qs) 
-
-
-
         {
             GamesList!.Clear();
             foreach (IDocumentSnapshot ds in qs.Documents)

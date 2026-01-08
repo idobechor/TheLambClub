@@ -104,7 +104,7 @@ namespace TheLambClub.ModelsLogic
                 handRank= new HandRank
                          {
                           HandType = LevelsOfHands.RoyalFlush,
-                          PrimaryValue = 14, // ברויאל פלאש האס הוא תמיד יהיה הקלף הגבוהה ביותר
+                          PrimaryValue = 14, 
                           HandCards = cards
                          };
             return handRank;
@@ -267,7 +267,7 @@ namespace TheLambClub.ModelsLogic
 
                 for (int j = i + 1; j < sortedCards.Length; j++)
                 {
-                    int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;      // Ace = 14
+                    int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;   
                     int valueMax = sortedCards[maxIndex].Value == 1 ? 14 : sortedCards[maxIndex].Value;
 
                     if (valueJ > valueMax)
@@ -287,7 +287,6 @@ namespace TheLambClub.ModelsLogic
         }
         protected override HandRank? CheckStraight(FBCard[] cards)
         {
-            //בסטרייט אין לנו שימוש בכפילויות ולכן נרצה להסיר אותם
             HandRank? handRank = null!;
             List<int> distinctValuesList = [];
             for (int i = 0; i < cards.Length; i++)
@@ -307,7 +306,6 @@ namespace TheLambClub.ModelsLogic
                     distinctValuesList.Add(value);
                 }
             }
-                //העברתי למערך בגלל שהפעולה היחידה שיש לי שממינת זה למערכים
             int[] distinctValues = distinctValuesList.ToArray();
             distinctValues=BubbleSort(distinctValues);
             for (int i = 0; i <= distinctValues.Length - 5; i++)
@@ -331,7 +329,6 @@ namespace TheLambClub.ModelsLogic
                     };
                 }
             }           
-            // בגלל שלאס יש 2 ערכים יש לנו מקרה קצה שצריך לטפל בו (המרנו את אס ל14 לפני)
             bool hasAce = false;
             bool hasTwo = false;
             bool hasThree = false;
@@ -366,7 +363,6 @@ namespace TheLambClub.ModelsLogic
             int threeOfAKindValue = 0;
             int[] CountArr = new int[13];
             int[] CardsValues = new int[cards.Length];
-            //בגלל שבפוקר לוקחים את ה5 קלפים הכי טובים אז יש רק 3 קיקרים
             int[] kickers = new int[2];
             for (int i = 0; i < cards.Length; i++)
             {
@@ -462,7 +458,6 @@ namespace TheLambClub.ModelsLogic
             int pair = 0;
             int[] CountArr = new int[13];
             int[] CardsValues = new int[cards.Length];
-            //בגלל שבפוקר לוקחים את ה5 קלפים הכי טובים אז יש רק 3 קיקרים
             int[] kickers = new int[3];
             for (int i = 0; i < cards.Length; i++)
             {
@@ -510,7 +505,6 @@ namespace TheLambClub.ModelsLogic
         protected override HandRank EvaluateHighCard(FBCard[] cards)
         {
             int[] kickersArray = new int[cards.Length];
-            //אסים שווים גם 1 וגם 14 ולכן אין ברירה אלה להמיר אותם ל14
             for (int i = 0; i < cards.Length; i++)
             {
                 kickersArray[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;

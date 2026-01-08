@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Maui.Behaviors;
-using Firebase.Auth;
+﻿
 using TheLambClub.ModelsLogic;
-
 namespace TheLambClub.Models
 {
     public abstract class UserModels

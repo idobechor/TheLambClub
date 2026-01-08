@@ -36,7 +36,7 @@ namespace TheLambClub.ModelsLogic
             }
         }
         public override bool IsHost=> HostId == fbd.UserId;
-        public Game() { }
+        public Game(){ }
 
         public override void NextTurn()
         {
@@ -101,7 +101,7 @@ namespace TheLambClub.ModelsLogic
                     item.FBCard2 = SetOfCards.GetRandomCard();
                 }
             }
-            if (upDateFB)   //במקרה של סיום הסבב אני גם ככה מעדכן את השחקנים פיירבייס ולכן לא תמיד אצטרך לעדכן גם פה
+            if (upDateFB)
                 UpdatePlayersArray(_ => { });
         }
         protected override void UpdatePlayersArray(Action<Task> OnComplete)
@@ -112,11 +112,11 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-        public override void AddSnapShotListener()//פונקציה שמזהה שינויים בפיירבייס ומגיבה להם
+        public override void AddSnapShotListener()
         {
             ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         }
-        public override void RemoveSnapShotListener()//כשאנחנו יוצאים מהמשחק וסוגרים אותו נסגור  גם את ההזנה לפיירבייס
+        public override void RemoveSnapShotListener()
         {
             ilr?.Remove();
             DeleteDocument(OnComplete);
@@ -290,7 +290,7 @@ namespace TheLambClub.ModelsLogic
             }
             return result;  
         }
-        protected override void EndHand()//מאפס הכל בסיום הסבב
+        protected override void EndHand()
         {
             EndOfHand = false;
             ChangeIsFoldedToFalse();
@@ -315,7 +315,7 @@ namespace TheLambClub.ModelsLogic
             {
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0 && EveryOneIsNotRerazeing();
-                bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;  // = (RoundNumber < updatedGame.RoundNumber && updatedGame.RoundNumber == HandComplete);
+                bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isHandEnded = false;
                 string WinnerName = string.Empty;
@@ -341,7 +341,7 @@ namespace TheLambClub.ModelsLogic
                 //}
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
                 {
-                    if (IsOneStaying())//אם כולם יצאו חוץ משחקן אחד לא נבדוק מה היה לשחקן האחד כי לא בטוח שכל הקלפים על הלוח נפתחו
+                    if (IsOneStaying())
                     {
                         Player[] Winner = new Player[1];
                         foreach (Player player in Players!)
@@ -402,8 +402,7 @@ namespace TheLambClub.ModelsLogic
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else
-            {
-               
+            {            
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
             }
         }

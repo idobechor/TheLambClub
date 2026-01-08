@@ -49,8 +49,7 @@ namespace TheLambClub.ViewModel
             {
                 Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
                 game.IsPopupOpen = true;
-            }
-          
+            }         
         }
 
         public GamePageVM(Game game, Grid grdOponnents)
@@ -131,12 +130,11 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.Players?[i] != null && game.CurrentPlayer?.Id != game.Players?[i].Id)//אנחנו לא צריכים את השחקן הנוכחי אותו נשים למטה
+                if (game.Players?[i] != null && game.CurrentPlayer?.Id != game.Players?[i].Id)
                 {
                     lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
-                }
-               
+                }             
             }
         }     
         public void AddSnapshotListener()

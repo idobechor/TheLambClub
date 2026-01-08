@@ -1,5 +1,4 @@
-﻿using TheLambClub.ModelsLogic;
-
+﻿
 namespace TheLambClub.Models
 {
     public abstract class SetOfCardsModel

@@ -12,7 +12,7 @@ public class MainPageVM : ObservableObject
     private readonly User user = new();
     public ObservableCollection<int>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
     public int SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers; 
-            set { games.SelectedNumberOfPlayers = value; (AddGameCommand as Command)?.ChangeCanExecute(); } }
+     set { games.SelectedNumberOfPlayers = value; (AddGameCommand as Command)?.ChangeCanExecute(); } }
         private bool CanAddGame()
         {
             return SelectedNumberOfPlayers !=0;
@@ -25,7 +25,6 @@ public class MainPageVM : ObservableObject
     public Game? SelectedItem
     {
         get => games.CurrentGame;
-
         set
         {
             if (value != null)

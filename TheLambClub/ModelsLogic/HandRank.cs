@@ -35,7 +35,7 @@ namespace TheLambClub.ModelsLogic
                     }
                 }
             }           
-            return res; //אם הם באמת שווים
+            return res; 
         }
         public override bool IsBetter(HandRank other)
         {
