@@ -7,9 +7,9 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class WinningPropmptML:WinningPopupModel
+    public class WinningPopup:WinningPopupModel
     {
-        public WinningPropmptML(Player[] players, Dictionary<Player, HandRank> ranks) : base(players, ranks)
+        public WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks) : base(players, ranks)
         {
         }
 

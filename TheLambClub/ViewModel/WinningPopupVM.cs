@@ -10,12 +10,12 @@ namespace TheLambClub.ViewModel
 {
     public class WinningPopupVM
     {
-        private readonly WinningPropmptML winningPropmptML;
-        public string[] PlayersNames => winningPropmptML.PlayersNames;
+        private readonly WinningPopup winningPopup;
+        public string[] PlayersNames => winningPopup.PlayersNames;
 
         public WinningPopupVM(Player[] players,Dictionary<Player,HandRank>ranks)
         {
-            winningPropmptML = new WinningPropmptML(players,ranks);
+            winningPopup = new WinningPopup(players,ranks);
         }
     }
 }
