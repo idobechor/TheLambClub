@@ -23,10 +23,8 @@ namespace TheLambClub.ModelsLogic
                 {
                     res = SecondaryValue - other.SecondaryValue;
                 }
-                else
-                {
-                    if (Kickers != null && other.Kickers != null)
-                    {
+                else if (Kickers != null && other.Kickers != null)
+                {                   
                         int minLength = Math.Min(Kickers.Length, other.Kickers.Length);
                         for (int i = 0; i < minLength; i++)
                         {
@@ -34,8 +32,7 @@ namespace TheLambClub.ModelsLogic
                             {
                                 res = Kickers[i] - other.Kickers[i];
                             }
-                        }
-                    }
+                        }                    
                 }
             }           
             return res; 
