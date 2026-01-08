@@ -1,5 +1,6 @@
 
 using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Messaging;
 using TheLambClub.ModelsLogic;
 using TheLambClub.ViewModel;
 
@@ -15,7 +16,6 @@ public partial class PickYourMovePopupPage  : Popup
         BindingContext= PromptYourMoveVM;
         PromptYourMoveVM.RequestClose += OnRequestClose;
     }
-
     private void OnRequestClose()
     {
         PromptYourMoveVM.Close();

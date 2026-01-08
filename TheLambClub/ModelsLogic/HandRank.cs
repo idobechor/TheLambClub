@@ -25,12 +25,15 @@ namespace TheLambClub.ModelsLogic
                 }
                 else
                 {
-                    int minLength = Math.Min(Kickers.Length, other.Kickers.Length);
-                    for (int i = 0; i < minLength; i++)
+                    if (Kickers != null && other.Kickers != null)
                     {
-                        if (Kickers[i] != other.Kickers[i])
+                        int minLength = Math.Min(Kickers.Length, other.Kickers.Length);
+                        for (int i = 0; i < minLength; i++)
                         {
-                            res= Kickers[i] - other.Kickers[i];
+                            if (Kickers[i] != other.Kickers[i])
+                            {
+                                res = Kickers[i] - other.Kickers[i];
+                            }
                         }
                     }
                 }
