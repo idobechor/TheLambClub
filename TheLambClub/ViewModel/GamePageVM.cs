@@ -23,6 +23,7 @@ namespace TheLambClub.ViewModel
        public string MyName=> game.MyName;
         public string CurrentStatus => game.CurrentStatus;      
         private readonly List<Label> lstOponnentsLabels = [];
+        private readonly List<Label> lstOponnentsMoneyLabels = [];
         private bool _isPopupOpen=>game.IsPopupOpen;
         public GamePageVM(Game game, Grid grdOponnents)
         {
@@ -30,6 +31,7 @@ namespace TheLambClub.ViewModel
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
             game.OnGameDeleted += OnGameDeleted;
+            game.MoneyChanged += OnMyMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
         private void OnGameChanged(object? sender, EventArgs e)
@@ -44,6 +46,10 @@ namespace TheLambClub.ViewModel
             game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         } 
+        private void OnMyMoneyChanged(int index)
+        {
+            OnPopertyChanged(nameof(lstOponnentsMoneyLabels[index]));
+        }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
             if (!_isPopupOpen)
@@ -82,30 +88,42 @@ namespace TheLambClub.ViewModel
                     HorizontalTextAlignment = TextAlignment.Center,
                 };
                 lstOponnentsLabels.Add(lbl);
-                Image img1 = new()
+                grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+                Label money = new()
                 {
-                    Source = Keys.BackOfCard,
-                    HeightRequest = 40,
-                    WidthRequest = 40,
-                    HorizontalOptions = LayoutOptions.Center
+                    Text = game!=null&&game.Players!=null&&game.Players[i]!=null?String.Empty+game.Players[i].CurrentMoney:String.Empty,
+                    TextColor = Colors.Black,
+                    FontSize = 10,
+                    Margin = new Thickness(5),
+                    Padding = new Thickness(2),
+                    HorizontalTextAlignment = TextAlignment.Center,
                 };
+                lstOponnentsLabels.Add(lbl);
+                lstOponnentsMoneyLabels.Add(money);
+                //Image img1 = new()
+                //{
+                //    Source = Keys.BackOfCard,
+                //    HeightRequest = 40,
+                //    WidthRequest = 40,
+                //    HorizontalOptions = LayoutOptions.Center
+                //};
 
-                Image img2 = new()
-                {
-                    Source = Keys.BackOfCard,
-                    HeightRequest = 40,
-                    WidthRequest = 40,
-                    HorizontalOptions = LayoutOptions.Center
-                };
-                StackLayout imagesRow = new()
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    HorizontalOptions = LayoutOptions.Center,
-                    Spacing = 3,
-                    Children = { img1, img2 }
-                };
+                //Image img2 = new()
+                //{
+                //    Source = Keys.BackOfCard,
+                //    HeightRequest = 40,
+                //    WidthRequest = 40,
+                //    HorizontalOptions = LayoutOptions.Center
+                //};
+                //StackLayout imagesRow = new()
+                //{
+                //    Orientation = StackOrientation.Horizontal,
+                //    HorizontalOptions = LayoutOptions.Center,
+                //    Spacing = 3,
+                //    Children = { img1, img2 }
+                //};
                 grdOponnents.Add(lbl, i, 0);
-                grdOponnents.Add(imagesRow, i, 1);
+                grdOponnents.Add(money, i, 1);
             }
         }
 
@@ -117,6 +135,7 @@ namespace TheLambClub.ViewModel
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
             });
         }
+        //לתקן כללי כתיבת קוד
         private void DisplayOponnentsNames()
         {
             int lblIndex = 0;

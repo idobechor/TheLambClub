@@ -25,6 +25,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnCheckOrCallChanged;
         [Ignored]
+        public EventHandler? OnMyMoneyChanged;
+        [Ignored]
         public  abstract Player ?CurrentPlayer { get; }
         [Ignored]
         public abstract string CurrentStatus { get;}

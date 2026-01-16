@@ -316,7 +316,7 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-
+            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
         }
         public override void CallFunction()
         {
@@ -334,7 +334,8 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            Console.WriteLine("Moving Turn From Calling" + DateTime.Now);                    
+            Console.WriteLine("Moving Turn From Calling" + DateTime.Now);
+            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
         }
         protected override bool EveryOneIsNotRerazeing()
         {
@@ -399,6 +400,7 @@ namespace TheLambClub.ModelsLogic
                 else
                 {
                     CheckOrCall = Strings.Check;
+                    MinBet = 0;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
