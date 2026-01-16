@@ -1,48 +1,61 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               xmlns:vm="clr-namespace:TheLambClub.ViewModel"
-               xmlns:m="clr-namespace:TheLambClub.Models"
-               x:Class="TheLambClub.Views.PickYourMovePopupPage"
-               x:DataType="vm:PickYourMovePromptPageVM"
-                 CanBeDismissedByTappingOutsideOfPopup="False">
-    <Grid ColumnDefinitions="auto,auto,auto,auto" RowDefinitions="*,*">
-        <Button 
-            Grid.RowSpan="2"
-        BackgroundColor="DarkBlue"
-        Command="{Binding Stay}"
-        CornerRadius="15"
-        Text="{Binding CheckOrFold}" 
-        TextColor="White" />
-        <Button 
-          Grid.RowSpan="2"
-        BackgroundColor="DarkBlue"
-             Grid.Column="1"
-        Command="{Binding Fold}"
-        CornerRadius="15"
-        Text="{x:Static m:Strings.FoldBtnTxt}" 
-        TextColor="White" />
-        <VerticalStackLayout Grid.Column="2" Grid.RowSpan="2">
-            <Label Text="{Binding BetAmountStr}"
-             FontSize="20"
-                 Grid.Column="2"
-                 Grid.Row="1"
-             HorizontalOptions="Center" />
-                    <Slider  Grid.Column="2" BackgroundColor="Black" Minimum="10" Maximum="1000" Value="{Binding BetAmount}" />
-                    <Button Text="{x:Static m:Strings.SubmitBetBtn }" Grid.Column="4" Grid.Row="2"
-              Command="{Binding SubmitBetCommand}" />
+<toolkit:Popup
+    x:Class="TheLambClub.Views.PickYourMovePopupPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:TheLambClub.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+    x:DataType="vm:PickYourMovePromptPageVM"
+    CanBeDismissedByTappingOutsideOfPopup="False">
+    <Grid
+        Padding="10"
+        ColumnDefinitions="*,2*"
+        ColumnSpacing="0"
+        RowDefinitions="*">
+        <VerticalStackLayout
+            Grid.Column="0"
+            Spacing="0"
+            VerticalOptions="Center">
+            <Button
+                BackgroundColor="DarkBlue"
+                Command="{Binding Stay}"
+                CornerRadius="15"
+                FontSize="20"
+                Text="{Binding CheckOrFold}"
+                TextColor="White" />
+            <Button
+                BackgroundColor="DarkBlue"
+                Command="{Binding Fold}"
+                CornerRadius="15"
+                FontSize="20"
+                Text="{x:Static m:Strings.FoldBtnTxt}"
+                TextColor="White" />
+            <Border Padding="0" BackgroundColor="Black">
+                <Label
+                    x:Name="TimeLeft"
+                    BackgroundColor="White"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    Text="{Binding TimeLeft}"
+                    VerticalOptions="Center" />
+            </Border>
         </VerticalStackLayout>
-        <Border BackgroundColor="Black"
-         Grid.Column="4"
-        Grid.RowSpan="2">
-            <Label 
-       BackgroundColor="White"     
-        Text="{Binding TimeLeft}"
-        x:Name="TimeLeft"
-        HorizontalOptions="Center"
-        VerticalOptions="Center"
-        FontSize="20"/>
-        </Border>
+        <VerticalStackLayout
+            Grid.Column="1"
+            HorizontalOptions="Center"
+            Spacing="0"
+            VerticalOptions="Center">
+            <Label
+                FontSize="20"
+                HorizontalOptions="Center"
+                Text="{Binding BetAmountStr}" />
+            <Slider
+                Maximum="{Binding PlayersCurrentMoney}"
+                Minimum="{Binding MinBet}"
+                WidthRequest="200"
+                Value="{Binding BetAmount}" />
+            <Button Command="{Binding SubmitBetCommand}" Text="{x:Static m:Strings.SubmitBetBtn}" />
+        </VerticalStackLayout>
     </Grid>
 </toolkit:Popup>

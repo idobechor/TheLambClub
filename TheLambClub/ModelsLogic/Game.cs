@@ -77,8 +77,14 @@ namespace TheLambClub.ModelsLogic
 
         public override void NextTurn()
         {
+            PlayerBeforeId = Players![CurrentPlayerIndex].Id;
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(PlayerBeforeId), PlayerBeforeId! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
         }
         public override void PickedFold()
         {
@@ -259,18 +265,19 @@ namespace TheLambClub.ModelsLogic
             }
            return i;
         }
-      
-        protected override int BeforeCurrentPlayerIndex()
-        {
+
+        protected override int BeforeCurrentPlayerIndex() {
             int index = CurrentPlayerIndex;
             if (Players != null && Players.Length == MaxNumOfPlayers)
             {
                 for (int i = 0; i < Players.Length - 1; i++)
                 {
-                    index = (index - 1 + Players.Length) % Players.Length;
-                    if (Players[index] != null && !Players[index]!.IsFolded)
-                       break;
-                }
+                    index = i; 
+                    if (Players[i].Id != null && Players[i].Id == PlayerBeforeId)
+                    {
+                        break;
+                    } 
+                } 
             }
             return index;
         }
@@ -290,30 +297,44 @@ namespace TheLambClub.ModelsLogic
                     }
                 }
             }
+
+            if ((CurrentPlayer!.IsReRazed))
+            {
+                Dictionary<string, object> d = new()
+                {
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
+                {nameof(Players), Players! },
+                };
+                fbd.UpdateFields(Keys.GamesCollection, Id, d, (task) => { });
+            }
+            else 
+             NextTurn();
+
             Dictionary<string, object> dict = new()
             {
                 { nameof(Players), Players! },
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            if (!(CurrentPlayer!.IsReRazed))
-                NextTurn();
+
         }
         public override void CallFunction()
         {
             if (Players![BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer!.CurrentBet)
             {
                 double MoneyToCall = Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet;
+                CurrentPlayer.CurrentBet = Players[BeforeCurrentPlayerIndex()].CurrentBet;
                 CurrentPlayer.CurrentMoney = CurrentPlayer.CurrentMoney - MoneyToCall;
                 Pot[RoundNumber] += MoneyToCall;
             }
+            NextTurn();
             Dictionary<string, object> dict = new()
             {
                 { nameof(Players), Players },
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            NextTurn();
+            Console.WriteLine("Moving Turn From Calling" + DateTime.Now);                    
         }
         protected override bool EveryOneIsNotRerazeing()
         {
@@ -352,9 +373,10 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
+                bool isCheckOrCallChanged = (updatedGame.CurrentPlayer?.CurrentBet != CurrentPlayer?.CurrentBet);
                 bool isHandEnded = false;
                 string WinnerName = string.Empty;
                 Dictionary<Player, HandRank> ranks = [];
@@ -364,12 +386,14 @@ namespace TheLambClub.ModelsLogic
                 RoundNumber = updatedGame.RoundNumber;
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
+                PlayerBeforeId= updatedGame.PlayerBeforeId;
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
-                int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
-                if (beforeMePlayerIndex > -1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)//קשור להימורים שעדיין לא ממשתי
+                if ( IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet)
                 {
-                    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
+                    CheckOrCall = Strings.Call + (Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) + "$";
+                    int minimalBet = (int)(Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) * 2;
+                    MinBet = CurrentPlayer.CurrentMoney>minimalBet?minimalBet: (int)CurrentPlayer.CurrentMoney;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
                 else
@@ -419,21 +443,33 @@ namespace TheLambClub.ModelsLogic
                 }
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)              
                     NextTurn();
-                if(CurrentPlayer!=null && IsMyTurn&&CurrentPlayer.IsReRazed)
+                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsReRazed)
                 {
-                    CurrentPlayer.IsReRazed= false;
+                    CurrentPlayer.IsReRazed = false;
+                    NextTurn();
+                    Dictionary<string, object> d = new()
+                    {
+                    { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
+                    {nameof(Players), Players! },
+                    };
+                    fbd.UpdateFields(Keys.GamesCollection, Id, d, (task) => { });
                 }
-
-                if (IsHost && isEndOfRound&&!isHandEnded)
+                if (IsFull&&IsHost &&EveryOneIsNotRerazeing()&&isEndOfRound && !isHandEnded)
                 {
                     foreach (Player player in Players!)
                     {
                         player!.CurrentBet = 0;
                     }
                     RoundNumber++;
-                    FillBoard();
-                    UpdateBoard((t) => { });
+                    Console.WriteLine("Round Number Updated" + RoundNumber+ "  ,"+ DateTime.Now);
+                    FillBoard();                  
                     EndOfHand = RoundNumber == HandComplete;
+                    UpdateBoard((t) => { });
+                    Dictionary<string, object> dict = new()
+                    {
+                       { nameof(Players), Players! },
+                    };
+                    fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
                 }
                 if (IsHost && changedToFull && !isHandEnded)
                 {

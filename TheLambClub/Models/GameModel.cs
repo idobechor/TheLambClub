@@ -42,6 +42,9 @@ namespace TheLambClub.Models
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
+        public string PlayerBeforeId=string.Empty;
+        [Ignored]
+        public int MinBet { get; set; }
         public abstract bool IsFull { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;

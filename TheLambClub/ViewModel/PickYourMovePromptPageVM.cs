@@ -13,7 +13,7 @@ namespace TheLambClub.ViewModel
         private int timeInt;
 
         public string TimeLeft => game.TimeLeft;
-        public TimerSettings timerSettings  => game.timerSettings;
+        public TimerSettings TimerSettings  => game.timerSettings;
 
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
@@ -37,6 +37,8 @@ namespace TheLambClub.ViewModel
         private int _betAmount { get; set; }
         public string CheckOrFold=>game.CheckOrCall;
         public string BetAmountStr =>Strings.IntoruceYourBet+_betAmount;
+        public int MinBet => game.MinBet;
+        public int PlayersCurrentMoney => ((int)(game != null && game.CurrentPlayer != null ? game.CurrentPlayer!.CurrentMoney : 10000));
         public int BetAmount
         {
             get => _betAmount;
@@ -57,7 +59,11 @@ namespace TheLambClub.ViewModel
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
             game.TimeLeftChanged += OnTimeLeftChanged;
-            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(timerSettings));
+            WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(TimerSettings));
+        }
+
+        public PickYourMovePromptPageVM()
+        {
         }
 
         public void Close()
@@ -69,6 +75,7 @@ namespace TheLambClub.ViewModel
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
         {
            OnPropertyChanged(nameof(CheckOrFold));
+            OnPropertyChanged(nameof(MinBet));
         }
 
         public ICommand Stay => new Command(StayFunction);

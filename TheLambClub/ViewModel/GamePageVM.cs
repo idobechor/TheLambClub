@@ -11,6 +11,7 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
+        private readonly PickYourMovePromptPageVM PYMPtPageVM = new();
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
 
@@ -39,6 +40,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
+            OnPropertyChanged(nameof(PYMPtPageVM.MinBet));
             game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         } 
