@@ -38,6 +38,7 @@ namespace TheLambClub.Models
         public int RoundNumber{get;set;}
         public int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
+        public double[] Pot = new double[5];
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;

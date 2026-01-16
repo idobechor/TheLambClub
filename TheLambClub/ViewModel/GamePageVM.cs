@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
-using System;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 using TheLambClub.Views;

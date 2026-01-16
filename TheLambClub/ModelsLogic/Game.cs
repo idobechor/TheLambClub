@@ -253,65 +253,66 @@ namespace TheLambClub.ModelsLogic
             int i = 0;
             foreach (Player player in Players!)
             {
-                if(player != null && !player.IsFolded)
-                {
-                    return i;
-                }
+                if(player != null && !player.IsFolded)               
+                    break;           
                 i++;
             }
-           return -1;
+           return i;
         }
-        public override void BetFunction(object obj) // פונקצית הימורים צריך לתקן
+      
+        protected override int BeforeCurrentPlayerIndex()
         {
-            //CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            //if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
-            //{
-            //    CurrentPlayer.IsReRazed = true;
-            //    CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
-            //}
-            //Dictionary<string, object> dict = new()
-            //{
-            //    { nameof(Players), Players! },
-            //};
-            //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            //NextTurn();
-        }
-        protected override int BeforeCurrentPlayerIndex() // פונקצית הימורים צריך לתקן
-        {
-            int beforeIndex = -1;
-            if (CurrentPlayerIndex == 0)
+            int index = CurrentPlayerIndex;
+            if (Players != null && Players.Length == MaxNumOfPlayers)
             {
-                for (int i = MaxNumOfPlayers - 1; i > 0; i--)
+                for (int i = 0; i < Players.Length - 1; i++)
                 {
-                    if (Players != null && Players[i] != null && !Players[i]!.IsFolded)
+                    index = (index - 1 + Players.Length) % Players.Length;
+                    if (Players[index] != null && !Players[index]!.IsFolded)
+                       break;
+                }
+            }
+            return index;
+        }
+        public override void BetFunction(object obj)
+        {
+            CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
+            Pot[RoundNumber] += ((double)CurrentPlayer?.CurrentBet!);
+            if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
+            {
+                CurrentPlayer.IsReRazed = true;
+                CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
+                foreach (Player player in Players!)
+                {
+                    if (player != null && player.Id != CurrentPlayer.Id)
                     {
-                        beforeIndex= i;
+                        player.IsReRazed = false;
                     }
                 }
             }
-            else
+            Dictionary<string, object> dict = new()
             {
-                for (int i = CurrentPlayerIndex - 1; i >= 0; i--)
-                {
-                    if (Players != null && Players[i] != null && !Players[i]!.IsFolded)
-                    {
-                        beforeIndex= i;
-                    }
-                }
-            }
-            return beforeIndex;
+                { nameof(Players), Players! },
+                { nameof(Pot), Pot }
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            if (!(CurrentPlayer!.IsReRazed))
+                NextTurn();
         }
-        public override void CallFunction() // פונקצית הימורים צריך לתקן
+        public override void CallFunction()
         {
-            //if (Players?[BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer?.CurrentBet)
-            //{
-            // CurrentPlayer?.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            //}
-            //Dictionary<string, object> dict = new()
-            //{
-            //    { nameof(Players), Players! },
-            //};
-            //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            if (Players![BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer!.CurrentBet)
+            {
+                double MoneyToCall = Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet;
+                CurrentPlayer.CurrentMoney = CurrentPlayer.CurrentMoney - MoneyToCall;
+                Pot[RoundNumber] += MoneyToCall;
+            }
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(Players), Players },
+                { nameof(Pot), Pot }
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             NextTurn();
         }
         protected override bool EveryOneIsNotRerazeing()
@@ -334,7 +335,7 @@ namespace TheLambClub.ModelsLogic
             RoundNumber = 0;
             CurrentPlayerIndex = 0;
             FillBoard();
-            FillArrayAndAddCards(false,(t) => { });                    
+            FillArrayAndAddCards(false,(t) => { });          
             Dictionary<string, object> dict = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
@@ -351,7 +352,7 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&& EveryOneIsNotRerazeing();
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isHandEnded = false;
@@ -366,16 +367,16 @@ namespace TheLambClub.ModelsLogic
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
                 int beforeMePlayerIndex= BeforeCurrentPlayerIndex();
-                //if (beforeMePlayerIndex >-1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)//קשור להימורים שעדיין לא ממשתי
-                //{
-                //    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
-                //    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
-                //}
-                //else
-                //{
-                //    CheckOrCall = Strings.Check;
-                //    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
-                //}
+                if (beforeMePlayerIndex > -1 && IsFull && Players?[beforeMePlayerIndex].CurrentBet != CurrentPlayer?.CurrentBet)//קשור להימורים שעדיין לא ממשתי
+                {
+                    CheckOrCall = Strings.Call + Players?[BeforeCurrentPlayerIndex()].CurrentBet + "$";
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    CheckOrCall = Strings.Check;
+                    OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
+                }
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete) )
                 {
                     if (IsOneStaying())
@@ -416,12 +417,19 @@ namespace TheLambClub.ModelsLogic
                         isHandEnded= true;
                     }
                 }
-                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
-                {
+                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)              
                     NextTurn();
+                if(CurrentPlayer!=null && IsMyTurn&&CurrentPlayer.IsReRazed)
+                {
+                    CurrentPlayer.IsReRazed= false;
                 }
+
                 if (IsHost && isEndOfRound&&!isHandEnded)
                 {
+                    foreach (Player player in Players!)
+                    {
+                        player!.CurrentBet = 0;
+                    }
                     RoundNumber++;
                     FillBoard();
                     UpdateBoard((t) => { });
