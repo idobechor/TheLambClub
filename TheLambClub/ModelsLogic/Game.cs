@@ -291,8 +291,11 @@ namespace TheLambClub.ModelsLogic
                         player.IsReRazed = false;
                 }
             }
-            else           
-                NextTurn();
+            else
+            {
+                PlayerBeforeId = Players![CurrentPlayerIndex].Id;
+                CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
+            }
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
@@ -300,7 +303,7 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
-            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
+            //OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
             Console.WriteLine("Betiing");
         }
 
@@ -308,15 +311,15 @@ namespace TheLambClub.ModelsLogic
         {
             int prevIndex = BeforeCurrentPlayerIndex();
             Player prevPlayer = Players![prevIndex];
-            Player current = CurrentPlayer!;
             double moneyToCall = prevPlayer.CurrentBet;
             if (moneyToCall > 0)
             {
-                current.CurrentBet = moneyToCall;
-                current.CurrentMoney -= moneyToCall;
+                Players[CurrentPlayerIndex].CurrentBet = moneyToCall;
+                Players[CurrentPlayerIndex].CurrentMoney -= moneyToCall;
                 Pot[RoundNumber] += moneyToCall;
             }
-            NextTurn();
+            PlayerBeforeId = Players![CurrentPlayerIndex].Id;
+            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
@@ -324,20 +327,16 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
-            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
+            //OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
             Console.WriteLine("calling");
         }
+
         protected override bool EveryOneIsNotRerazeing()
         {
             bool result = true;
-
             foreach (Player player in Players!)
-            {
                 if (player != null && player.IsReRazed)
-                {
                     result= false;
-                }
-            }
             return result;  
         }
         protected override void EndHand()
@@ -363,10 +362,10 @@ namespace TheLambClub.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                if (Players !=null&& Players![BeforeCurrentPlayerIndex()] !=null&& updatedGame.Players![BeforeCurrentPlayerIndex()].CurrentMoney!= Players![BeforeCurrentPlayerIndex()].CurrentMoney)
-                {
-                    OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
-                }
+                //    if (Players !=null&& Players![BeforeCurrentPlayerIndex()] !=null&& updatedGame.Players![BeforeCurrentPlayerIndex()].CurrentMoney!= Players![BeforeCurrentPlayerIndex()].CurrentMoney)
+                //    {
+                //        OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
+                //    }
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
@@ -403,12 +402,8 @@ namespace TheLambClub.ModelsLogic
                     {
                         Player[] Winner = new Player[1];
                         foreach (Player player in Players!)
-                        {
-                            if (player != null && !player.IsFolded)
-                            {
-                                Winner[0] = player;
-                            }
-                        }
+                            if (player != null && !player.IsFolded)                            
+                                Winner[0] = player;                                                    
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(Winner, null!));
                         IsPopupOpen= false;
                     }
@@ -424,10 +419,7 @@ namespace TheLambClub.ModelsLogic
                         }
                          playersArray = new Player[ranks.Count];
                         ranks.Keys.CopyTo(playersArray, 0);
-                        Array.Sort(playersArray, (p1, p2) =>
-                        {
-                            return ranks[p2].Compare(ranks[p1]);
-                        });
+                        Array.Sort(playersArray, (p1, p2) => ranks[p2].Compare(ranks[p1]));            
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
                         IsPopupOpen = false;
                     }
@@ -454,7 +446,9 @@ namespace TheLambClub.ModelsLogic
                 {
                     foreach (Player player in Players!)
                     {
+                        Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 1  ");
                         player!.CurrentBet = 0;
+                        Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 2  ");
                     }
                     RoundNumber++;
                     Console.WriteLine("Round Number Updated" + RoundNumber+ "  ,"+ DateTime.Now);

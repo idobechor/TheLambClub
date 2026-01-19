@@ -40,11 +40,11 @@ namespace TheLambClub.ViewModel
         private void OnMyMoneyChanged(object? sender, EventArgs e)
         {
             
-            if(game.CurrentPlayerIndex>0)
-               lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
-            else          
-                OnPropertyChanged(nameof(Money));
-            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            //if(game.CurrentPlayerIndex>0)
+            //   lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
+            //else          
+            //    OnPropertyChanged(nameof(Money));
+            //OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
 
         }
 
@@ -99,17 +99,17 @@ namespace TheLambClub.ViewModel
                 };
                 lstOponnentsLabels.Add(lbl);
                 grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                Label money = new()
-                {
-                    Text = game!=null&&game.Players!=null&&game.Players[i]!=null?String.Empty+game.Players[i].CurrentMoney:String.Empty,
-                    TextColor = Colors.Black,
-                    FontSize = 10,
-                    Margin = new Thickness(5),
-                    Padding = new Thickness(2),
-                    HorizontalTextAlignment = TextAlignment.Center,
-                };
+                //Label money = new()
+                //{
+                //    Text = game!=null&&game.Players!=null&&game.Players[i]!=null?String.Empty+game.Players[i].CurrentMoney:String.Empty,
+                //    TextColor = Colors.Black,
+                //    FontSize = 10,
+                //    Margin = new Thickness(5),
+                //    Padding = new Thickness(2),
+                //    HorizontalTextAlignment = TextAlignment.Center,
+                //};
                 lstOponnentsLabels.Add(lbl);
-                lstOponnentsMoneyLabels.Add(money);
+                //lstOponnentsMoneyLabels.Add(money);
                 //Image img1 = new()
                 //{
                 //    Source = Keys.BackOfCard,
@@ -133,7 +133,7 @@ namespace TheLambClub.ViewModel
                 //    Children = { img1, img2 }
                 //};
                 grdOponnents.Add(lbl, i, 0);
-                grdOponnents.Add(money, i, 1);
+                //grdOponnents.Add(money, i, 1);
             }
         }
 

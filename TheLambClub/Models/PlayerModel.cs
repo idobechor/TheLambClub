@@ -12,8 +12,18 @@ namespace TheLambClub.Models
         public FBCard ?FBCard2 { get; set; }
         public string Name { get; set; } = name;
         public string Id { get; set; } = id;
-        public double CurrentBet { get; set; } 
-        public double CurrentMoney { get; set; } 
+        public double CurrentBet { get; set; }
+        private double _currentMoney = 10000; // ערך התחלתי
+
+        public double CurrentMoney
+        {
+            get => _currentMoney;
+            set
+            {
+                if (value >= 0 && value < _currentMoney) 
+                    _currentMoney = value;               
+            }
+        }
         public bool IsReRazed { get; set; } = false;
 
         //public int SumOfMoney { get; set; }
