@@ -12,7 +12,7 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public int Money { get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
+        public int Money => game != null &&  game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney:10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         private readonly PickYourMovePromptPageVM PYMPtPageVM = new();
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
@@ -39,12 +39,13 @@ namespace TheLambClub.ViewModel
 
         private void OnMyMoneyChanged(object? sender, EventArgs e)
         {
-            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            
             if(game.CurrentPlayerIndex>0)
                lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
             else          
                 OnPropertyChanged(nameof(Money));
-            
+            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+
         }
 
         private void OnGameChanged(object? sender, EventArgs e)

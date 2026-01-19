@@ -267,7 +267,7 @@ namespace TheLambClub.ModelsLogic
                 for (int i = 0; i < Players.Length - 1; i++)
                 {
                     index = i; 
-                    if (Players[i].Id != null && Players[i].Id == PlayerBeforeId)
+                    if (Players[i] != null && Players[i].Id == PlayerBeforeId)
                     {
                         break;
                     } 
@@ -277,60 +277,55 @@ namespace TheLambClub.ModelsLogic
         }
         public override void BetFunction(object obj)
         {
-            CurrentPlayer!.CurrentMoney = CurrentPlayer.CurrentMoney - CurrentPlayer.CurrentBet;
-            Pot[RoundNumber] += ((double)CurrentPlayer?.CurrentBet!);
-            if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet < CurrentPlayer?.CurrentBet && Players?[BeforeCurrentPlayerIndex()].CurrentBet != 0)
+            Player prevPlayer = Players![BeforeCurrentPlayerIndex()];
+            Player current = CurrentPlayer!;
+            current.CurrentMoney -= current.CurrentBet;
+            Pot[RoundNumber] += current.CurrentBet;
+            if (IsFull && prevPlayer.CurrentBet < current.CurrentBet && prevPlayer.CurrentBet != 0)
             {
-                CurrentPlayer.IsReRazed = true;
+                current.IsReRazed = true;
                 CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
                 foreach (Player player in Players!)
                 {
-                    if (player != null && player.Id != CurrentPlayer.Id)
-                    {
+                    if (player.Id != current.Id)
                         player.IsReRazed = false;
-                    }
                 }
             }
-
-            if ((CurrentPlayer!.IsReRazed))
+            else           
+                NextTurn();
+            Dictionary<string, object> update = new()
             {
-                Dictionary<string, object> d = new()
-                {
-                { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
-                {nameof(Players), Players! },
-                };
-                fbd.UpdateFields(Keys.GamesCollection, Id, d, (task) => { });
-            }
-            else 
-             NextTurn();
-
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(Players), Players! },
-                { nameof(Pot), Pot }
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
-        }
-        public override void CallFunction()
-        {
-            if (Players![BeforeCurrentPlayerIndex()].CurrentBet != CurrentPlayer!.CurrentBet)
-            {
-                double MoneyToCall = Math.Abs(Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet);
-                CurrentPlayer.CurrentBet = Players[BeforeCurrentPlayerIndex()].CurrentBet;
-                CurrentPlayer.CurrentMoney = CurrentPlayer.CurrentMoney - MoneyToCall;
-                Pot[RoundNumber] += MoneyToCall;
-            }
-            NextTurn();
-            Dictionary<string, object> dict = new()
-            {
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
                 { nameof(Players), Players },
                 { nameof(Pot), Pot }
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-            Console.WriteLine("Moving Turn From Calling" + DateTime.Now);
-            
+            fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
+            Console.WriteLine("Betiing");
+        }
+
+        public override void CallFunction()
+        {
+            int prevIndex = BeforeCurrentPlayerIndex();
+            Player prevPlayer = Players![prevIndex];
+            Player current = CurrentPlayer!;
+            double moneyToCall = prevPlayer.CurrentBet;
+            if (moneyToCall > 0)
+            {
+                current.CurrentBet = moneyToCall;
+                current.CurrentMoney -= moneyToCall;
+                Pot[RoundNumber] += moneyToCall;
+            }
+            NextTurn();
+            Dictionary<string, object> update = new()
+            {
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+                { nameof(Players), Players },
+                { nameof(Pot), Pot }
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
+            Console.WriteLine("calling");
         }
         protected override bool EveryOneIsNotRerazeing()
         {
@@ -373,7 +368,7 @@ namespace TheLambClub.ModelsLogic
                     OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
                 }
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
-                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&&EveryOneIsNotRerazeing();
+                bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isCheckOrCallChanged = (updatedGame.CurrentPlayer?.CurrentBet != CurrentPlayer?.CurrentBet);
@@ -389,11 +384,11 @@ namespace TheLambClub.ModelsLogic
                 PlayerBeforeId= updatedGame.PlayerBeforeId;
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
-                if ( IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet)
+                if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet)
                 {
                     CheckOrCall = Strings.Call + (Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) + "$";
                     int minimalBet = (int)(Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) * 2;
-                    MinBet = CurrentPlayer.CurrentMoney>minimalBet?minimalBet: (int)CurrentPlayer.CurrentMoney;
+                    MinBet = CurrentPlayer.CurrentMoney > minimalBet ? minimalBet : (int)CurrentPlayer.CurrentMoney;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
                 else

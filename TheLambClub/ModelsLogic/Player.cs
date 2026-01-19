@@ -9,6 +9,11 @@ namespace TheLambClub.ModelsLogic
         public Player() : base(String.Empty, String.Empty) { }
         public Player(string playerName, string id) : base(playerName,id)
         {
+            if (CurrentMoney == 0)
+            {
+                CurrentMoney = 10000;
+                CurrentBet = 0;
+            }
         }
         public override HandRank EvaluateBestHand(FBCard[] boardCards)
         {            
