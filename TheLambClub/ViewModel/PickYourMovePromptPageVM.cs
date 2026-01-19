@@ -48,7 +48,7 @@ namespace TheLambClub.ViewModel
                 {
                     _betAmount = value;
                 }
-                game.CurrentPlayer?.CurrentBet = _betAmount;
+                game.CurrentPlayer!.CurrentBet = _betAmount;
                 OnPropertyChanged(nameof(BetAmountStr));
             }
         }

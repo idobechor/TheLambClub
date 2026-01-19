@@ -11,10 +11,11 @@ namespace TheLambClub.ModelsLogic
         {
             IsBusy = true;
             CurrentGame = new(SelectedNumberOfPlayers);
-            currentGame?.Players = new Player[SelectedNumberOfPlayers];
-            currentGame?.Players?[0] = new Player((new User()).UserName, fbd.UserId);
-            currentGame?.HostId = fbd.UserId;
-            currentGame?.OnGameDeleted += OnGameDeleted;           
+            if (currentGame == null) return;
+            currentGame.Players = new Player[SelectedNumberOfPlayers];
+            currentGame.Players[0] = new Player((new User()).UserName, fbd.UserId);
+            currentGame.HostId = fbd.UserId;
+            currentGame.OnGameDeleted += OnGameDeleted;           
             CurrentGame.SetDocument(OnComplete);
         }
         protected override void OnGameDeleted(object? sender, EventArgs e)

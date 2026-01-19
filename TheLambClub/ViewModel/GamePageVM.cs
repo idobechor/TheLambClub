@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using System;
 using System.Collections.ObjectModel;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
@@ -11,6 +12,7 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
+        public int Money { get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         private readonly PickYourMovePromptPageVM PYMPtPageVM = new();
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
@@ -31,9 +33,20 @@ namespace TheLambClub.ViewModel
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
             game.OnGameDeleted += OnGameDeleted;
-            game.MoneyChanged += OnMyMoneyChanged;
+            game.OnMyMoneyChanged += OnMyMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
+
+        private void OnMyMoneyChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            if(game.CurrentPlayerIndex>0)
+               lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
+            else          
+                OnPropertyChanged(nameof(Money));
+            
+        }
+
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
@@ -46,10 +59,6 @@ namespace TheLambClub.ViewModel
             game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         } 
-        private void OnMyMoneyChanged(int index)
-        {
-            OnPopertyChanged(nameof(lstOponnentsMoneyLabels[index]));
-        }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
             if (!_isPopupOpen)
@@ -141,9 +150,9 @@ namespace TheLambClub.ViewModel
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
             {
-                if (game.Players?[i] != null && game.CurrentPlayer?.Id != game.Players?[i].Id)
+                if (game.Players![i] != null && game.CurrentPlayer!.Id != game.Players[i].Id)
                 {
-                    lstOponnentsLabels[lblIndex].Text = game.Players?[i].Name;
+                    lstOponnentsLabels[lblIndex].Text = game.Players[i].Name;
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
                 }             
             }

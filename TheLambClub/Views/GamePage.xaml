@@ -60,6 +60,13 @@
               VerticalOptions="Center"
               Source="{Binding Card2.Source}" />
             </Grid>
+            <Label 
+          Text="{Binding Money}"
+          TextColor="Black"
+          BackgroundColor="AliceBlue"
+          HorizontalOptions="Center"
+          FontAttributes="Bold"
+          FontSize="20" />
         </VerticalStackLayout>
         <!--<Button 
       IsEnabled="{Binding IsMyTurn}"
