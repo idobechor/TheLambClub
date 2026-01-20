@@ -9,11 +9,10 @@ namespace TheLambClub.ViewModel
     {
         public event Action? RequestClose;
         private readonly Game game;
-        private readonly Label TimeLeftLabel ;
+        private readonly Label TimeLeftLabel;
         private int timeInt;
-
         public string TimeLeft => game.TimeLeft;
-        public TimerSettings TimerSettings  => game.timerSettings;
+        public TimerSettings TimerSettings => game.timerSettings;
 
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
@@ -32,12 +31,12 @@ namespace TheLambClub.ViewModel
             {
                 RequestClose?.Invoke();
             }
-                OnPropertyChanged(nameof(TimeLeft));
+            OnPropertyChanged(nameof(TimeLeft));
         }
         private int _betAmount { get; set; }
-        public string CheckOrFold=>game.CheckOrCall;
-        public string BetAmountStr =>Strings.IntoruceYourBet+_betAmount;
-        public int MinBet => game.MinBet;
+        public string CheckOrFold => game.CheckOrCall;
+        public string BetAmountStr => Strings.IntoruceYourBet + _betAmount;
+        public int MinBet => game.MinBet == 0 ? 0 : game.MinBet - 1;
         public int PlayersCurrentMoney => ((int)(game != null && game.CurrentPlayer != null ? game.CurrentPlayer!.CurrentMoney : 10000));
         public int BetAmount
         {
@@ -45,17 +44,19 @@ namespace TheLambClub.ViewModel
             set
             {
                 if (_betAmount != value)
-                {
                     _betAmount = value;
-                }
-                if(_betAmount!=MinBet)
+                if (_betAmount != MinBet)
                     game.CurrentPlayer!.CurrentBet = _betAmount;
                 OnPropertyChanged(nameof(BetAmountStr));
+                Console.WriteLine("CanSubmitBet:");
+                (SubmitBetCommand as Command)?.ChangeCanExecute();
+                Console.WriteLine("ChangeCanExecute:");
             }
         }
 
-        public PickYourMovePromptPageVM(Game game,Label label)
+        public PickYourMovePromptPageVM(Game game, Label label)
         {
+            SubmitBetCommand = new Command(BetFunction, CanSubmit);
             TimeLeftLabel = label;
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
@@ -81,7 +82,13 @@ namespace TheLambClub.ViewModel
 
         public ICommand Stay => new Command(StayFunction);
 
-        public ICommand SubmitBetCommand => new Command(BetFunction);
+        public ICommand SubmitBetCommand { get; private set; }
+
+        private bool CanSubmit(object arg)
+        {
+           
+            return !(BetAmount == 0 || _betAmount == MinBet);
+        }
 
         private void StayFunction(object obj)
         {

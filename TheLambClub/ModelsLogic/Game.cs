@@ -112,6 +112,7 @@ namespace TheLambClub.ModelsLogic
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers;
             CurrentPlayerIndex = 0;
+            beforeCurrentPlayerIndex = selectedNumberOfPlayers-1;
         }
         protected override void RegisterTimer()
         {
@@ -188,6 +189,7 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Players), Players! },
                 { nameof(CurrentNumOfPlayers), CurrentNumOfPlayers },
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+                { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
                 { nameof(RoundNumber), RoundNumber },
                 { nameof(IsFull), IsFull },
             };
@@ -198,6 +200,7 @@ namespace TheLambClub.ModelsLogic
             Dictionary<string, object> dict = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+                  { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
@@ -260,24 +263,24 @@ namespace TheLambClub.ModelsLogic
            return i;
         }
 
-        protected override int BeforeCurrentPlayerIndex() {
-            int index = CurrentPlayerIndex;
-            if (Players != null && Players.Length == MaxNumOfPlayers)
-            {
-                for (int i = 0; i < Players.Length - 1; i++)
-                {
-                    index = i; 
-                    if (Players[i] != null && Players[i].Id == PlayerBeforeId)
-                    {
-                        break;
-                    } 
-                } 
-            }
-            return index;
-        }
+        //protected override int BeforeCurrentPlayerIndex() {
+        //    int index = CurrentPlayerIndex;
+        //    if (Players != null && Players.Length == MaxNumOfPlayers)
+        //    {
+        //        for (int i = 0; i < Players.Length - 1; i++)
+        //        {
+        //            index = i; 
+        //            if (Players[i] != null && Players[i].Id == PlayerBeforeId)
+        //            {
+        //                break;
+        //            } 
+        //        } 
+        //    }
+        //    return index;
+        //}
         public override void BetFunction(object obj)
         {
-            Player prevPlayer = Players![BeforeCurrentPlayerIndex()];
+            Player prevPlayer = Players![beforeCurrentPlayerIndex];
             Player current = CurrentPlayer!;
             current.CurrentMoney -= current.CurrentBet;
             Pot[RoundNumber] += current.CurrentBet;
@@ -300,6 +303,7 @@ namespace TheLambClub.ModelsLogic
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
                 { nameof(Players), Players },
+                  { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
@@ -309,8 +313,7 @@ namespace TheLambClub.ModelsLogic
 
         public override void CallFunction()
         {
-            int prevIndex = BeforeCurrentPlayerIndex();
-            Player prevPlayer = Players![prevIndex];
+            Player prevPlayer = Players![beforeCurrentPlayerIndex];
             double moneyToCall = prevPlayer.CurrentBet;
             if (moneyToCall > 0)
             {
@@ -318,11 +321,13 @@ namespace TheLambClub.ModelsLogic
                 Players[CurrentPlayerIndex].CurrentMoney -= moneyToCall;
                 Pot[RoundNumber] += moneyToCall;
             }
-            PlayerBeforeId = Players![CurrentPlayerIndex].Id;
+            Console.WriteLine("CurrentPlayerIndex"+ CurrentPlayerIndex+ " 1#");
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
+            Console.WriteLine("CurrentPlayerIndex"+ CurrentPlayerIndex +" 2#");
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
+                 { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
                 { nameof(Players), Players },
                 { nameof(Pot), Pot }
             };
@@ -350,6 +355,7 @@ namespace TheLambClub.ModelsLogic
             Dictionary<string, object> dict = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
+                { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
                 { nameof(BoardCards), BoardCards },
                 { nameof(RoundNumber), RoundNumber },
                 { nameof(Players), Players! },
@@ -383,10 +389,14 @@ namespace TheLambClub.ModelsLogic
                 PlayerBeforeId= updatedGame.PlayerBeforeId;
                 Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
                 Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
-                if (IsFull && Players?[BeforeCurrentPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet)
+                if (isGameStarted)
                 {
-                    CheckOrCall = Strings.Call + (Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) + "$";
-                    int minimalBet = (int)(Players[BeforeCurrentPlayerIndex()].CurrentBet - CurrentPlayer.CurrentBet) * 2;
+                    updatedGame.beforeCurrentPlayerIndex = MaxNumOfPlayers - 1;
+                }
+                if (IsFull && Players?[beforeCurrentPlayerIndex].CurrentBet > CurrentPlayer?.CurrentBet)
+                {
+                    CheckOrCall = Strings.Call + (Players[beforeCurrentPlayerIndex].CurrentBet - CurrentPlayer.CurrentBet) + "$";
+                    int minimalBet = (int)(Players[beforeCurrentPlayerIndex].CurrentBet) * 2>CurrentPlayer.CurrentMoney? (int)CurrentPlayer.CurrentMoney: ((int)(Players[beforeCurrentPlayerIndex].CurrentBet)*2);
                     MinBet = CurrentPlayer.CurrentMoney > minimalBet ? minimalBet : (int)CurrentPlayer.CurrentMoney;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -438,6 +448,7 @@ namespace TheLambClub.ModelsLogic
                     Dictionary<string, object> d = new()
                     {
                     { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
+                    { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
                     {nameof(Players), Players! },
                     };
                     fbd.UpdateFields(Keys.GamesCollection, Id, d, (task) => { });

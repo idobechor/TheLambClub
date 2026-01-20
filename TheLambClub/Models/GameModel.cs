@@ -3,6 +3,7 @@ using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
+using Xamarin.Io.OpenCensus.Metrics.Export;
 
 namespace TheLambClub.Models
 {
@@ -38,7 +39,18 @@ namespace TheLambClub.Models
         public string TimeLeft { get; protected set; } = string.Empty;     
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
-        public int CurrentPlayerIndex { get; set; }
+        public int beforeCurrentPlayerIndex { get; set; } 
+        private int _currentPlayerIndex; 
+        public int CurrentPlayerIndex
+        {
+            get => _currentPlayerIndex;
+            set
+            {
+                if (Players!=null&& Players![_currentPlayerIndex]!=null&& !Players![_currentPlayerIndex].IsFolded)
+                    beforeCurrentPlayerIndex = _currentPlayerIndex;
+                _currentPlayerIndex = value;
+            }
+        }
         public string HostName { get; set; } = string.Empty;
         public double[] Pot = new double[5];
         public DateTime Created { get; set; }
@@ -97,7 +109,7 @@ namespace TheLambClub.Models
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
-        protected abstract int BeforeCurrentPlayerIndex();
+        //protected abstract int BeforeCurrentPlayerIndex();
         public abstract void CallFunction();
         protected abstract bool EveryOneIsNotRerazeing();
         protected abstract void EndHand();
