@@ -82,8 +82,8 @@ namespace TheLambClub.ViewModel
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
             grdOponnents.RowDefinitions.Clear();
-            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); 
-            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); 
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
             for (int i = 0; i < oponnentsCount; i++)
             {
@@ -97,43 +97,8 @@ namespace TheLambClub.ViewModel
                     Padding = new Thickness(2),
                     HorizontalTextAlignment = TextAlignment.Center,
                 };
-                lstOponnentsLabels.Add(lbl);
-                grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                //Label money = new()
-                //{
-                //    Text = game!=null&&game.Players!=null&&game.Players[i]!=null?String.Empty+game.Players[i].CurrentMoney:String.Empty,
-                //    TextColor = Colors.Black,
-                //    FontSize = 10,
-                //    Margin = new Thickness(5),
-                //    Padding = new Thickness(2),
-                //    HorizontalTextAlignment = TextAlignment.Center,
-                //};
-                lstOponnentsLabels.Add(lbl);
-                //lstOponnentsMoneyLabels.Add(money);
-                //Image img1 = new()
-                //{
-                //    Source = Keys.BackOfCard,
-                //    HeightRequest = 40,
-                //    WidthRequest = 40,
-                //    HorizontalOptions = LayoutOptions.Center
-                //};
-
-                //Image img2 = new()
-                //{
-                //    Source = Keys.BackOfCard,
-                //    HeightRequest = 40,
-                //    WidthRequest = 40,
-                //    HorizontalOptions = LayoutOptions.Center
-                //};
-                //StackLayout imagesRow = new()
-                //{
-                //    Orientation = StackOrientation.Horizontal,
-                //    HorizontalOptions = LayoutOptions.Center,
-                //    Spacing = 3,
-                //    Children = { img1, img2 }
-                //};
+                lstOponnentsLabels.Add(lbl);             
                 grdOponnents.Add(lbl, i, 0);
-                //grdOponnents.Add(money, i, 1);
             }
         }
 

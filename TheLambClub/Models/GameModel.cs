@@ -3,8 +3,6 @@ using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.ObjectModel;
 using TheLambClub.ModelsLogic;
-using Xamarin.Io.OpenCensus.Metrics.Export;
-
 namespace TheLambClub.Models
 {
     public abstract class GameModel
@@ -40,17 +38,8 @@ namespace TheLambClub.Models
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
         public int beforeCurrentPlayerIndex { get; set; } 
-        private int _currentPlayerIndex; 
-        public int CurrentPlayerIndex
-        {
-            get => _currentPlayerIndex;
-            set
-            {
-                if (Players!=null&& Players![_currentPlayerIndex]!=null&& !Players![_currentPlayerIndex].IsFolded)
-                    beforeCurrentPlayerIndex = _currentPlayerIndex;
-                _currentPlayerIndex = value;
-            }
-        }
+        protected int _currentPlayerIndex;
+        public abstract int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
         public double[] Pot = new double[5];
         public DateTime Created { get; set; }

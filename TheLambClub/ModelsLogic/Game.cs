@@ -7,6 +7,17 @@ namespace TheLambClub.ModelsLogic
 {
     public class Game : GameModel
     {
+        public override int CurrentPlayerIndex
+        {
+            get => _currentPlayerIndex;
+            set
+            { 
+                if (Players != null && _currentPlayerIndex >= 0 && _currentPlayerIndex < Players.Length)                
+                    if (null != Players![_currentPlayerIndex])
+                        beforeCurrentPlayerIndex = _currentPlayerIndex;
+                _currentPlayerIndex = value;
+            }
+        }
         public override ObservableCollection<ViewCard>? BoardViewCards
         {
             get
@@ -362,6 +373,56 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
         }
+        protected bool AllCall()
+        {
+            bool IsAllCall= true;
+            double bet = -1;
+            foreach (Player player in Players!)
+            {
+                if (player==null)
+                {
+                    IsAllCall = false;
+                    break;
+                }
+                else if(player.CurrentBet!=0&&!player.IsFolded)
+                {
+                    if (bet == -1)                    
+                        bet = player.CurrentBet;                
+                    else if (bet != player.CurrentBet) 
+                    {
+                        IsAllCall = false;
+                        break;
+                    }
+                }
+                else if(player.CurrentBet == 0)
+                {
+                    IsAllCall = false;
+                    break;
+                }
+            }
+            return IsAllCall;
+        }
+        protected void EndOfRound()
+        {
+            foreach (Player player in Players!)
+            {
+                Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 1  ");
+                player!.CurrentBet = 0;
+                player.IsReRazed = false;
+                Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 2  ");
+            }
+            RoundNumber++;
+            Console.WriteLine("Round Number Updated" + RoundNumber + "  ," + DateTime.Now);
+            FillBoard();
+            EndOfHand = RoundNumber == HandComplete;
+            Dictionary<string, object> dict = new()
+            {
+                { nameof(BoardCards), BoardCards },
+                { nameof(RoundNumber), RoundNumber },
+                { nameof(Players), Players! },
+            };
+            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -372,6 +433,7 @@ namespace TheLambClub.ModelsLogic
                 //    {
                 //        OnMyMoneyChanged?.Invoke(this, EventArgs.Empty);
                 //    }
+                bool RoundChanges=RoundNumber!=updatedGame.RoundNumber;
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0&&EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers; 
@@ -387,12 +449,12 @@ namespace TheLambClub.ModelsLogic
                 BoardCards = updatedGame.BoardCards;
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
                 PlayerBeforeId= updatedGame.PlayerBeforeId;
-                Console.WriteLine("CurrentNumOfPlayers" + CurrentNumOfPlayers);
-                Console.WriteLine("updatedGame.CurrentNumOfPlayers" + updatedGame.CurrentNumOfPlayers);
+                //if(AllCall())
+                //{
+                //    EndOfRound();
+                //}
                 if (isGameStarted)
-                {
-                    updatedGame.beforeCurrentPlayerIndex = MaxNumOfPlayers - 1;
-                }
+                    updatedGame.beforeCurrentPlayerIndex = MaxNumOfPlayers - 1;    
                 if (IsFull && Players?[beforeCurrentPlayerIndex].CurrentBet > CurrentPlayer?.CurrentBet)
                 {
                     CheckOrCall = Strings.Call + (Players[beforeCurrentPlayerIndex].CurrentBet - CurrentPlayer.CurrentBet) + "$";
@@ -444,38 +506,23 @@ namespace TheLambClub.ModelsLogic
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsReRazed)
                 {
                     CurrentPlayer.IsReRazed = false;
-                    NextTurn();
-                    Dictionary<string, object> d = new()
-                    {
-                    { nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
-                    { nameof(beforeCurrentPlayerIndex), beforeCurrentPlayerIndex },
-                    {nameof(Players), Players! },
-                    };
-                    fbd.UpdateFields(Keys.GamesCollection, Id, d, (task) => { });
-                }
-                if (IsFull&&IsHost &&EveryOneIsNotRerazeing()&&isEndOfRound && !isHandEnded)
-                {
-                    foreach (Player player in Players!)
-                    {
-                        Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 1  ");
-                        player!.CurrentBet = 0;
-                        Console.WriteLine($"Current index {CurrentPlayerIndex} Current Money {CurrentPlayer?.CurrentMoney} 2  ");
-                    }
-                    RoundNumber++;
-                    Console.WriteLine("Round Number Updated" + RoundNumber+ "  ,"+ DateTime.Now);
-                    FillBoard();                  
-                    EndOfHand = RoundNumber == HandComplete;
-                    UpdateBoard((t) => { });
+                    CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
                     Dictionary<string, object> dict = new()
                     {
-                       { nameof(Players), Players! },
+                    { nameof(PlayerBeforeId), PlayerBeforeId! },
+                    {nameof(Players), Players! },
+                    {nameof(CurrentPlayerIndex), CurrentPlayerIndex! },
                     };
                     fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
                 }
-                if (IsHost && changedToFull && !isHandEnded)
+                if (IsHost && AllCall() && !RoundChanges)
                 {
-                    FillArrayAndAddCards(true,(t) => { });
-                }              
+                    EndOfRound();
+                }           
+                if (IsFull&&IsHost &&EveryOneIsNotRerazeing()&&isEndOfRound && !isHandEnded)           
+                    EndOfRound();            
+                if (IsHost && changedToFull && !isHandEnded)              
+                    FillArrayAndAddCards(true,(t) => { });                           
                 if (!TimerCreated)
                 {
                     RegisterTimer();
