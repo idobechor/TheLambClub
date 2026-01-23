@@ -80,7 +80,8 @@ namespace TheLambClub.Models
         public abstract ViewCard ?ViewCard1 { get; }
         [Ignored]
         public abstract ViewCard ?ViewCard2 { get; }
-
+        [Ignored]
+        protected bool IsHappened=false;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
