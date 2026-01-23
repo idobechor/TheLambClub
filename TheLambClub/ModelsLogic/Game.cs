@@ -89,14 +89,9 @@ namespace TheLambClub.ModelsLogic
 
         public override void NextTurn()
         {
-            PlayerBeforeId = Players![CurrentPlayerIndex].Id;
+            //PlayerBeforeId = Players![CurrentPlayerIndex].Id;
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(PlayerBeforeId), PlayerBeforeId! },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
         }
         public override void PickedFold()
         {
@@ -315,7 +310,8 @@ namespace TheLambClub.ModelsLogic
                 CurrentPlayer!.CurrentBet = maxBet;
                 CurrentPlayer.CurrentMoney -= moneyToCall;
                 Pot[RoundNumber] += moneyToCall;
-           IsHappened = true;
+            Console.WriteLine("IsHappened"+ IsHappened);
+            
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
@@ -324,6 +320,8 @@ namespace TheLambClub.ModelsLogic
                 { nameof(Pot), Pot }
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            if (!( EveryOneAreEqual())|| maxBet == 0)//(maxBet == 0 || !EveryOneAreEqual()||IsHappened)
+                NextTurn();
         }
         protected override bool EveryOneIsNotRerazeing()
         {
@@ -362,15 +360,18 @@ namespace TheLambClub.ModelsLogic
             }
             RoundNumber++;
             Console.WriteLine("Round Number Updated" + RoundNumber + "  ," + DateTime.Now);
-            CurrentPlayerIndex = FirstPlayerWhichIsNotFold();
+            CurrentPlayerIndex = 0;
             FillBoard();
             EndOfHand = RoundNumber == HandComplete;
+
             Dictionary<string, object> dict = new()
             {
                 { nameof(BoardCards), BoardCards },
                 { nameof(RoundNumber), RoundNumber },
                 { nameof(Players), Players! },
+                { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
             };
+
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
         }
         protected bool EveryOneAreEqual()
@@ -382,6 +383,13 @@ namespace TheLambClub.ModelsLogic
                     return false;                 
             return true;
         }
+        protected bool AllBetsZero()
+        {
+            foreach (Player player in Players!)
+                if (player==null||!player.IsFolded && player.CurrentBet != 0)
+                    return false;
+            return true;
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -389,6 +397,7 @@ namespace TheLambClub.ModelsLogic
             if (updatedGame != null)
             {
                 bool RoundChanges = RoundNumber != updatedGame.RoundNumber;
+                //IsHappened = RoundChanges&&CurrentPlayerIndex!=FirstPlayerWhichIsNotFold();
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&& EveryOneAreEqual();//EveryOneIsNotRerazeing();
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
@@ -454,15 +463,21 @@ namespace TheLambClub.ModelsLogic
                     }
                 }
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
-                    NextTurn();
-                if (IsFull && IsHost && EveryOneAreEqual())
-                { EndOfRound(); IsHappened = false; }           
+                    NextTurn();                     
                 if (IsHost && changedToFull && !isHandEnded)              
-                    FillArrayAndAddCards(true,(t) => { });       
-                if(IsHappened)
+                    FillArrayAndAddCards(true,(t) => { });
+                Console.WriteLine("IsHappened" + IsHappened + "before"+ " IsMyTurn"+ IsMyTurn);
+                //if (IsHappened&&IsMyTurn)
+                //{
+                //    IsHappened= false;
+                //    NextTurn();
+                //    Console.WriteLine("IsHappened" + IsHappened + "after");
+                //}
+                if (IsFull && IsHost && EveryOneAreEqual()|| IsHost && AllBetsZero()&& isEndOfRound)
                 {
-                    IsHappened= false;
-                    NextTurn();
+                    EndOfRound();
+                    //IsHappened=false;
+                    Console.WriteLine("IsHappened" + IsHappened + 2);
                 }
                 if (!TimerCreated)
                 {
