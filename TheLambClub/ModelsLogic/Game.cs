@@ -396,7 +396,7 @@ namespace TheLambClub.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                bool RoundChanges = RoundNumber != updatedGame.RoundNumber;
+                bool IsAllIn = updatedGame.Players?[updatedGame.CurrentPlayerIndex].CurrentMoney == 0 && CurrentPlayer?.IsAllIn == false;
                 //IsHappened = RoundChanges&&CurrentPlayerIndex!=FirstPlayerWhichIsNotFold();
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&& EveryOneAreEqual();//EveryOneIsNotRerazeing();
@@ -437,6 +437,8 @@ namespace TheLambClub.ModelsLogic
                         foreach (Player player in Players!)
                             if (player != null && !player.IsFolded)
                                 Winner[0] = player;
+                        Winner[0].CurrentMoney += Pot.Sum();
+                        updatedGame.Players = Players;
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(Winner, null!));
                         IsPopupOpen = false;
                     }
@@ -453,6 +455,30 @@ namespace TheLambClub.ModelsLogic
                         playersArray = new Player[ranks.Count];
                         ranks.Keys.CopyTo(playersArray, 0);
                         Array.Sort(playersArray, (p1, p2) => ranks[p2].Compare(ranks[p1]));
+                        double sum = Pot.Sum();
+                        for (int i = 0; i < playersArray.Length && sum > 0; i++)
+                        {
+                            Player curr = playersArray[i];
+                            if (curr.IsAllIn)
+                            {
+                                double winAmount = Math.Min(sum, curr.SumOfMoneyThatThePlayerWon);
+                                curr.CurrentMoney += (int)winAmount;
+                                sum -= winAmount;
+                            }
+                            else
+                            {
+                                curr.CurrentMoney += (int)sum;
+                                sum = 0;
+                            }
+                        }
+                        foreach (Player player in Players!)
+                        {
+                            player.IsAllIn = false;
+                            player.SumOfMoneyThatThePlayerWon = 0;
+                            player.RoundAllIn = -1;
+                        }
+                        updatedGame.Players = Players;
+                        updatedGame.Pot = Pot;
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
                         IsPopupOpen = false;
                     }
@@ -461,6 +487,10 @@ namespace TheLambClub.ModelsLogic
                         EndHand();
                         isHandEnded = true;
                     }
+                    for(int i=0; i < Pot.Length; i++)
+                        Pot[i] = 0;
+                    updatedGame.Pot = Pot;
+                    updatedGame.Players = Players;
                 }
                 if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
                     NextTurn();                     
@@ -479,6 +509,25 @@ namespace TheLambClub.ModelsLogic
                     //IsHappened=false;
                     Console.WriteLine("IsHappened" + IsHappened + 2);
                 }
+                if(IsAllIn)
+                {
+                    CurrentPlayer!.IsAllIn= true;
+                    CurrentPlayer.RoundAllIn = RoundNumber;
+                }
+                if (IsAllIn && isEndOfRound && CurrentPlayer?.RoundAllIn == RoundNumber-1) 
+                {
+                    double sum = 0;
+                    int nonefoldedPlayers = 0;
+                    foreach (Player player in Players!)                    
+                        if (!player.IsFolded)
+                            nonefoldedPlayers++;                    
+                    for (int i = 0; i < RoundNumber; i++)                   
+                        sum += Pot[i];                 
+                    sum += CurrentPlayer.CurrentBet * nonefoldedPlayers;
+                    CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
+                    updatedGame.Players = Players;
+                }
+
                 if (!TimerCreated)
                 {
                     RegisterTimer();
