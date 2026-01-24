@@ -514,7 +514,7 @@ namespace TheLambClub.ModelsLogic
                     CurrentPlayer!.IsAllIn= true;
                     CurrentPlayer.RoundAllIn = RoundNumber;
                 }
-                if (IsAllIn && isEndOfRound && CurrentPlayer?.RoundAllIn == RoundNumber-1) 
+                if (IsAllIn && isEndOfRound ) 
                 {
                     double sum = 0;
                     int nonefoldedPlayers = 0;
@@ -523,7 +523,7 @@ namespace TheLambClub.ModelsLogic
                             nonefoldedPlayers++;                    
                     for (int i = 0; i < RoundNumber; i++)                   
                         sum += Pot[i];                 
-                    sum += CurrentPlayer.CurrentBet * nonefoldedPlayers;
+                    sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
                     CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
                     updatedGame.Players = Players;
                 }
