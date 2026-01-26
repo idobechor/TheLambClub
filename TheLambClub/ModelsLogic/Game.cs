@@ -32,18 +32,9 @@ namespace TheLambClub.ModelsLogic
 
             }
         }
-        public override ViewCard? ViewCard1
-        {
-            get
-            {
-                ViewCard vc;
-                if (CurrentPlayer == null || CurrentPlayer.FBCard1 == null)
-                    vc = new ViewCard();
-                else
-                    vc = new ViewCard(CurrentPlayer.FBCard1);
-                return vc;
-            }
-        }
+        public override ViewCard? ViewCard1 => CurrentPlayer == null || CurrentPlayer.FBCard1 == null ?
+            new ViewCard() : new ViewCard(CurrentPlayer.FBCard1);
+        
         public override ViewCard? ViewCard2
         {
             get
@@ -292,6 +283,20 @@ namespace TheLambClub.ModelsLogic
             Player prevPlayer = Players![beforeCurrentPlayerIndex];
             CurrentPlayer!.CurrentMoney -= CurrentPlayer!.CurrentBet;
             Pot[RoundNumber] += CurrentPlayer.CurrentBet;
+            if (CurrentPlayer.CurrentMoney == 0)// && Players !=null&& Players![beforeCurrentPlayerIndex] !=null&& !Players![beforeCurrentPlayerIndex]!.IsAllIn)
+            {
+                CurrentPlayer!.IsAllIn = true;
+                CurrentPlayer.RoundAllIn = RoundNumber;
+                double sum = 0;
+                int nonefoldedPlayers = 0;
+                foreach (Player p in Players!)
+                    if (!p.IsFolded)
+                        nonefoldedPlayers++;
+                for (int i = 0; i < RoundNumber; i++)
+                    sum += Pot[i];
+                sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
+                CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
+            }
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             Dictionary<string, object> update = new()
             {
@@ -312,8 +317,20 @@ namespace TheLambClub.ModelsLogic
             CurrentPlayer!.CurrentBet = maxBet;
             CurrentPlayer.CurrentMoney -= moneyToCall;
             Pot[RoundNumber] += moneyToCall;
-            Console.WriteLine("IsHappened" + IsHappened);
-
+            if (CurrentPlayer.CurrentMoney==0)// && Players !=null&& Players![beforeCurrentPlayerIndex] !=null&& !Players![beforeCurrentPlayerIndex]!.IsAllIn)
+            {
+                CurrentPlayer!.IsAllIn = true;
+                CurrentPlayer.RoundAllIn = RoundNumber;
+                double sum = 0;
+                int nonefoldedPlayers = 0;
+                foreach (Player p in Players!)
+                    if (!p.IsFolded)
+                        nonefoldedPlayers++;
+                for (int i = 0; i < RoundNumber; i++)
+                    sum += Pot[i];
+                sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
+                CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
+            }
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), CurrentPlayerIndex },
@@ -398,10 +415,12 @@ namespace TheLambClub.ModelsLogic
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
-                bool IsAllIn = updatedGame.Players?[updatedGame.CurrentPlayerIndex].CurrentMoney == 0 && CurrentPlayer?.IsAllIn == false;
+                
                 //IsHappened = RoundChanges&&CurrentPlayerIndex!=FirstPlayerWhichIsNotFold();
                 bool currentPlayerIndexChange = CurrentPlayerIndex != updatedGame.CurrentPlayerIndex;
                 bool isEndOfRound = CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;//&& EveryOneAreEqual();//EveryOneIsNotRerazeing();
+                Console.WriteLine("isEndOfRound:"+isEndOfRound);
+                Console.WriteLine("CurrentPlayerIndex:"+ CurrentPlayerIndex);
                 bool changedToFull = CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isGameStarted = CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
                 bool isCheckOrCallChanged = (updatedGame.CurrentPlayer?.CurrentBet != CurrentPlayer?.CurrentBet);
@@ -416,6 +435,9 @@ namespace TheLambClub.ModelsLogic
                 CurrentPlayerIndex = updatedGame.CurrentPlayerIndex;
                 PlayerBeforeId = updatedGame.PlayerBeforeId;
                 Pot = updatedGame.Pot;
+                //bool IsAllIn = Players != null && Players[beforeCurrentPlayerIndex] != null &&
+                //   Players[beforeCurrentPlayerIndex].CurrentMoney == 0 &&
+                //   Players[beforeCurrentPlayerIndex].IsAllIn == false;
                 if (isGameStarted)
                     updatedGame.beforeCurrentPlayerIndex = MaxNumOfPlayers - 1;
                 if (IsFull && Players?[beforeCurrentPlayerIndex].CurrentBet > CurrentPlayer?.CurrentBet)
@@ -431,6 +453,7 @@ namespace TheLambClub.ModelsLogic
                     MinBet = 0;
                     OnCheckOrCallChanged?.Invoke(this, EventArgs.Empty);
                 }
+
                 if ((IsOneStaying() && IsFull || RoundNumber == HandComplete))
                 {
                     if (IsOneStaying())
@@ -479,8 +502,13 @@ namespace TheLambClub.ModelsLogic
                             player.SumOfMoneyThatThePlayerWon = 0;
                             player.RoundAllIn = -1;
                         }
-                        updatedGame.Players = Players;
-                        updatedGame.Pot = Pot;
+                        Dictionary<string, object> dict = new()
+                        {
+                            { nameof(Players), Players! },
+                            { nameof(Pot), Pot },
+                        };
+
+                        fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
                         OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
                         IsPopupOpen = false;
                     }
@@ -494,41 +522,18 @@ namespace TheLambClub.ModelsLogic
                     updatedGame.Pot = Pot;
                     updatedGame.Players = Players;
                 }
-                if (CurrentPlayer != null && IsMyTurn && CurrentPlayer.IsFolded)
+                if (CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded|| CurrentPlayer.IsAllIn))
                     NextTurn();
                 if (IsHost && changedToFull && !isHandEnded)
                     FillArrayAndAddCards(true, (t) => { });
-                Console.WriteLine("IsHappened" + IsHappened + "before" + " IsMyTurn" + IsMyTurn);
-                //if (IsHappened&&IsMyTurn)
-                //{
-                //    IsHappened= false;
-                //    NextTurn();
-                //    Console.WriteLine("IsHappened" + IsHappened + "after");
-                //}
                 if (IsFull && IsHost && EveryOneAreEqual() || IsHost && AllBetsZero() && isEndOfRound)
                 {
                     EndOfRound();
                     //IsHappened=false;
                     Console.WriteLine("IsHappened" + IsHappened + 2);
                 }
-                if (IsAllIn)
-                {
-                    CurrentPlayer!.IsAllIn = true;
-                    CurrentPlayer.RoundAllIn = RoundNumber;
-                }
-                if (IsAllIn && isEndOfRound)
-                {
-                    double sum = 0;
-                    int nonefoldedPlayers = 0;
-                    foreach (Player player in Players!)
-                        if (!player.IsFolded)
-                            nonefoldedPlayers++;
-                    for (int i = 0; i < RoundNumber; i++)
-                        sum += Pot[i];
-                    sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
-                    CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
-                    updatedGame.Players = Players;
-                }
+
+                
 
                 if (!TimerCreated)
                 {
