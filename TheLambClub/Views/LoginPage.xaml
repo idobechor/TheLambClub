@@ -14,7 +14,7 @@
         BackgroundColor="#cF000000"
         StrokeShape="Rectangle"
         StrokeThickness="0">
-        <Grid>
+        <Grid ColumnDefinitions="2*,3*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="50" Margin="5">
             <Label
                 Grid.Column="1"
                 FontSize="40"

@@ -14,6 +14,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? TimeLeftFinished;
         [Ignored]
+        public EventHandler? OpenMyTurnPopUp;
+        [Ignored]
         protected IListenerRegistration? ilr;
         [Ignored]      
         protected FbData fbd = new();
@@ -81,7 +83,7 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract ViewCard ?ViewCard2 { get; }
         [Ignored]
-        protected bool IsHappened=true;
+        public bool IsHappened=false;
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();

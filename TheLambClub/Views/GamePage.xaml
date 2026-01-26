@@ -1,86 +1,81 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="TheLambClub.Views.GamePage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
-    xmlns:m="clr-namespace:TheLambClub.Models"
-    xmlns:views="clr-namespace:TheLambClub.Views"
-    Title="GamePage"
-    x:DataType="vm:GamePageVM">
+<ContentPage x:Class="TheLambClub.Views.GamePage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+             xmlns:m="clr-namespace:TheLambClub.Models"
+             BackgroundImageSource="treebackground.jpg"
+             x:DataType="vm:GamePageVM">
 
-    <VerticalStackLayout>
-        <Label Text="{Binding Status}" TextColor="Black"/>
-        <Grid x:Name="grdOponnents" />
-        <Frame WidthRequest="240"
-       HeightRequest="120"
-       CornerRadius="999"
-       BackgroundColor="Green"
-       HasShadow="False"
-       Padding="0" >
+    <Grid RowDefinitions="Auto, *, Auto,Auto" Padding="15">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="5">
+            <Frame BackgroundColor="#1A1A1A"
+                   BorderColor="#FFD700"
+                   Padding="10,5"
+                   HorizontalOptions="Start"
+                   CornerRadius="5"
+                   HasShadow="False">
+                <Label Text="{Binding Status}" 
+                       TextColor="#FFD700" 
+                       FontSize="13" 
+                       FontAttributes="Bold"/>
+            </Frame>
+
+            <Grid x:Name="grdOponnents" HeightRequest="40" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <Border Grid.Row="1"
+        Stroke="Black" 
+        StrokeThickness="6" 
+        Background="Green"
+        HeightRequest="160"
+        WidthRequest="370"
+        HorizontalOptions="Center"
+        VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="55"/>
+            </Border.StrokeShape>
             <CollectionView ItemsSource="{Binding BoardCards}"
-                ItemsLayout="HorizontalList">
+                    ItemsLayout="HorizontalList"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="m:ViewCard">
                         <Image Source="{Binding Source}"
-                   HeightRequest="40"
-                   WidthRequest="40" />
+                       HeightRequest="80"
+                       WidthRequest="55"
+                       Margin="3"
+                       Aspect="AspectFit"/>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </Frame>
-        <VerticalStackLayout Spacing="4">
-            <Label 
-          Text="{Binding Name}"
-          TextColor="Red"
-          BackgroundColor="AliceBlue"
-          HorizontalOptions="Center"
-          FontAttributes="Bold"
-          FontSize="20" />
-            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto"
-            Margin="10"
-            HeightRequest="150">
-                <ImageButton 
-              WidthRequest="120"
-              HeightRequest="120"
-              Margin="10"
-              Padding="0"
-              Aspect="AspectFit"
-              HorizontalOptions="Center"
-              VerticalOptions="Center" 
-              Source="{Binding Card1.Source}" />
-                <ImageButton 
-              Grid.Column="1"
-              WidthRequest="120"
-              HeightRequest="120"
-              Margin="10"
-              Padding="0"
-              Aspect="AspectFit"
-              HorizontalOptions="Center"
-              VerticalOptions="Center"
-              Source="{Binding Card2.Source}" />
-            </Grid>
-            <!--<Label 
-          Text="{Binding Money}"
-          TextColor="Black"
-          BackgroundColor="AliceBlue"
-          HorizontalOptions="Center"
-          FontAttributes="Bold"
-          FontSize="20" />-->
+        </Border>
+
+        <VerticalStackLayout Grid.Row="2" 
+                             Spacing="8" 
+                             HorizontalOptions="Center" 
+                             VerticalOptions="End">
+            <Label Text="{Binding Name}" 
+                       TextColor="White" 
+                       FontSize="15" 
+                   Padding="15,4"
+                   HorizontalOptions="Center"
+                       FontAttributes="Bold"/>
+
+            <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                <Frame Padding="0" CornerRadius="8" HeightRequest="110" WidthRequest="80" HasShadow="True" IsClippedToBounds="True">
+                    <Image Source="{Binding Card1.Source}" Aspect="AspectFill"/>
+                </Frame>
+                <Frame Padding="0" CornerRadius="8" HeightRequest="110" WidthRequest="80" HasShadow="True" IsClippedToBounds="True">
+                    <Image Source="{Binding Card2.Source}" Aspect="AspectFill"/>
+                </Frame>
+            </HorizontalStackLayout>
         </VerticalStackLayout>
-        <!--<Button 
-      IsEnabled="{Binding IsMyTurn}"
-      AbsoluteLayout.LayoutBounds="0.5,0.95,140,45"
-      AbsoluteLayout.LayoutFlags="PositionProportional"
-      BackgroundColor="DarkBlue"
-      Command="{Binding NextTurnCommand}"
-      CornerRadius="15"
-      Text="{x:Static m:Strings.MoveTurnButttonText}" 
-      TextColor="White" />-->
         <Button
+            Grid.Row="3"
      Command="{Binding ShowPickYourMovePrompt}"
      HorizontalOptions="Fill"
      Text="{x:Static m:Strings.PickMoveTxt}" />
-    
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

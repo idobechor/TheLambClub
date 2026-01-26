@@ -53,10 +53,5 @@
         <Setter Property="TextColor" Value="LightGray"/>
         <Setter Property="PlaceholderColor" Value="LightGray"/>
     </Style>
-    <Style TargetType="Grid">
-        <Setter Property="ColumnDefinitions" Value="2*,3*,*"/>
-        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto"/>
-        <Setter Property="RowSpacing" Value="50"/>
-        <Setter Property="Margin" Value="5"/>
-    </Style>
+    
 </ResourceDictionary>

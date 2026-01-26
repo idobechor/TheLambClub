@@ -12,7 +12,7 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public int Money => game != null &&  game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney:10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
+        public int Money => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : 10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         private readonly PickYourMovePromptPageVM PYMPtPageVM = new();
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
@@ -20,13 +20,13 @@ namespace TheLambClub.ViewModel
         public ViewCard Card2 => game.ViewCard2!;
 
         public string Status => game.CurrentStatus;
-        public Command ShowPickYourMovePrompt { get; }     
+        public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
-       public string MyName=> game.MyName;
-        public string CurrentStatus => game.CurrentStatus;      
+        public string MyName => game.MyName;
+        public string CurrentStatus => game.CurrentStatus;
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
-        private bool _isPopupOpen=>game.IsPopupOpen;
+        private bool _isPopupOpen => game.IsPopupOpen;
         public GamePageVM(Game game, Grid grdOponnents)
         {
             this.game = game;
@@ -39,7 +39,7 @@ namespace TheLambClub.ViewModel
 
         private void OnMyMoneyChanged(object? sender, EventArgs e)
         {
-            
+
             //if(game.CurrentPlayerIndex>0)
             //   lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
             //else          
@@ -59,14 +59,14 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(PYMPtPageVM.MinBet));
             game.OnwinnerSelected += WinnerSelected;
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
-        } 
+        }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
             if (!_isPopupOpen)
             {
                 Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
                 game.IsPopupOpen = true;
-            }         
+            }
         }
         private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)
@@ -91,13 +91,13 @@ namespace TheLambClub.ViewModel
                 Label lbl = new()
                 {
                     Text = Strings.WaitingForPlayers,
-                    TextColor = Colors.Black,
-                    FontSize = 10,
+                    TextColor = Colors.White,
+                    FontSize = 20,
                     Margin = new Thickness(5),
                     Padding = new Thickness(2),
                     HorizontalTextAlignment = TextAlignment.Center,
                 };
-                lstOponnentsLabels.Add(lbl);             
+                lstOponnentsLabels.Add(lbl);
                 grdOponnents.Add(lbl, i, 0);
             }
         }
@@ -120,9 +120,9 @@ namespace TheLambClub.ViewModel
                 {
                     lstOponnentsLabels[lblIndex].Text = game.Players[i].Name;
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
-                }             
+                }
             }
-        }     
+        }
         public void AddSnapshotListener()
         {
             game.AddSnapShotListener();
