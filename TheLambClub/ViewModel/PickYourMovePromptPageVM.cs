@@ -82,8 +82,8 @@ namespace TheLambClub.ViewModel
 
         private bool CanSubmit(object arg)
         {
-           
-            return !(BetAmount == 0 || _betAmount == MinBet);
+
+            return true;//!(_betAmount == 0 || _betAmount == MinBet);
         }
 
         private void StayFunction(object obj)
