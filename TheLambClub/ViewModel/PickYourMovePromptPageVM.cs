@@ -44,13 +44,8 @@ namespace TheLambClub.ViewModel
             set
             {
                 if (_betAmount != value)
-                    _betAmount = value;
-                if (_betAmount != MinBet)
-                    game.CurrentPlayer!.CurrentBet = _betAmount;
+                    _betAmount = value;              
                 OnPropertyChanged(nameof(BetAmountStr));
-                Console.WriteLine("CanSubmitBet:");
-                (SubmitBetCommand as Command)?.ChangeCanExecute();
-                Console.WriteLine("ChangeCanExecute:");
             }
         }
 
@@ -99,6 +94,10 @@ namespace TheLambClub.ViewModel
 
         private void BetFunction(object obj)
         {
+            if (_betAmount != MinBet)
+                game.CurrentPlayer!.CurrentBet = _betAmount;
+            (SubmitBetCommand as Command)?.ChangeCanExecute();
+
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }

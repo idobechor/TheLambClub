@@ -287,15 +287,6 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
                 CurrentPlayer.RoundAllIn = RoundNumber;
-                double sum = 0;
-                int nonefoldedPlayers = 0;
-                foreach (Player p in Players!)
-                    if (!p.IsFolded)
-                        nonefoldedPlayers++;
-                for (int i = 0; i < RoundNumber; i++)
-                    sum += Pot[i];
-                sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
-                CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
             }
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             Dictionary<string, object> update = new()
@@ -321,15 +312,6 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
                 CurrentPlayer.RoundAllIn = RoundNumber;
-                double sum = 0;
-                int nonefoldedPlayers = 0;
-                foreach (Player p in Players!)
-                    if (!p.IsFolded)
-                        nonefoldedPlayers++;
-                for (int i = 0; i < RoundNumber; i++)
-                    sum += Pot[i];
-                sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
-                CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
             }
             Dictionary<string, object> update = new()
             {
@@ -409,6 +391,13 @@ namespace TheLambClub.ModelsLogic
                     return false;
             return true;
         }
+        protected bool EveryOneIsAllIn()
+        {
+            foreach (Player player in Players!)
+                if (player == null || !player.IsFolded && !player.IsAllIn)
+                    return false;
+            return true;
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Console.WriteLine("Game OnChange called");
@@ -438,6 +427,38 @@ namespace TheLambClub.ModelsLogic
                 //bool IsAllIn = Players != null && Players[beforeCurrentPlayerIndex] != null &&
                 //   Players[beforeCurrentPlayerIndex].CurrentMoney == 0 &&
                 //   Players[beforeCurrentPlayerIndex].IsAllIn == false;
+                if (EveryOneIsAllIn()&&IsHost)
+                {
+                    double sum = 0;
+                    for (int i = 0; i <= RoundNumber; i++)
+                        sum += Pot[i];
+                    foreach (Player p in Players!)                  
+                        p.SumOfMoneyThatThePlayerWon = (int)sum;                 
+                    for (int i = RoundNumber; i < HandComplete; i++)                                       
+                       BoardCards[i] = SetOfCards.GetRandomCard();
+                    RoundNumber = HandComplete;
+                    isEndOfRound = true;
+                    Dictionary<string, object> dict = new()
+                    {
+                        { nameof(BoardCards), BoardCards },
+                    };
+                    fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+
+                }
+                else if(CurrentPlayer!=null&&isEndOfRound&&CurrentPlayer.IsAllIn)
+                {
+                    double sum = 0;
+                    int nonefoldedPlayers = 0;
+                    foreach (Player p in Players!)
+                        if (!p.IsFolded)
+                            nonefoldedPlayers++;
+                    for (int i = 0; i < RoundNumber; i++)
+                        sum += Pot[i];
+                    sum += CurrentPlayer!.CurrentBet * nonefoldedPlayers;
+                    CurrentPlayer.SumOfMoneyThatThePlayerWon += (int)sum;
+                    Console.WriteLine("isEndOfRound&&IsAllIn");
+                }
+
                 if (isGameStarted)
                     updatedGame.beforeCurrentPlayerIndex = MaxNumOfPlayers - 1;
                 if (IsFull && Players?[beforeCurrentPlayerIndex].CurrentBet > CurrentPlayer?.CurrentBet)
@@ -464,8 +485,11 @@ namespace TheLambClub.ModelsLogic
                                 Winner[0] = player;
                         Winner[0].CurrentMoney += Pot.Sum();
                         updatedGame.Players = Players;
-                        OnwinnerSelected?.Invoke(this, new WinningPopupEvent(Winner, null!));
-                        IsPopupOpen = false;
+                        if (!IsPopupOpen)
+                        {
+                            OnwinnerSelected?.Invoke(this, new WinningPopupEvent(Winner, null!));
+                            IsPopupOpen = true;
+                        }
                     }
                     else
                     {
@@ -496,12 +520,7 @@ namespace TheLambClub.ModelsLogic
                                 sum = 0;
                             }
                         }
-                        foreach (Player player in Players!)
-                        {
-                            player.IsAllIn = false;
-                            player.SumOfMoneyThatThePlayerWon = 0;
-                            player.RoundAllIn = -1;
-                        }
+                  
                         Dictionary<string, object> dict = new()
                         {
                             { nameof(Players), Players! },
@@ -509,8 +528,12 @@ namespace TheLambClub.ModelsLogic
                         };
 
                         fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-                        OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
-                        IsPopupOpen = false;
+                        if (!IsPopupOpen)
+                        {
+                            OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
+                            IsPopupOpen = true;
+                        }
+
                     }
                     if (IsHost)
                     {

@@ -18,11 +18,8 @@ namespace TheLambClub.Models
         public double CurrentMoney
         {
             get => _currentMoney;
-            set
-            {
-                if (value >= 0 && value < _currentMoney) 
-                    _currentMoney = value;               
-            }
+            set => _currentMoney = value;                   
+            
         }
         public bool IsReRazed { get; set; } = false;
 
