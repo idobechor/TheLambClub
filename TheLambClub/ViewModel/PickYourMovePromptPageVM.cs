@@ -67,7 +67,7 @@ namespace TheLambClub.ViewModel
         {
             game.TimeLeftChanged -= OnTimeLeftChanged;
             WeakReferenceMessenger.Default.Send(new AppMessage<bool>(true));
-            game.IsHappened= false;
+            //game.IsHappened= false;
         }
         
         private void OnCheckOrCallChanged(object? sender, EventArgs e)

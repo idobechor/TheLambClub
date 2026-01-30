@@ -33,8 +33,17 @@ namespace TheLambClub.ViewModel
             InitOponnentsGrid(grdOponnents);
             game.OnGameChanged += OnGameChanged;
             game.OnGameDeleted += OnGameDeleted;
+            game.OnPlayerLost += OnPlayerLost;
             game.OnMyMoneyChanged += OnMyMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
+        }
+
+        private void OnPlayerLost(object? sender, EventArgs e)
+        {
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Shell.Current.Navigation.PopAsync();
+            });
         }
 
         private void OnMyMoneyChanged(object? sender, EventArgs e)

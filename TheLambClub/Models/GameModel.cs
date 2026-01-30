@@ -22,6 +22,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
+        public EventHandler? OnPlayerLost;
+        [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
         public EventHandler? OnCheckOrCallChanged;
@@ -88,7 +90,7 @@ namespace TheLambClub.Models
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
-        public abstract void NextTurn();
+        public abstract void NextTurn(bool UpDateFB);
         public abstract void PickedFold();
         protected abstract void OnComplete(Task task);
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
