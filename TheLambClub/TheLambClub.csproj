@@ -64,9 +64,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\LostGamePopup.xaml.cs">
+      <DependentUpon>LostGamePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\PickYourMovePopupPage.xaml.cs">
       <DependentUpon>PickYourMovePopupPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\WinGamePopup.xaml.cs">
+      <DependentUpon>WinGamePopup.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Views\LostGamePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\WinGamePopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
   </ItemGroup>
 
 </Project>

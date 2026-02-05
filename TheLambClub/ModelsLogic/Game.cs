@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
 using System.Collections.ObjectModel;
 using TheLambClub.Models;
@@ -67,7 +68,7 @@ namespace TheLambClub.ModelsLogic
                 return p;
             }
         }
-        public override string CurrentStatus => IsFull ? Strings.PlayingStatus : Strings.WaitingStatus;
+        public override string CurrentStatus => IsFull ? Strings.PlayingStatus : CurrentPlayer!.Name;
         public override bool IsMyTurn
         {
             get
@@ -83,7 +84,6 @@ namespace TheLambClub.ModelsLogic
 
         public override void NextTurn(bool UpDateFB)
         {
-            //PlayerBeforeId = Players![CurrentPlayerIndex].Id;
             CurrentPlayerIndex = (CurrentPlayerIndex + 1) % CurrentNumOfPlayers;
             if(UpDateFB)
                UpdateFBTurnUpdate((task) => OnGameChanged?.Invoke(this, EventArgs.Empty));
@@ -551,40 +551,33 @@ namespace TheLambClub.ModelsLogic
                                 curr.CurrentMoney += (int)sum;
                                 sum = 0;
                             }
-                        }         
-                        //Dictionary<string, object> dict = new()
-                        //{
-                        //    { nameof(Players), Players! },
-                        //    { nameof(Pot), Pot },
-                        //};
-                        //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
-                        if (!IsPopupOpen)
+                        }
+                        if (!IsPopupOpen && !EveryOneIsAllIn())
                         {
                             OnwinnerSelected?.Invoke(this, new WinningPopupEvent(playersArray, ranks));
                             IsPopupOpen = true;
-                        }
+                        }                  
                     }
                     if (IsHost)
                     {
                         foreach (Player player in playersArray)
                             if (player.IsAllIn && player.CurrentMoney == 0)
                                 player.IsOut = true;
+                    }
+                     if (EveryOneIsAllIn() && updatedGame.CurrentPlayer!.IsAllIn && updatedGame.CurrentPlayer!.CurrentMoney == 0)
+                        OnWinnerSelected?.Invoke(this, EventArgs.Empty);
+                    else if (EveryOneIsAllIn())
+                        OnPlayerLost?.Invoke(this, EventArgs.Empty);
+
+                    if (IsHost)
+                    {
                         EndHand();
                         isHandEnded = true;
                     }
-                    if (isHandEnded)
-                    {
-                        IsPopupOpen=false;
-                    }
-
+                    IsPopupOpen =false;                  
                 }
-                if (CurrentPlayer != null && CurrentPlayer.IsOut)              
-                    OnPlayerLost?.Invoke(this, EventArgs.Empty);
-
-                //if(OnlyOneIsStayed())
-                //{
-                //    //להפעיל פופאפ ניצחון
-                //}
+                 
+                
                 Console.WriteLine("ChangeTurn"+ ChangeTurn + "IsMyTurn"+ IsMyTurn+"");
              
                 if (IsHost && changedToFull && !isHandEnded)
@@ -596,7 +589,7 @@ namespace TheLambClub.ModelsLogic
                     IsEndOfRound=true;
                     EndOfRound(false);
                 }
-                if (CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded || CurrentPlayer.IsAllIn))
+                if (CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded || CurrentPlayer.IsAllIn|| CurrentPlayer.IsOut))
                 {
                     IsFoldOrOut=true;
                     NextTurn(false); 
@@ -622,18 +615,20 @@ namespace TheLambClub.ModelsLogic
                         };
                         fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
                     }
-                    IsFoldOrOut=false;
-                    IsEndOfRound=false;
-
                 }
+                IsFoldOrOut = false;
+                IsEndOfRound = false;
                 if (!TimerCreated)
                 {
                     RegisterTimer();
                     TimerCreated = true;
                 }
-
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
-            }            
+            }
+            else
+            {
+                OnGameDeleted?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }

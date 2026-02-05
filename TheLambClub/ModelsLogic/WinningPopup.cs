@@ -7,12 +7,8 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class WinningPopup:WinningPopupModel
+    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks) : WinningPopupModel(players, ranks)
     {
-        public WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks) : base(players, ranks)
-        {
-        }
-
         public override string[] PlayersNames
         {
             get

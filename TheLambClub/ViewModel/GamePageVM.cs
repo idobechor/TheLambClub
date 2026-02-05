@@ -34,16 +34,19 @@ namespace TheLambClub.ViewModel
             game.OnGameChanged += OnGameChanged;
             game.OnGameDeleted += OnGameDeleted;
             game.OnPlayerLost += OnPlayerLost;
+            game.OnWinnerSelected += OnWinnerSelected;
             game.OnMyMoneyChanged += OnMyMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
+        private void OnWinnerSelected(object? sender, EventArgs e)
+        {
+             Shell.Current.ShowPopupAsync(new WinGamePopup("Dear " + game.CurrentPlayer!.Name + "you won the game event well done"));
+        }
+
         private void OnPlayerLost(object? sender, EventArgs e)
         {
-            MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                Shell.Current.Navigation.PopAsync();
-            });
+            Shell.Current.ShowPopupAsync(new WinGamePopup("Dear " + game.CurrentPlayer!.Name + "you Lost the game please try again"));
         }
 
         private void OnMyMoneyChanged(object? sender, EventArgs e)

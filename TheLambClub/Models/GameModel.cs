@@ -24,6 +24,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnPlayerLost;
         [Ignored]
+        public EventHandler? OnWinnerSelected;
+        [Ignored]
         public EventHandler? OnGameChanged;
         [Ignored]
         public EventHandler? OnCheckOrCallChanged;
