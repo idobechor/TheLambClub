@@ -73,8 +73,6 @@ namespace TheLambClub.Models
         [Ignored]
         public string CheckOrCall { get; set; } = Strings.Check;
         [Ignored]
-        protected bool EndOfHand = false;
-        [Ignored]
         protected bool TimerCreated = false;
         public Player[]? Players { get; set; }
         protected const int HandComplete = 4;       
@@ -98,8 +96,8 @@ namespace TheLambClub.Models
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
         protected abstract void UpdateFBTurnUpdate(Action<Task> OnComplete);
-        protected abstract void UpdateBoard(Action<Task> OnComplete);
-        protected abstract void FillBoard();
+      //  protected abstract void UpdateBoard( Action<Task> OnComplete);
+        protected abstract void FillBoard(int round);
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);

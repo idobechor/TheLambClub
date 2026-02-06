@@ -8,34 +8,19 @@ namespace TheLambClub.ModelsLogic
         public SetOfCards()
         {
             cards = [];
-            usedCards = [];
             FillPakage();
         }
-        protected override bool IsExist(FBCard currCard)
-        {
-            bool res = false;
-            foreach (FBCard card in usedCards!)
-            {
-                if (currCard.Shape == card.Shape && currCard.Value == card.Value)
-                {
-                    res = true;
-                }
-            }
-            return res;
-        }
-        protected override void FillPakage()
+       
+        public override void FillPakage()
          {
-
             foreach (Shapes shape in Enum.GetValues(typeof(Shapes)))
                for (int value = 1; value <= FBCard.CardsInShape; value++)
                     cards!.Add(new FBCard(((int)shape), value));
          }
         public override FBCard GetRandomCard()
         {
-            FBCard card = null!;
-            while (card == null)
-                card = cards![rnd.Next(cards.Count)];
-            usedCards!.Add(card);
+            FBCard card = cards![rnd.Next(cards.Count)];
+            cards!.Remove(card);
             return card;
         }
         public override FBCard Add(FBCard fbcard)

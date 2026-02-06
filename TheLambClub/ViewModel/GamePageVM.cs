@@ -26,7 +26,6 @@ namespace TheLambClub.ViewModel
         public string CurrentStatus => game.CurrentStatus;
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
-        private bool _isPopupOpen => game.IsPopupOpen;
         public GamePageVM(Game game, Grid grdOponnents)
         {
             this.game = game;
@@ -36,6 +35,7 @@ namespace TheLambClub.ViewModel
             game.OnPlayerLost += OnPlayerLost;
             game.OnWinnerSelected += OnWinnerSelected;
             game.OnMyMoneyChanged += OnMyMoneyChanged;
+            game.OnwinnerSelected += WinnerSelected;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
@@ -46,7 +46,7 @@ namespace TheLambClub.ViewModel
 
         private void OnPlayerLost(object? sender, EventArgs e)
         {
-            Shell.Current.ShowPopupAsync(new WinGamePopup("Dear " + game.CurrentPlayer!.Name + "you Lost the game please try again"));
+            Shell.Current.ShowPopupAsync(new LostGamePopup("Dear " + game.CurrentPlayer!.Name + "you Lost the game please try again"));
         }
 
         private void OnMyMoneyChanged(object? sender, EventArgs e)
@@ -69,16 +69,12 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
             OnPropertyChanged(nameof(PYMPtPageVM.MinBet));
-            game.OnwinnerSelected += WinnerSelected;
+            
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
-            if (!_isPopupOpen)
-            {
-                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));
-                game.IsPopupOpen = true;
-            }
+                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));            
         }
         private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)
