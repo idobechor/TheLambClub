@@ -12,9 +12,10 @@
         Padding="10"
         ColumnDefinitions="*,2*"
         ColumnSpacing="0"
-        RowDefinitions="*">
+        RowDefinitions="*,Auto">
         <VerticalStackLayout
             Grid.Column="0"
+            Grid.Row="0"
             Spacing="0"
             VerticalOptions="Center">
             <Button
@@ -31,6 +32,14 @@
                 FontSize="20"
                 Text="{x:Static m:Strings.FoldBtnTxt}"
                 TextColor="White" />
+            <Button
+                BackgroundColor="DarkSlateGray"
+                Command="{Binding GetSuggestionCommand}"
+                CornerRadius="15"
+                FontSize="16"
+                IsEnabled="{Binding CanRequestSuggestion}"
+                Text="Get AI suggestion"
+                TextColor="White" />
             <Border Padding="0" BackgroundColor="Black">
                 <Label
                     x:Name="TimeLeft"
@@ -43,6 +52,7 @@
         </VerticalStackLayout>
         <VerticalStackLayout
             Grid.Column="1"
+            Grid.Row="0"
             HorizontalOptions="Center"
             Spacing="0"
             VerticalOptions="Center">
@@ -56,6 +66,23 @@
                 WidthRequest="200"
                 Value="{Binding BetAmount}" />
             <Button Command="{Binding SubmitBetCommand}" Text="{x:Static m:Strings.SubmitBetBtn}" />
+        </VerticalStackLayout>
+        <VerticalStackLayout
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Padding="0,8"
+            VerticalOptions="End">
+            <Label
+                FontSize="10"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding AiSuggestionVisible}"
+                Text="{Binding AiSuggestionText}"
+                TextColor="DarkBlue" />
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsLoadingSuggestion}"
+                IsVisible="{Binding IsLoadingSuggestion}" />
         </VerticalStackLayout>
     </Grid>
 </toolkit:Popup>

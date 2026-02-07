@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Handlers;
-using TheLambClub.Views;
+using TheLambClub.Models;
+using TheLambClub.Services;
 
 namespace TheLambClub
 {
@@ -10,6 +10,8 @@ namespace TheLambClub
         public static MauiApp CreateMauiApp()
         {
             MauiAppBuilder builder = MauiApp.CreateBuilder();
+            string? apiKey = Keys.OpenAIKey;
+            builder.Services.AddSingleton<IPokerSuggestionService>(_ => new PokerSuggestionService(apiKey));
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()

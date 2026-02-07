@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
+using TheLambClub.Services;
 using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
@@ -13,7 +14,6 @@ namespace TheLambClub.ViewModel
     {
         private readonly Game game;
         public int Money => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : 10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
-        private readonly PickYourMovePromptPageVM PYMPtPageVM = new();
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
 
@@ -68,7 +68,6 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
-            OnPropertyChanged(nameof(PYMPtPageVM.MinBet));
             
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
@@ -83,7 +82,8 @@ namespace TheLambClub.ViewModel
         }
         private async void ShowPickYourMovePromptFunction(object obj)
         {
-            await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game));
+            var suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>();
+            await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game, suggestionService));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
         private void InitOponnentsGrid(Grid grdOponnents)

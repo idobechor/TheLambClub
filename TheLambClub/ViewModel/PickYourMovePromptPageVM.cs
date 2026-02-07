@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
+using TheLambClub.Services;
 
 namespace TheLambClub.ViewModel
 {
@@ -10,6 +11,7 @@ namespace TheLambClub.ViewModel
         public event Action? RequestClose;
         private readonly Game game;
         private readonly Label TimeLeftLabel;
+        private readonly IPokerSuggestionService? _suggestionService;
         private int timeInt;
         public string TimeLeft => game.TimeLeft;
         public TimerSettings TimerSettings => game.timerSettings;
@@ -49,18 +51,36 @@ namespace TheLambClub.ViewModel
             }
         }
 
-        public PickYourMovePromptPageVM(Game game, Label label)
+        private string? _aiSuggestionText;
+        public string? AiSuggestionText
         {
+            get => _aiSuggestionText;
+            private set { _aiSuggestionText = value; OnPropertyChanged(); OnPropertyChanged(nameof(AiSuggestionVisible)); }
+        }
+
+        public bool AiSuggestionVisible => !string.IsNullOrEmpty(_aiSuggestionText);
+
+        private bool _isLoadingSuggestion;
+        public bool IsLoadingSuggestion
+        {
+            get => _isLoadingSuggestion;
+            private set { _isLoadingSuggestion = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanRequestSuggestion)); }
+        }
+
+        public bool CanRequestSuggestion => _suggestionService != null && !_isLoadingSuggestion;
+
+        public ICommand GetSuggestionCommand { get; }
+
+        public PickYourMovePromptPageVM(Game game, Label label, IPokerSuggestionService? suggestionService = null)
+        {
+            GetSuggestionCommand = new Command(GetSuggestionAsync, _ => CanRequestSuggestion);
             SubmitBetCommand = new Command(BetFunction, CanSubmitBet);
             TimeLeftLabel = label;
+            _suggestionService = suggestionService;
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
             game.TimeLeftChanged += OnTimeLeftChanged;
             WeakReferenceMessenger.Default.Send(new AppMessage<TimerSettings>(TimerSettings));
-        }
-
-        public PickYourMovePromptPageVM()
-        {
         }
 
         public void Close()
@@ -106,6 +126,37 @@ namespace TheLambClub.ViewModel
         {
             game.PickedFold();
             RequestClose?.Invoke();
+        }
+
+        private async void GetSuggestionAsync(object obj)
+        {
+            if (_suggestionService == null) return;
+            IsLoadingSuggestion = true;
+            AiSuggestionText = null;
+            OnPropertyChanged(nameof(CanRequestSuggestion));
+            (GetSuggestionCommand as Command)?.ChangeCanExecute();
+
+            try
+            {
+                var result = await _suggestionService.GetSuggestionAsync(
+                    game.CurrentPlayer?.FBCard1!,
+                    game.CurrentPlayer?.FBCard2!,
+                    new List<FBCard>(game.BoardCards));
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    if (result.Success)
+                        AiSuggestionText = "AI suggests: " + (result.Suggestion ?? "").ToUpperInvariant();
+                    else
+                        AiSuggestionText = result.RawResponse ?? "Suggestion unavailable.";
+                });
+            }
+            finally
+            {
+                IsLoadingSuggestion = false;
+                OnPropertyChanged(nameof(CanRequestSuggestion));
+                (GetSuggestionCommand as Command)?.ChangeCanExecute();
+            }
         }
     }
 }
