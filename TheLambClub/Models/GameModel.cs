@@ -43,7 +43,6 @@ namespace TheLambClub.Models
         public string TimeLeft { get; protected set; } = string.Empty;     
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
-        public int beforeCurrentPlayerIndex { get; set; } 
         protected int _currentPlayerIndex;
         public abstract int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
@@ -77,8 +76,6 @@ namespace TheLambClub.Models
         public Player[]? Players { get; set; }
         protected const int HandComplete = 4;       
         [Ignored]
-        public bool IsPopupOpen { get; set; }= false;
-        [Ignored]
         public abstract ObservableCollection<ViewCard> ?BoardViewCards { get; }
         [Ignored]
         public abstract ViewCard ?ViewCard1 { get; }
@@ -90,20 +87,17 @@ namespace TheLambClub.Models
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
-        public abstract void NextTurn(bool UpDateFB);
         public abstract void PickedFold();
         protected abstract void OnComplete(Task task);
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
         protected abstract void UpdateFBTurnUpdate(Action<Task> OnComplete);
-      //  protected abstract void UpdateBoard( Action<Task> OnComplete);
         protected abstract void FillBoard(int round);
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
-        //protected abstract int BeforeCurrentPlayerIndex();
         public abstract void CallFunction();
         protected abstract bool EveryOneIsNotRerazeing();
         protected abstract void EndHand();

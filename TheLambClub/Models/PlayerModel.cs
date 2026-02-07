@@ -23,10 +23,7 @@ namespace TheLambClub.Models
         }
         public bool IsReRazed { get; set; } = false;
 
-        public int SumOfMoneyThatThePlayerWon { get; set; }
         public bool IsAllIn { get; set; } = false;
-        public bool IsOut { get; set; } = false;
-        public int RoundAllIn { get; set; }=-1;
         public enum LevelsOfHands
         {
             HighCard,

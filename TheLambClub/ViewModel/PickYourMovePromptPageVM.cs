@@ -37,7 +37,7 @@ namespace TheLambClub.ViewModel
         public string CheckOrFold => game.CheckOrCall;
         public string BetAmountStr => Strings.IntoruceYourBet + _betAmount;
         public int MinBet => game.MinBet == 0 ? 0 : game.MinBet - 1;
-        public int PlayersCurrentMoney => ((int)(game != null && game.CurrentPlayer != null ? game.CurrentPlayer!.CurrentMoney : 10000));
+        public int MaxBet => game.MaxBet;
         public int BetAmount
         {
             get => _betAmount;
@@ -51,7 +51,7 @@ namespace TheLambClub.ViewModel
 
         public PickYourMovePromptPageVM(Game game, Label label)
         {
-            SubmitBetCommand = new Command(BetFunction, CanSubmit);
+            SubmitBetCommand = new Command(BetFunction, CanSubmitBet);
             TimeLeftLabel = label;
             this.game = game;
             game.OnCheckOrCallChanged+= OnCheckOrCallChanged;
@@ -80,10 +80,9 @@ namespace TheLambClub.ViewModel
 
         public ICommand SubmitBetCommand { get; private set; }
 
-        private bool CanSubmit(object arg)
+        private bool CanSubmitBet(object arg)
         {
-
-            return true;//!(_betAmount == 0 || _betAmount == MinBet);
+            return game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
         }
 
         private void StayFunction(object obj)

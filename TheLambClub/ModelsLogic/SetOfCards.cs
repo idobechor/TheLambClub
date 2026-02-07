@@ -13,6 +13,7 @@ namespace TheLambClub.ModelsLogic
        
         public override void FillPakage()
          {
+            cards!.Clear();
             foreach (Shapes shape in Enum.GetValues(typeof(Shapes)))
                for (int value = 1; value <= FBCard.CardsInShape; value++)
                     cards!.Add(new FBCard(((int)shape), value));

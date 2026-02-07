@@ -51,7 +51,7 @@
                 HorizontalOptions="Center"
                 Text="{Binding BetAmountStr}" />
             <Slider
-                Maximum="{Binding PlayersCurrentMoney}"
+                Maximum="{Binding MaxBet}"
                 Minimum="{Binding MinBet}"
                 WidthRequest="200"
                 Value="{Binding BetAmount}" />
