@@ -15,7 +15,6 @@ namespace TheLambClub.Services
         /// <param name="playerCard1">Player's first hole card.</param>
         /// <param name="playerCard2">Player's second hole card.</param>
         /// <param name="boardCards">Community board cards (only non-null entries are used).</param>
-        /// <param name="cancellationToken">Optional cancellation.</param>
         /// <returns>Result with Suggestion ("raise", "stay", "fold") or failure.</returns>
         Task<PokerSuggestionResult> GetSuggestionAsync(
             FBCard playerCard1,

@@ -6,10 +6,10 @@ namespace TheLambClub.Services
     public class PokerSuggestionResult
     {
         /// <summary>Normalized suggestion: "raise", "stay", or "fold". Null if no suggestion could be obtained.</summary>
-        public string Suggestion { get; set; }
+        public string? Suggestion { get; set; }
 
         /// <summary>Raw model response for debugging or display.</summary>
-        public string RawResponse { get; set; }
+        public string? RawResponse { get; set; }
 
         /// <summary>True if the suggestion was obtained successfully.</summary>
         public bool Success => !string.IsNullOrEmpty(Suggestion);

@@ -16,6 +16,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OpenMyTurnPopUp;
         [Ignored]
+        public EventHandler? OnTurnChanged;
+        [Ignored]
         protected IListenerRegistration? ilr;
         [Ignored]      
         protected FbData fbd = new();

@@ -14,6 +14,7 @@ namespace TheLambClub.ModelsLogic
             get => _currentPlayerIndex;
             set
             {
+                OnTurnChanged?.Invoke(this, EventArgs.Empty);
                 _currentPlayerIndex = value;
             }
         }
@@ -64,7 +65,7 @@ namespace TheLambClub.ModelsLogic
                 return p;
             }
         }
-        public override string CurrentStatus => IsFull ? Strings.PlayingStatus : CurrentPlayer!.Name;
+        public override string CurrentStatus => IsFull ? "Current Player:"+Players![CurrentPlayerIndex]!.Name : Strings.WaitingForPlayers;
         public override bool IsMyTurn
         {
             get

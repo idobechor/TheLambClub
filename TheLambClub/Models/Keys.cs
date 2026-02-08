@@ -2,7 +2,7 @@
 {
     public static class Keys
     {
-        public const string OpenAIKey = "";//למחוק כל העלה לגיט
+        public const string OpenAIKey = "";
         public const string UserNameKey = "Username";
         public const string PasswordNameKey = "Password";
         public const string EmailNameKey = "Email";

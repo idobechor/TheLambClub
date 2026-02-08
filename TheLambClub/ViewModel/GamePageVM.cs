@@ -16,14 +16,12 @@ namespace TheLambClub.ViewModel
         public int Money => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : 10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
-
         public ViewCard Card2 => game.ViewCard2!;
 
         public string Status => game.CurrentStatus;
         public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
         public string MyName => game.MyName;
-        public string CurrentStatus => game.CurrentStatus;
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
         public GamePageVM(Game game, Grid grdOponnents)
@@ -36,7 +34,13 @@ namespace TheLambClub.ViewModel
             game.OnWinnerSelected += OnWinnerSelected;
             game.OnMyMoneyChanged += OnMyMoneyChanged;
             game.OnwinnerSelected += WinnerSelected;
+            game.OnTurnChanged += OnTurnChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
+        }
+
+        private void OnTurnChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(Status));
         }
 
         private void OnWinnerSelected(object? sender, EventArgs e)
@@ -68,7 +72,6 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
-            
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
@@ -83,7 +86,7 @@ namespace TheLambClub.ViewModel
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             var suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>();
-            await Shell.Current.ShowPopupAsync(new PickYourMovePopupPage(game, suggestionService));
+            await Shell.Current!.ShowPopupAsync(new PickYourMovePopupPage(game, suggestionService));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
         private void InitOponnentsGrid(Grid grdOponnents)
