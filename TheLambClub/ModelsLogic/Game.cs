@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
@@ -268,13 +270,14 @@ namespace TheLambClub.ModelsLogic
 
         public override void BetFunction(object obj)
         {
-            Player prevPlayer = Players![previousPlayerIndex()];
+            Player prevPlayer = Players![PreviousPlayerIndex()];
             CurrentPlayer!.CurrentMoney -= CurrentPlayer!.CurrentBet;
             Pot[RoundNumber] += CurrentPlayer.CurrentBet;
             if (CurrentPlayer.CurrentMoney == 0)
             {
                 CurrentPlayer!.IsAllIn = true;
             }
+            MoneyChanged?.Invoke(this, new ChangingMoneyEvent(CurrentPlayer.Name,(int)CurrentPlayer.CurrentMoney)) ;
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
@@ -295,6 +298,7 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
             }
+            MoneyChanged?.Invoke(this, new ChangingMoneyEvent(CurrentPlayer.Name, (int)CurrentPlayer.CurrentMoney));
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
@@ -447,7 +451,7 @@ namespace TheLambClub.ModelsLogic
             Pot = updatedGame.Pot;
         }
 
-        private int previousPlayerIndex()
+        private int PreviousPlayerIndex()
         {
             int previousIndex = CurrentPlayerIndex - 1;
 
@@ -490,11 +494,11 @@ namespace TheLambClub.ModelsLogic
 
         private void UpdateCheckOrCallUI()
         {
-            bool needToCall = IsFull && Players?[previousPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet;
+            bool needToCall = IsFull && Players?[PreviousPlayerIndex()].CurrentBet > CurrentPlayer?.CurrentBet;
 
             if (needToCall)
             {
-                double callAmount = Players![previousPlayerIndex()].CurrentBet - CurrentPlayer!.CurrentBet;
+                double callAmount = Players![PreviousPlayerIndex()].CurrentBet - CurrentPlayer!.CurrentBet;
                 CheckOrCall = Strings.Call + callAmount + "$";
                 MinBet = CalculateMinBet();
             }
@@ -509,7 +513,7 @@ namespace TheLambClub.ModelsLogic
 
         private int CalculateMinBet()
         {
-            double previousBet = Players![previousPlayerIndex()].CurrentBet;
+            double previousBet = Players![PreviousPlayerIndex()].CurrentBet;
             double playerMoney = CurrentPlayer!.CurrentMoney;
             int doublePreviousBet = (int)previousBet * 2;
 
@@ -544,7 +548,7 @@ namespace TheLambClub.ModelsLogic
         {
             var ranks = EvaluatePlayerHands();
             var sortedPlayers = SortPlayersByHandRank(ranks);
-            DistributePotToWinners(sortedPlayers);
+            DistributePotToWinners(sortedPlayers,ranks);
             bool found = CheckForGameOver();
             if (found)
             {
@@ -599,23 +603,23 @@ namespace TheLambClub.ModelsLogic
             return playersArray;
         }
 
-        private void DistributePotToWinners(Player[] sortedPlayers)
+        private void DistributePotToWinners(Player[] sortedPlayers, Dictionary<Player,HandRank>Dict)
         {
             double remainingPot = Pot.Sum();
-            sortedPlayers[0].CurrentMoney += (int)remainingPot;
-        }
-
-        private bool banckruptPlayerExists()
-        {
-            foreach (Player player in Players!)
+            int countEven = 1;
+            for (int i = 0; i < sortedPlayers.Length-1; i++) 
             {
-                if (player != null && player.CurrentMoney == 0)
-                    return true;
+                if (Dict[sortedPlayers[i]].Equals(Dict[sortedPlayers[i + 1]]))
+                {
+                    countEven++;
+                }
             }
-            return false;
+            for (int i = 0;i < countEven; i++)
+            {
+                sortedPlayers[i].CurrentMoney += (int)remainingPot/ countEven;
+            }
         }
-
-        private bool FinalizeHandIfHost(Player[] playersArray, Game updatedGame)
+        private bool FinalizeHandIfHost(Player[]? playersArray, Game ? updatedGame)
         {
             if (IsHost)
             {

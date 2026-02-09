@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+
 using CommunityToolkit.Mvvm.Messaging;
 using TheLambClub.Models;
 using TheLambClub.Platforms.Android;
@@ -15,12 +16,12 @@ namespace TheLambClub
         {
             base.OnCreate(savedInstanceState);
             RegisterTimerMessages();
-            StartDeleteFBDocsService();         
+            StartDeleteFBDocsService();
         }
 
         private void StartDeleteFBDocsService()
         {
-            Intent = new Android.Content.Intent(this, typeof(DeleteFBDocsService));
+            Intent = new Android.Content.Intent(this, typeof(DeleteFbDocsService));
             StartService(Intent);
         }
 

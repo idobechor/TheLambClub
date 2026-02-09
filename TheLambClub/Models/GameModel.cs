@@ -10,6 +10,8 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler<WinningPopupEvent>? OnwinnerSelected;
         [Ignored]
+        public EventHandler<ChangingMoneyEvent>? MoneyChanged;
+        [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
         public EventHandler? TimeLeftFinished;

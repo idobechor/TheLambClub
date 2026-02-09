@@ -13,7 +13,8 @@ namespace TheLambClub.ViewModel
     class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public int Money => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : 10000; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
+        public int PotMoney => game.Pot != null ? (int)game.Pot.Sum() : Keys.InitialPotsMoney;
+        public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
         public ViewCard Card2 => game.ViewCard2!;
@@ -32,10 +33,21 @@ namespace TheLambClub.ViewModel
             game.OnGameDeleted += OnGameDeleted;
             game.OnPlayerLost += OnPlayerLost;
             game.OnWinnerSelected += OnWinnerSelected;
-            game.OnMyMoneyChanged += OnMyMoneyChanged;
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
+            game.MoneyChanged += OnMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
+        }
+
+        private void OnMoneyChanged(object? sender, ChangingMoneyEvent e)
+        {
+            for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
+            {
+                if (i < game.CurrentNumOfPlayers && lstOponnentsLabels[i].Text==e.Name)
+                {
+                    lstOponnentsMoneyLabels[i].Text =e.Money.ToString();
+                }
+            }
         }
 
         private void OnTurnChanged(object? sender, EventArgs e)
@@ -45,29 +57,21 @@ namespace TheLambClub.ViewModel
 
         private void OnWinnerSelected(object? sender, EventArgs e)
         {
-             Shell.Current.ShowPopupAsync(new WinGamePopup("Dear " + game.CurrentPlayer!.Name + "you won the game event well done"));
+             Shell.Current.ShowPopupAsync(new WinGamePopup(Strings.Dear+game.CurrentPlayer!.Name+Strings.WinningMsg));
         }
 
         private void OnPlayerLost(object? sender, EventArgs e)
         {
-            Shell.Current.ShowPopupAsync(new LostGamePopup("Dear " + game.CurrentPlayer!.Name + "you Lost the game please try again"));
-        }
-
-        private void OnMyMoneyChanged(object? sender, EventArgs e)
-        {
-
-            //if(game.CurrentPlayerIndex>0)
-            //   lstOponnentsMoneyLabels[game.CurrentPlayerIndex-1].Text = String .Empty+ game.CurrentPlayer!.CurrentMoney;
-            //else          
-            //    OnPropertyChanged(nameof(Money));
-            //OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-
+            Shell.Current.ShowPopupAsync(new LostGamePopup(Strings.Dear + game.CurrentPlayer!.Name + Strings.LosingMsg));
         }
 
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
             OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            OnPropertyChanged(nameof(PotMoney));
+            OnPropertyChanged(nameof(PlayerMoney));
             OnPropertyChanged(nameof(_IsMyTurn));
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
@@ -92,24 +96,33 @@ namespace TheLambClub.ViewModel
         private void InitOponnentsGrid(Grid grdOponnents)
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
-            grdOponnents.RowDefinitions.Clear();
+            grdOponnents.RowSpacing = 10;
+            grdOponnents.ColumnSpacing = 10;
             grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grdOponnents.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
             for (int i = 0; i < oponnentsCount; i++)
             {
                 grdOponnents.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
-                Label lbl = new()
+                Label lblName = new()
                 {
                     Text = Strings.WaitingForPlayers,
                     TextColor = Colors.White,
                     FontSize = 20,
-                    Margin = new Thickness(5),
-                    Padding = new Thickness(2),
-                    HorizontalTextAlignment = TextAlignment.Center,
+                    FontAttributes = FontAttributes.Bold,
+                    HorizontalTextAlignment = TextAlignment.Center
                 };
-                lstOponnentsLabels.Add(lbl);
-                grdOponnents.Add(lbl, i, 0);
+                lstOponnentsLabels.Add(lblName);
+                grdOponnents.Add(lblName, i, 0);
+                Label lblMoney = new()
+                {
+                    Text = Keys.InitialMoney.ToString(),
+                    TextColor = Colors.White,
+                    FontSize = 18,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(0, 5, 0, 0)
+                };
+                lstOponnentsMoneyLabels.Add(lblMoney);
+                grdOponnents.Add(lblMoney, i, 1);
             }
         }
 

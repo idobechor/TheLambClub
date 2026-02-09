@@ -54,5 +54,8 @@
         public const string Check = "Check";
         public const string IntoruceTheWinner = "The Winner is:";
         public const string IntoruceYourBet = "your bet amount is:";
+        public const string Dear = "Dear "; 
+        public const string WinningMsg = "you won the game event well done"; 
+        public const string LosingMsg = "you Lost the game please try again"; 
     }
 }

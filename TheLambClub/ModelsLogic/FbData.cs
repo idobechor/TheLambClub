@@ -23,6 +23,12 @@ namespace TheLambClub.ModelsLogic
             ICollectionReference cr = fs.Collection(collectonName);
             return cr.AddSnapshotListener(OnChange);
         }
+        public override async void GetDocumentsWhereLessThan(string collectonName, string fName, object fValue, Action<IQuerySnapshot> OnComplete)
+        {
+            ICollectionReference cr = fs.Collection(collectonName);
+            IQuerySnapshot qs = await cr.WhereLessThan(fName, fValue).GetAsync();
+            OnComplete(qs);
+        }
         public override IListenerRegistration AddSnapshotListener(string collectonName, string id, Plugin.CloudFirestore.DocumentSnapshotHandler OnChange)
         {
             IDocumentReference cr = fs.Collection(collectonName).Document(id);
