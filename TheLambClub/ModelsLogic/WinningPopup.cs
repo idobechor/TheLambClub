@@ -7,7 +7,7 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks) : WinningPopupModel(players, ranks)
+    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks, numUpWinners)
     {
         public override string[] PlayersNames
         {
@@ -21,7 +21,7 @@ namespace TheLambClub.ModelsLogic
                      else
                      {
                          if (player!=null)
-                             if (Array.IndexOf(Players, player) == 0)
+                             if (Array.IndexOf(Players, player) <=numUpWinners)
                                 WinnerText= Models.Strings.IntoruceTheWinner+player.Name+" "+Ranks[player].ToString();
                              else
                                 WinnerText= (Array.IndexOf(Players, player)+1)+player.Name+" "+Ranks[player].ToString();

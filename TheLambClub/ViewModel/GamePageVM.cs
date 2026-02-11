@@ -80,7 +80,7 @@ namespace TheLambClub.ViewModel
         }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
-                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks));            
+                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));            
         }
         private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)

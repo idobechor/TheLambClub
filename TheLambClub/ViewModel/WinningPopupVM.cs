@@ -6,9 +6,9 @@ namespace TheLambClub.ViewModel
     {
         private readonly WinningPopup winningPopup;
         public string[] PlayersNames => winningPopup.PlayersNames;
-        public WinningPopupVM(Player[] players,Dictionary<Player,HandRank>ranks)
+        public WinningPopupVM(Player[] players,Dictionary<Player,HandRank>ranks,int numUpWinners)
         {
-            winningPopup = new WinningPopup(players,ranks);
+            winningPopup = new WinningPopup(players,ranks, numUpWinners);
         }
         public WinningPopupVM()
         {

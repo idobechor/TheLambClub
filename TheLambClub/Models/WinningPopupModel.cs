@@ -9,7 +9,7 @@ namespace TheLambClub.Models
         public abstract string[] PlayersNames { get; }
 
 
-        public WinningPopupModel(Player[] players, Dictionary<Player, HandRank> ranks)
+        public WinningPopupModel(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners)
         {
             this.Players = players;
             this.Ranks = ranks;

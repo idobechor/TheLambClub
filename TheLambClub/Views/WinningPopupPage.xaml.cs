@@ -7,10 +7,10 @@ namespace TheLambClub.Views;
 public partial class WinningPopupPage : Popup
 {
     private readonly WinningPopupVM winningPopupVM;
-    public WinningPopupPage(Player[] Players, Dictionary<Player, HandRank> ranks)
+    public WinningPopupPage(Player[] Players, Dictionary<Player, HandRank> ranks, int numUpWinners)
     {
         InitializeComponent();
-        winningPopupVM = new WinningPopupVM(Players,ranks);
+        winningPopupVM = new WinningPopupVM(Players,ranks, numUpWinners);
         BindingContext = winningPopupVM;
     }
 }

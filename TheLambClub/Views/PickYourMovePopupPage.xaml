@@ -8,7 +8,13 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:PickYourMovePromptPageVM"
     CanBeDismissedByTappingOutsideOfPopup="False">
-    <Grid
+    <Border
+     Margin="0"
+     Padding="0"
+     BackgroundColor="#cF000000"
+     StrokeShape="Rectangle"
+     StrokeThickness="0">
+        <Grid
         Padding="10"
         ColumnDefinitions="*,2*"
         ColumnSpacing="0"
@@ -85,4 +91,5 @@
                 IsVisible="{Binding IsLoadingSuggestion}" />
         </VerticalStackLayout>
     </Grid>
+    </Border>
 </toolkit:Popup>

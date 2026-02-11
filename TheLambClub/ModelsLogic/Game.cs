@@ -540,7 +540,7 @@ namespace TheLambClub.ModelsLogic
         {
             Player winner = Players!.First(p => p != null && !p.IsFolded);
             winner.CurrentMoney += Pot.Sum();
-            OnwinnerSelected?.Invoke(this, new WinningPopupEvent([winner], null!));
+            OnwinnerSelected?.Invoke(this, new WinningPopupEvent([winner], null!,0));
             return [winner];
         }
 
@@ -560,7 +560,19 @@ namespace TheLambClub.ModelsLogic
             }
             else
             {
-                OnwinnerSelected?.Invoke(this, new WinningPopupEvent(sortedPlayers, ranks));
+                int i =1;
+               for (int j = 0; j < sortedPlayers.Length-1; j++)
+                {
+                    if (ranks[sortedPlayers[j]].Equals(ranks[sortedPlayers[j + 1]]))
+                    {
+                        i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                OnwinnerSelected?.Invoke(this, new WinningPopupEvent(sortedPlayers, ranks,i));
             }
             return sortedPlayers;
         }

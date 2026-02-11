@@ -6,25 +6,43 @@
              xmlns:m="clr-namespace:TheLambClub.Models"
              Title="PickRegisterOrLoginPage"
              x:DataType="vm:PickRegisterOrLoginPageVM"
-             BackgroundColor="Gray">
+             BackgroundImageSource="signinbackground.jpg">
     <StackLayout 
-        VerticalOptions="Center"
-        HorizontalOptions="Center"
-        Spacing="20">
-
+    VerticalOptions="Center"
+    HorizontalOptions="Center"
+    Spacing="25">
+        <Label
+     FontAttributes="Bold"
+     FontSize="54"
+     Text="{x:Static m:Strings.TheLambClub}"
+     TextColor="WhiteSmoke" />
         <Button 
-            Command="{Binding LoginCommand}"
-            Text="{x:Static m:Strings.LoginText}"
-            BackgroundColor="DarkOrange"
-             WidthRequest="200"
-           HeightRequest="70"/>
+        Command="{Binding LoginCommand}"
+        Text="{x:Static m:Strings.LoginText}"
+        BackgroundColor="#00008B"
+        TextColor="white"
+        FontAttributes="Bold"
+        FontSize="18"
+        CornerRadius="35"
+        WidthRequest="220"
+        HeightRequest="60">
+            <Button.Shadow>
+                <Shadow Brush="#00008B" Offset="2,2" Opacity="0.8"/>
+            </Button.Shadow>
+        </Button>
 
         <Button
-            Command="{Binding RegisterCommand}"
-            Text="{x:Static m:Strings.Register}"
-            BackgroundColor="Blue"
-             WidthRequest="200"
-         HeightRequest="70"/>
+        Command="{Binding RegisterCommand}"
+        Text="{x:Static m:Strings.Register}"
+        BackgroundColor="Transparent"
+        BorderColor="#00008B"
+        BorderWidth="2"
+        TextColor="white"
+        FontAttributes="Bold"
+        FontSize="18"
+        CornerRadius="35"
+        WidthRequest="220"
+        HeightRequest="60"/>
 
     </StackLayout>
 </ContentPage>
