@@ -21,7 +21,7 @@ namespace TheLambClub.ModelsLogic
                      else
                      {
                          if (player!=null)
-                             if (Array.IndexOf(Players, player) <=numUpWinners)
+                             if (Array.IndexOf(Players, player) <numUpWinners)
                                 WinnerText= Models.Strings.IntoruceTheWinner+player.Name+" "+Ranks[player].ToString();
                              else
                                 WinnerText= (Array.IndexOf(Players, player)+1)+player.Name+" "+Ranks[player].ToString();

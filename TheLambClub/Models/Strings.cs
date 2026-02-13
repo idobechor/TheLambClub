@@ -57,5 +57,6 @@
         public const string Dear = "Dear "; 
         public const string WinningMsg = "you won the game event well done"; 
         public const string LosingMsg = "you Lost the game please try again"; 
+        public const string CurrentTurnTxt = "Current Player:"; 
     }
 }

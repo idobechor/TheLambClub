@@ -44,7 +44,9 @@ namespace TheLambClub.Models
         [Ignored]
         public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
         [Ignored]
-        public string TimeLeft { get; protected set; } = string.Empty;     
+        public string TimeLeft { get; protected set; } = string.Empty;
+        [Ignored]
+        public int MaxBet => (int)Players!.Min(p => p.IsFolded == false ? p.CurrentMoney : 10000);
         public FBCard[]BoardCards { get; set; }=new FBCard[5];
         public int RoundNumber{get;set;}
         protected int _currentPlayerIndex;

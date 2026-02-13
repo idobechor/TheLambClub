@@ -13,8 +13,5 @@ namespace TheLambClub.ViewModel
         public WinningPopupVM()
         {
         }
-        public void Close()
-        {
-        }
     }
 }

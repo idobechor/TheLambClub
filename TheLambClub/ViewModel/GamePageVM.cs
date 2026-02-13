@@ -10,7 +10,7 @@ using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
-    class GamePageVM : ObservableObject
+    public partial class GamePageVM : ObservableObject
     {
         private readonly Game game;
         public int PotMoney => game.Pot != null ? (int)game.Pot.Sum() : Keys.InitialPotsMoney;
@@ -25,6 +25,7 @@ namespace TheLambClub.ViewModel
         public string MyName => game.MyName;
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
+
         public GamePageVM(Game game, Grid grdOponnents)
         {
             this.game = game;
@@ -39,6 +40,7 @@ namespace TheLambClub.ViewModel
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
+
         private void OnMoneyChanged(object? sender, ChangingMoneyEvent e)
         {
             for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
@@ -48,6 +50,7 @@ namespace TheLambClub.ViewModel
                     lstOponnentsMoneyLabels[i].Text =e.Money.ToString();
                 }
             }
+            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
         }
 
         private void OnTurnChanged(object? sender, EventArgs e)
@@ -89,7 +92,7 @@ namespace TheLambClub.ViewModel
         }
         private async void ShowPickYourMovePromptFunction(object obj)
         {
-            var suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>();
+            IPokerSuggestionService suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>()!;
             await Shell.Current!.ShowPopupAsync(new PickYourMovePopupPage(game, suggestionService));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }

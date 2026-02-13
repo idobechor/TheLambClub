@@ -2,22 +2,20 @@
 <ContentPage
     x:Class="TheLambClub.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:MainPageVM">
     <ScrollView BackgroundColor="Black">
         <VerticalStackLayout Padding="25" Spacing="30">
-
-            <Grid ColumnDefinitions="*, Auto" Margin="0,10,0,0">
+            <Grid Margin="0,10,0,0" ColumnDefinitions="*, Auto">
                 <Label
-                    Margin="0,60,0,0"
-                    FontAttributes="Bold"
-                    FontSize="20"
+                    CharacterSpacing="4"
+                    FontSize="30"
                     HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding UserName, StringFormat={x:Static m:Strings.WelcomeTxt}}"
-                    TextColor="#D4AF37" />
+                    Text="{x:Static m:Strings.TheLambClub}"
+                    TextColor="#D4AF37"
+                    VerticalOptions="Center" />
                 <Button
                     Grid.Column="1"
                     Background="Gray"
@@ -26,54 +24,110 @@
                     Text="{StaticResource IconDeveloper_guide}"
                     TextColor="Blue" />
             </Grid>
-            <Border StrokeShape="RoundRectangle 25" StrokeThickness="0.5" Stroke="#D4AF37" HeightRequest="180">
+            <Border
+                HeightRequest="180"
+                Stroke="#D4AF37"
+                StrokeShape="RoundRectangle 25"
+                StrokeThickness="0.5">
                 <Grid>
-                    <Label  Text="{x:Static m:Strings.TheLambClub}" 
-                           HorizontalOptions="Center" VerticalOptions="Center"
-                           FontSize="30"  
-                           TextColor="#D4AF37" CharacterSpacing="4">
-                    </Label>
+                    <Label
+                        Margin="0,60,0,0"
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding UserName, StringFormat={x:Static m:Strings.WelcomeTxt}}"
+                        TextColor="#D4AF37" />
                 </Grid>
             </Border>
             <VerticalStackLayout Spacing="15">
-                <Label Text="START A NEW TABLE" FontSize="12" TextColor="#D4AF37" FontAttributes="Bold" CharacterSpacing="2" HorizontalOptions="Center"/>
-
+                <Label
+                    CharacterSpacing="2"
+                    FontAttributes="Bold"
+                    FontSize="12"
+                    HorizontalOptions="Center"
+                    Text="START A NEW TABLE"
+                    TextColor="#D4AF37" />
                 <Grid ColumnDefinitions="*, 130" ColumnSpacing="15">
-                    <Border Grid.Column="0" StrokeShape="RoundRectangle 12" BackgroundColor="#2A2A2A" StrokeThickness="0">
-                        <Picker     Title="{x:Static m:Strings.PickerTitle}"
-                                TitleColor="#666666"
-                                TextColor="White"
-                                HorizontalTextAlignment="Center"
-                                ItemsSource="{Binding NumberOfPlayersList}"
-                                SelectedItem="{Binding SelectedNumberOfPlayers}" />
+                    <Border
+                        Grid.Column="0"
+                        BackgroundColor="#2A2A2A"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="0">
+                        <Picker
+                            Title="{x:Static m:Strings.PickerTitle}"
+                            HorizontalTextAlignment="Center"
+                            ItemsSource="{Binding NumberOfPlayersList}"
+                            SelectedItem="{Binding SelectedNumberOfPlayers}"
+                            TextColor="White"
+                            TitleColor="#666666" />
                     </Border>
-                    <Button Grid.Column="1"
-                            Text="CREATE"
-                              FontSize="20"
-                            Command="{Binding AddGameCommand}"
-                            BackgroundColor="#D4AF37"
-                            TextColor="#000000"
-                            FontAttributes="Bold"
-                            HeightRequest="50"
-                            CornerRadius="12" />
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="#D4AF37"
+                        Command="{Binding AddGameCommand}"
+                        CornerRadius="12"
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HeightRequest="50"
+                        Text="CREATE"
+                        TextColor="#000000" />
                 </Grid>
             </VerticalStackLayout>
             <VerticalStackLayout Spacing="20">
-                <Label Text="ACTIVE TABLES" FontSize="12" TextColor="#888888" FontAttributes="Bold" CharacterSpacing="2" />
+                <Label
+                    CharacterSpacing="2"
+                    FontAttributes="Bold"
+                    FontSize="12"
+                    Text="ACTIVE TABLES"
+                    TextColor="#888888" />
 
-                <CollectionView ItemsSource="{Binding GamesList}" SelectedItem="{Binding SelectedItem}" SelectionMode="Single">
+                <CollectionView
+                    ItemsSource="{Binding GamesList}"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="m:GameModel">
-                            <Border Margin="0,0,0,15" StrokeShape="RoundRectangle 20" BackgroundColor="#222222" StrokeThickness="0">
-                                <Grid ColumnDefinitions="Auto, *, Auto" Padding="20" VerticalOptions="Center">
-                                    <VerticalStackLayout Grid.Column="1" Margin="15,0" VerticalOptions="Center">
-                                        <Label Text="{Binding HostName}" FontAttributes="Bold" FontSize="18" TextColor="White" />
-                                        <Label Text="{Binding Created}" FontSize="11" TextColor="#666666" />
+                            <Border
+                                Margin="0,0,0,15"
+                                BackgroundColor="#222222"
+                                StrokeShape="RoundRectangle 20"
+                                StrokeThickness="0">
+                                <Grid
+                                    Padding="20"
+                                    ColumnDefinitions="Auto, *, Auto"
+                                    VerticalOptions="Center">
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        Margin="15,0"
+                                        VerticalOptions="Center">
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            Text="{Binding HostName}"
+                                            TextColor="White" />
+                                        <Label
+                                            FontSize="11"
+                                            Text="{Binding Created}"
+                                            TextColor="#666666" />
                                     </VerticalStackLayout>
-                                    <Border Grid.Column="2" BackgroundColor="#333333" Padding="10,5" StrokeShape="RoundRectangle 10">
+                                    <Border
+                                        Grid.Column="2"
+                                        Padding="10,5"
+                                        BackgroundColor="#333333"
+                                        StrokeShape="RoundRectangle 10">
                                         <HorizontalStackLayout Spacing="5">
-                                            <Label Text="{Binding NumOfPlayersName}" FontSize="14" FontAttributes="Bold" TextColor="#D4AF37" VerticalOptions="Center" />
-                                            <Label Text="P" FontSize="12" TextColor="#D4AF37" VerticalOptions="Center" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="14"
+                                                Text="{Binding NumOfPlayersName}"
+                                                TextColor="#D4AF37"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                FontSize="12"
+                                                Text="P"
+                                                TextColor="#D4AF37"
+                                                VerticalOptions="Center" />
                                         </HorizontalStackLayout>
                                     </Border>
                                 </Grid>

@@ -1,48 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TheLambClub.Views.PickRegisterOrLoginPage"
-              xmlns:vm="clr-namespace:TheLambClub.ViewModel"
-             xmlns:m="clr-namespace:TheLambClub.Models"
-             Title="PickRegisterOrLoginPage"
-             x:DataType="vm:PickRegisterOrLoginPageVM"
-             BackgroundImageSource="signinbackground.jpg">
-    <StackLayout 
-    VerticalOptions="Center"
-    HorizontalOptions="Center"
-    Spacing="25">
+<ContentPage
+    x:Class="TheLambClub.Views.PickRegisterOrLoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:TheLambClub.Models"
+    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+    Title="PickRegisterOrLoginPage"
+    x:DataType="vm:PickRegisterOrLoginPageVM"
+    BackgroundImageSource="signinbackground.jpg">
+    <StackLayout
+        HorizontalOptions="Center"
+        Spacing="25"
+        VerticalOptions="Center">
         <Label
-     FontAttributes="Bold"
-     FontSize="54"
-     Text="{x:Static m:Strings.TheLambClub}"
-     TextColor="WhiteSmoke" />
-        <Button 
-        Command="{Binding LoginCommand}"
-        Text="{x:Static m:Strings.LoginText}"
-        BackgroundColor="#00008B"
-        TextColor="white"
-        FontAttributes="Bold"
-        FontSize="18"
-        CornerRadius="35"
-        WidthRequest="220"
-        HeightRequest="60">
+            FontAttributes="Bold"
+            FontSize="38"
+            Text="{x:Static m:Strings.TheLambClub}"
+            TextColor="WhiteSmoke" />
+        <Button
+            BackgroundColor="#00008B"
+            Command="{Binding LoginCommand}"
+            CornerRadius="35"
+            FontAttributes="Bold"
+            FontSize="18"
+            HeightRequest="60"
+            Text="{x:Static m:Strings.LoginText}"
+            TextColor="white"
+            WidthRequest="220">
             <Button.Shadow>
-                <Shadow Brush="#00008B" Offset="2,2" Opacity="0.8"/>
+                <Shadow
+                    Brush="#00008B"
+                    Opacity="0.8"
+                    Offset="2,2" />
             </Button.Shadow>
         </Button>
 
         <Button
-        Command="{Binding RegisterCommand}"
-        Text="{x:Static m:Strings.Register}"
-        BackgroundColor="Transparent"
-        BorderColor="#00008B"
-        BorderWidth="2"
-        TextColor="white"
-        FontAttributes="Bold"
-        FontSize="18"
-        CornerRadius="35"
-        WidthRequest="220"
-        HeightRequest="60"/>
+            BackgroundColor="Transparent"
+            BorderColor="#00008B"
+            BorderWidth="2"
+            Command="{Binding RegisterCommand}"
+            CornerRadius="35"
+            FontAttributes="Bold"
+            FontSize="18"
+            HeightRequest="60"
+            Text="{x:Static m:Strings.Register}"
+            TextColor="white"
+            WidthRequest="220" />
 
     </StackLayout>
 </ContentPage>

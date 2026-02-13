@@ -6,7 +6,7 @@ using TheLambClub.Services;
 
 namespace TheLambClub.ViewModel
 {
-    public class PickYourMovePromptPageVM : ObservableObject
+    public partial class PickYourMovePromptPageVM : ObservableObject
     {
         public event Action? RequestClose;
         private readonly Game game;
@@ -35,18 +35,18 @@ namespace TheLambClub.ViewModel
             }
             OnPropertyChanged(nameof(TimeLeft));
         }
-        private int _betAmount { get; set; }
+        private int _BetAmount { get; set; }
         public string CheckOrFold => game.CheckOrCall;
-        public string BetAmountStr => Strings.IntoruceYourBet + _betAmount;
+        public string BetAmountStr => Strings.IntoruceYourBet + _BetAmount;
         public int MinBet => game.MinBet == 0 ? 0 : game.MinBet - 1;
         public int MaxBet => game.MaxBet;
         public int BetAmount
         {
-            get => _betAmount;
+            get => _BetAmount;
             set
             {
-                if (_betAmount != value)
-                    _betAmount = value;              
+                if (_BetAmount != value)
+                    _BetAmount = value;              
                 OnPropertyChanged(nameof(BetAmountStr));
                 ((Command)SubmitBetCommand)?.ChangeCanExecute();
             }
@@ -114,8 +114,8 @@ namespace TheLambClub.ViewModel
 
         private void BetFunction(object obj)
         {
-            if (_betAmount != MinBet)
-                game.CurrentPlayer!.CurrentBet = _betAmount;
+            if (_BetAmount != MinBet)
+                game.CurrentPlayer!.CurrentBet = _BetAmount;
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
@@ -140,7 +140,7 @@ namespace TheLambClub.ViewModel
                 var result = await _suggestionService.GetSuggestionAsync(
                     game.CurrentPlayer?.FBCard1!,
                     game.CurrentPlayer?.FBCard2!,
-                    new List<FBCard>(game.BoardCards));
+                    [.. game.BoardCards]);
 
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {

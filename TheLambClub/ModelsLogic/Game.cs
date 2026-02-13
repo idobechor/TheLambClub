@@ -277,7 +277,6 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
             }
-            MoneyChanged?.Invoke(this, new ChangingMoneyEvent(CurrentPlayer.Name,(int)CurrentPlayer.CurrentMoney)) ;
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
@@ -286,7 +285,7 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
         }
-
+     
         public override void CallFunction()
         {
             double maxBet = Players!.Max(p => p.CurrentBet);
@@ -298,7 +297,6 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
             }
-            MoneyChanged?.Invoke(this, new ChangingMoneyEvent(CurrentPlayer.Name, (int)CurrentPlayer.CurrentMoney));
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
@@ -380,17 +378,16 @@ namespace TheLambClub.ModelsLogic
                 OnGameDeleted?.Invoke(this, EventArgs.Empty);
                 return;
             }
-
+            bool isPotMoneyChanged=updatedGame.Pot.Sum()!=Pot.Sum();
             bool isEndOfRound = IsRoundEnding(updatedGame);
             bool changedToFull = HasGameBecomeFull(updatedGame);
             bool isGameStarted = HasGameJustStarted(updatedGame);
             bool isRoundChanged = RoundNumber != updatedGame.RoundNumber;
             bool isChangeToOneStaying = updatedGame.IsOneStaying() && !IsOneStaying();
-
-
-            Console.WriteLine("CurrentPlayerIndex " + CurrentPlayerIndex);
-            Console.WriteLine("Game OnChange called isEndOfRound: " + isEndOfRound + " isRoundChanged: " + isRoundChanged + " isChangeToOneStaying: " + isChangeToOneStaying);
-
+            if (isPotMoneyChanged && !IsMyTurn) 
+            {
+                MoneyChanged?.Invoke(this, new ChangingMoneyEvent(Players![CurrentPlayerIndex].Name, (int)updatedGame.Players![CurrentPlayerIndex].CurrentMoney));
+            }
             SyncGameState(updatedGame);
 
             int nextRound = 0;
@@ -473,8 +470,7 @@ namespace TheLambClub.ModelsLogic
         {
             if (AnyOneIsAllIn())
             {
-                double totalPot = CalculateTotalPot();
-
+                _ = CalculateTotalPot();
                 for (int i = RoundNumber; i < HandComplete + 1; i++)
                     BoardCards[i] = SetOfCards.GetRandomCard();
 
@@ -546,8 +542,8 @@ namespace TheLambClub.ModelsLogic
 
         private Player[] HandleShowdown()
         {
-            var ranks = EvaluatePlayerHands();
-            var sortedPlayers = SortPlayersByHandRank(ranks);
+            Dictionary<Player,HandRank> ranks = EvaluatePlayerHands();
+            Player[] sortedPlayers = SortPlayersByHandRank(ranks);
             DistributePotToWinners(sortedPlayers,ranks);
             bool found = CheckForGameOver();
             if (found)
@@ -633,13 +629,9 @@ namespace TheLambClub.ModelsLogic
         }
         private bool FinalizeHandIfHost(Player[]? playersArray, Game ? updatedGame)
         {
-            if (IsHost)
-            {
+            if (IsHost)           
                 EndHand();
-                return true;
-            }
-
-            return false;
+           return IsHost;
         }
 
         private void ProcessRoundAndTurnUpdates(bool isEndOfRound, bool isHandEnded, bool changedToFull, int nextRound)
@@ -663,30 +655,23 @@ namespace TheLambClub.ModelsLogic
 
         private bool ShouldEndRound(bool isEndOfRound, bool isHandEnded)
         {
-            if (isHandEnded) return false;
-
-            bool allBetsEqual = IsFull && IsHost && EveryOneAreEqual();
-            bool roundEndWithZeroBets = IsHost && AllBetsZero() && isEndOfRound;
-
-            Console.WriteLine("allBetsEqual " + allBetsEqual + " roundEndWithZeroBets " + roundEndWithZeroBets);
-
-            return allBetsEqual || roundEndWithZeroBets;
+            bool res = isHandEnded;
+            if (!res)
+            {
+                bool allBetsEqual = IsFull && IsHost && EveryOneAreEqual();
+                bool roundEndWithZeroBets = IsHost && AllBetsZero() && isEndOfRound;
+                res= allBetsEqual || roundEndWithZeroBets;
+            }
+            return res;
         }
-
-        private bool ShouldSkipCurrentPlayerTurn()
-        {
-            if (CurrentPlayer == null || !IsMyTurn) return false;
-
-            return CurrentPlayer.IsFolded || CurrentPlayer.IsAllIn;
-        }
-
+        private bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded || CurrentPlayer.IsAllIn);
         private void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round)
         {
             if (!IsHost && !skippedTurn) return;
 
             if (endedRound && IsHost)
             {
-                var dict = new Dictionary<string, object>
+                Dictionary<string, object> dict = new()
                 {
                     { nameof(BoardCards), BoardCards },
                     { nameof(RoundNumber), round },
@@ -697,7 +682,7 @@ namespace TheLambClub.ModelsLogic
             }
             else if (skippedTurn)
             {
-                var dict = new Dictionary<string, object>
+                Dictionary<string, object> dict = new()
                 {
                     { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
                 };
@@ -707,10 +692,12 @@ namespace TheLambClub.ModelsLogic
 
         private void EnsureTimerRegistered()
         {
-            if (TimerCreated) return;
-
-            RegisterTimer();
+            if (!TimerCreated)
+            {
+                  RegisterTimer();
             TimerCreated = true;
+            }
+          
         }
 
         #endregion
