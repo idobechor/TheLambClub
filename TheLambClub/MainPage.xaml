@@ -10,15 +10,12 @@
         <VerticalStackLayout Padding="25" Spacing="30">
             <Grid Margin="0,10,0,0" ColumnDefinitions="*, Auto">
                 <Label
-                    CharacterSpacing="4"
-                    FontSize="30"
-                    HorizontalOptions="Center"
+                    FontSize="15"
                     Text="{x:Static m:Strings.TheLambClub}"
-                    TextColor="#D4AF37"
-                    VerticalOptions="Center" />
+                    TextColor="#D4AF37" />
                 <Button
                     Grid.Column="1"
-                    Background="Gray"
+                    Background="#2A2A2A"
                     Command="{Binding InstructionsCommand}"
                     FontFamily="MaterialSymbols"
                     Text="{StaticResource IconDeveloper_guide}"
@@ -33,7 +30,7 @@
                     <Label
                         Margin="0,60,0,0"
                         FontAttributes="Bold"
-                        FontSize="20"
+                        FontSize="30"
                         HorizontalOptions="Center"
                         HorizontalTextAlignment="Center"
                         Text="{Binding UserName, StringFormat={x:Static m:Strings.WelcomeTxt}}"
