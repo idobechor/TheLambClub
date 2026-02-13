@@ -4,19 +4,62 @@
                xmlns:vm="clr-namespace:TheLambClub.ViewModel"
                xmlns:m="clr-namespace:TheLambClub.Models"
                x:Class="TheLambClub.Views.WinningPopupPage"
-               x:DataType="vm:WinningPopupVM">
-    <VerticalStackLayout Background="Aqua">
+               x:DataType="vm:WinningPopupVM"
+              CanBeDismissedByTappingOutsideOfPopup="False">
+    <Border StrokeShape="RoundRectangle 15"
+        BackgroundColor="#2D2D2D"
+        StrokeThickness="0"
+        WidthRequest="300"
+        HeightRequest="400"
+        VerticalOptions="Center"
+        HorizontalOptions="Center"
+        Padding="20">
 
-        <CollectionView ItemsSource="{Binding PlayersNames}"
-               ItemsLayout="VerticalList">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Label Text="{Binding}"
-                   FontSize="16"
-                   Margin="8,0"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+        <Grid RowDefinitions="Auto, Auto, *, Auto" RowSpacing="15">
+
+            <Label Grid.Row="0"
+               Text="Round Results"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center" />
+
+            <BoxView Grid.Row="1" 
+                 HeightRequest="1" 
+                 Color="Orange" 
+                 WidthRequest="100" 
+                 HorizontalOptions="Center"/>
+
+            <CollectionView Grid.Row="2" 
+                        ItemsSource="{Binding PlayersNames}"
+                        SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                            <Grid Padding="0,12">
+                                <Label Text="{Binding .}" 
+                                   TextColor="#E0E0E0" 
+                                   FontSize="16" 
+                                   HorizontalTextAlignment="Center"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#404040" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Grid.Row="3"
+                Command="{Binding ClosePopupCommand}"
+                Text="Close"
+                BackgroundColor="Transparent"
+                TextColor="Orange"
+                FontSize="16"
+                FontAttributes="Bold"
+                BorderColor="Orange"
+                BorderWidth="1"
+                CornerRadius="8"
+                HeightRequest="45"/>
+        </Grid>
+    </Border>
 
 </toolkit:Popup>

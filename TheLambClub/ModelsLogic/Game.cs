@@ -321,15 +321,15 @@ namespace TheLambClub.ModelsLogic
                 Pot[i] = 0;
             FillBoard(0);
             FillArrayAndAddCards(false, (t) => { });
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(CurrentPlayerIndex), 0! },
-                { nameof(BoardCards), BoardCards },
-                { nameof(RoundNumber), 0 },
-                { nameof(Players), Players! },
-                { nameof(Pot), Pot! },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            //Dictionary<string, object> dict = new()
+            //{
+            //    { nameof(CurrentPlayerIndex), 0! },
+            //    { nameof(BoardCards), BoardCards },
+            //    { nameof(RoundNumber),0  },
+            //    { nameof(Players), Players! },
+            //    { nameof(Pot), Pot! },
+            //};
+            //fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
 
         }
         protected void EndOfRound(int round)
@@ -638,11 +638,9 @@ namespace TheLambClub.ModelsLogic
         {
             if (IsHost && changedToFull && !isHandEnded)
                 FillArrayAndAddCards(true, (t) => { });
-
             bool shouldEndRound = ShouldEndRound(isEndOfRound, isHandEnded);
             bool shouldSkipTurn = ShouldSkipCurrentPlayerTurn();
-
-            int round = RoundNumber + 1;
+              int round = RoundNumber + 1;
             if (shouldEndRound) {
                 if (nextRound > 0){
                     round = nextRound;
@@ -650,7 +648,7 @@ namespace TheLambClub.ModelsLogic
                 EndOfRound(round);
             }
 
-            UpdateFirebaseIfNeeded(shouldEndRound, shouldSkipTurn, round);
+            UpdateFirebaseIfNeeded(shouldEndRound, shouldSkipTurn, round, isHandEnded);
         }
 
         private bool ShouldEndRound(bool isEndOfRound, bool isHandEnded)
@@ -665,11 +663,11 @@ namespace TheLambClub.ModelsLogic
             return res;
         }
         private bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded || CurrentPlayer.IsAllIn);
-        private void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round)
+        private void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round, bool isEndOfHand)
         {
             if (!IsHost && !skippedTurn) return;
 
-            if (endedRound && IsHost)
+            if (endedRound && IsHost&&!isEndOfHand)
             {
                 Dictionary<string, object> dict = new()
                 {
@@ -677,6 +675,18 @@ namespace TheLambClub.ModelsLogic
                     { nameof(RoundNumber), round },
                     { nameof(Players), Players! },
                     { nameof(CurrentPlayerIndex), 0 },
+                };
+                fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
+            }
+            else if(IsHost && isEndOfHand)
+            {
+                Dictionary<string, object> dict = new()
+                {
+                    { nameof(CurrentPlayerIndex), 0! },
+                    { nameof(BoardCards), BoardCards },
+                    { nameof(RoundNumber),0  },
+                    { nameof(Players), Players! },
+                    { nameof(Pot), Pot! },
                 };
                 fbd.UpdateFields(Keys.GamesCollection, Id, dict, (task) => { });
             }

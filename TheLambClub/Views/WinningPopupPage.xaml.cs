@@ -12,5 +12,10 @@ public partial class WinningPopupPage : Popup
         InitializeComponent();
         winningPopupVM = new WinningPopupVM(Players,ranks, numUpWinners);
         BindingContext = winningPopupVM;
+        winningPopupVM.RequestClose += OnRequestClose;
+    }
+    private void OnRequestClose()
+    {
+        Close();
     }
 }

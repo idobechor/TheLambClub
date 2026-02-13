@@ -13,7 +13,16 @@ namespace TheLambClub.ViewModel
     public partial class GamePageVM : ObservableObject
     {
         private readonly Game game;
-        public int PotMoney => game.Pot != null ? (int)game.Pot.Sum() : Keys.InitialPotsMoney;
+        public int PotMoney
+        {
+            get
+            {
+
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+                OnPropertyChanged(nameof(PlayerMoney));
+                return game.Pot != null ? (int)game.Pot.Sum() : Keys.InitialPotsMoney;
+            }
+        }
         public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
