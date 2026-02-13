@@ -423,7 +423,7 @@ namespace TheLambClub.ModelsLogic
         {
             Console.WriteLine("CurrentPlayerIndex"+ CurrentPlayerIndex);
             Console.WriteLine("updatedGame.CurrentPlayerIndex"+ updatedGame.CurrentPlayerIndex);
-            return CurrentPlayerIndex > 0 && updatedGame.CurrentPlayerIndex == 0;
+            return CurrentPlayerIndex == MaxNumOfPlayers-1 && updatedGame.CurrentPlayerIndex == 0;
             
         }
 
