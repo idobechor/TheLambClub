@@ -5,7 +5,7 @@ using static TheLambClub.Models.PlayerModel;
 
 namespace TheLambClub.ModelsLogic
 {
-    public  class HandEvaluator : HandEvaluatorModel
+    public class HandEvaluator : HandEvaluatorModel
     {
         public override HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
@@ -18,16 +18,16 @@ namespace TheLambClub.ModelsLogic
                 boardCards[2],
                 boardCards[3],
                 boardCards[4]
-            ];                               
+            ];
             FBCard[] firstFive = new FBCard[5];
             for (int i = 0; i < 5; i++)
             {
                 firstFive[i] = allCards[i];
             }
-            HandRank bestHand = EvaluateHighCard(firstFive); 
-           
+            HandRank bestHand = EvaluateHighCard(firstFive);
+
             List<List<FBCard>> combinations = GetCombinationsList(allCards, 5);
-            
+
             for (int i = 0; i < combinations.Count; i++)
             {
                 FBCard[] combinationArray = combinations[i].ToArray();
@@ -36,31 +36,31 @@ namespace TheLambClub.ModelsLogic
                 {
                     bestHand = currentHand;
                 }
-            }           
+            }
             return bestHand;
         }
-        public  override HandRank EvaluateHand(FBCard[] cards)
+        public override HandRank EvaluateHand(FBCard[] cards)
         {
             HandRank bestHand = null!;
-            if (CheckRoyalFlush(cards) != null)          
-                bestHand = CheckRoyalFlush(cards)!;      
-            else if (CheckStraightFlush(cards) != null)           
-                bestHand = CheckStraightFlush(cards)!;          
-            else if (null != CheckFourOfAKind(cards)!)           
-                bestHand = CheckFourOfAKind(cards)!;         
-            else if (CheckFullHouse(cards)! != null)            
+            if (CheckRoyalFlush(cards) != null)
+                bestHand = CheckRoyalFlush(cards)!;
+            else if (CheckStraightFlush(cards) != null)
+                bestHand = CheckStraightFlush(cards)!;
+            else if (null != CheckFourOfAKind(cards)!)
+                bestHand = CheckFourOfAKind(cards)!;
+            else if (CheckFullHouse(cards)! != null)
                 bestHand = CheckFullHouse(cards)!;
-            else  if (null != CheckFlush(cards)!)           
-                bestHand = CheckFlush(cards)!;         
-            else if (null != CheckStraight(cards)!)            
-                bestHand = CheckStraight(cards)!;       
-            else if (null != CheckThreeOfAKind(cards)!)           
+            else if (null != CheckFlush(cards)!)
+                bestHand = CheckFlush(cards)!;
+            else if (null != CheckStraight(cards)!)
+                bestHand = CheckStraight(cards)!;
+            else if (null != CheckThreeOfAKind(cards)!)
                 bestHand = CheckThreeOfAKind(cards)!;
-            else if (null != CheckTwoPair(cards)!)           
-                bestHand = CheckTwoPair(cards)!;           
-            else if (CheckPair(cards)! != null )
+            else if (null != CheckTwoPair(cards)!)
+                bestHand = CheckTwoPair(cards)!;
+            else if (CheckPair(cards)! != null)
                 bestHand = CheckPair(cards)!;
-            else 
+            else
                 bestHand = EvaluateHighCard(cards);
             return bestHand;
         }
@@ -80,7 +80,7 @@ namespace TheLambClub.ModelsLogic
             }
             return arr;
         }
-       public override int[] SortDescending(int[] arr)
+        public override int[] SortDescending(int[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
             {
@@ -100,15 +100,15 @@ namespace TheLambClub.ModelsLogic
         {
             HandRank StraightFlush = CheckStraightFlush(cards)!;
             HandRank handRank = null!;
-            if (StraightFlush != null && StraightFlush?.PrimaryValue==14)
-                handRank= new HandRank
-                         {
-                          HandType = LevelsOfHands.RoyalFlush,
-                          PrimaryValue = 14, 
-                          HandCards = cards
-                         };
+            if (StraightFlush != null && StraightFlush?.PrimaryValue == 14)
+                handRank = new HandRank
+                {
+                    HandType = LevelsOfHands.RoyalFlush,
+                    PrimaryValue = 14,
+                    HandCards = cards
+                };
             return handRank;
-        }  
+        }
         protected override HandRank? CheckStraightFlush(FBCard[] cards)
         {
             HandRank flush = CheckFlush(cards)!;
@@ -126,12 +126,12 @@ namespace TheLambClub.ModelsLogic
                 HandRank straight = CheckStraight(flushCardsList.ToArray())!;
                 if (straight != null)
                 {
-                    handRank= new HandRank
-                             {
+                    handRank = new HandRank
+                    {
                         HandType = LevelsOfHands.StraightFlush,
                         PrimaryValue = straight.PrimaryValue,
                         HandCards = cards
-                             };
+                    };
                 }
             }
             return handRank;
@@ -139,7 +139,7 @@ namespace TheLambClub.ModelsLogic
         protected override HandRank? CheckFourOfAKind(FBCard[] cards)
         {
             HandRank handRank = null!;
-            int[]CountArr = new int[13];
+            int[] CountArr = new int[13];
             bool foundFour = false;
             int fourValue = 0;
             foreach (FBCard card in cards)
@@ -175,26 +175,26 @@ namespace TheLambClub.ModelsLogic
                             kicker = cardValue;
                         }
                     }
-                }               
-                handRank= new HandRank
+                }
+                handRank = new HandRank
                 {
                     HandType = LevelsOfHands.FourOfAKind,
                     PrimaryValue = normalizedFourValue,
                     Kickers = new[] { kicker },
                     HandCards = cards
                 };
-            }          
+            }
             return handRank;
         }
         protected override HandRank? CheckFullHouse(FBCard[] cards)
         {
             HandRank threeOfAKindRank = CheckThreeOfAKind(cards)!;
             HandRank pair = CheckPair(cards)!;
-            HandRank handRank =null!;
+            HandRank handRank = null!;
 
-            if (threeOfAKindRank!=null&&pair!=null)
-            {               
-                handRank= new HandRank
+            if (threeOfAKindRank != null && pair != null)
+            {
+                handRank = new HandRank
                 {
                     HandType = LevelsOfHands.FullHouse,
                     PrimaryValue = threeOfAKindRank.PrimaryValue,
@@ -221,10 +221,10 @@ namespace TheLambClub.ModelsLogic
 
             if (!(dict[Shapes.Club] < 5 && dict[Shapes.Diamond] < 5 && dict[Shapes.Heart] < 5 && dict[Shapes.Spade] < 5))
             {
-              Shapes flushShape = dict[Shapes.Club] >= 5 ? Shapes.Club :
-              dict[Shapes.Diamond] >= 5 ? Shapes.Diamond :
-              dict[Shapes.Heart] >= 5 ? Shapes.Heart :
-              Shapes.Spade;
+                Shapes flushShape = dict[Shapes.Club] >= 5 ? Shapes.Club :
+                dict[Shapes.Diamond] >= 5 ? Shapes.Diamond :
+                dict[Shapes.Heart] >= 5 ? Shapes.Heart :
+                Shapes.Spade;
                 List<FBCard> flushCardsList = [];
                 foreach (FBCard card in cards)
                 {
@@ -246,7 +246,7 @@ namespace TheLambClub.ModelsLogic
 
                 int primaryValue = sortedFlushCards[0].Value == 1 ? 14 : sortedFlushCards[0].Value;
 
-                handRank= new HandRank
+                handRank = new HandRank
                 {
                     HandType = LevelsOfHands.Flush,
                     PrimaryValue = primaryValue,
@@ -267,7 +267,7 @@ namespace TheLambClub.ModelsLogic
 
                 for (int j = i + 1; j < sortedCards.Length; j++)
                 {
-                    int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;   
+                    int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;
                     int valueMax = sortedCards[maxIndex].Value == 1 ? 14 : sortedCards[maxIndex].Value;
 
                     if (valueJ > valueMax)
@@ -307,7 +307,7 @@ namespace TheLambClub.ModelsLogic
                 }
             }
             int[] distinctValues = distinctValuesList.ToArray();
-            distinctValues=BubbleSort(distinctValues);
+            distinctValues = BubbleSort(distinctValues);
             for (int i = 0; i <= distinctValues.Length - 5; i++)
             {
                 bool isStraight = true;
@@ -318,23 +318,23 @@ namespace TheLambClub.ModelsLogic
                         isStraight = false;
                         break;
                     }
-                }               
+                }
                 if (isStraight)
                 {
-                    handRank= new HandRank
+                    handRank = new HandRank
                     {
                         HandType = LevelsOfHands.Straight,
-                        PrimaryValue = distinctValues[i + 4], 
+                        PrimaryValue = distinctValues[i + 4],
                         HandCards = cards
                     };
                 }
-            }           
+            }
             bool hasAce = false;
             bool hasTwo = false;
             bool hasThree = false;
             bool hasFour = false;
             bool hasFive = false;
-            
+
             for (int i = 0; i < cards.Length; i++)
             {
                 int value = cards[i].Value;
@@ -344,24 +344,24 @@ namespace TheLambClub.ModelsLogic
                 else if (value == 4) hasFour = true;
                 else if (value == 5) hasFive = true;
             }
-            
+
             if (hasAce && hasTwo && hasThree && hasFour && hasFive)
             {
-                handRank= new HandRank
+                handRank = new HandRank
                 {
                     HandType = LevelsOfHands.Straight,
-                    PrimaryValue = 5, 
+                    PrimaryValue = 5,
                     HandCards = cards
                 };
             }
 
-           return handRank;
-        }   
+            return handRank;
+        }
         protected override HandRank? CheckThreeOfAKind(FBCard[] cards)
         {
             HandRank handRank = null!;
             int threeOfAKindValue = 0;
-            int[] CountArr = new int[13];
+            int[] CountArr = new int[14]; // 1..13 + ace(14)
             int[] CardsValues = new int[cards.Length];
             int[] kickers = new int[2];
             for (int i = 0; i < cards.Length; i++)
@@ -387,13 +387,13 @@ namespace TheLambClub.ModelsLogic
                 }
             }
             if (threeOfAKindValue != 0)
-                handRank= new HandRank
+                handRank = new HandRank
                 {
                     HandType = PlayerModel.LevelsOfHands.ThreeOfAKind,
                     PrimaryValue = threeOfAKindValue,
                     Kickers = kickers,
                     HandCards = cards
-                };                      
+                };
             return handRank;
         }
         protected override HandRank? CheckTwoPair(FBCard[] cards)
@@ -401,8 +401,8 @@ namespace TheLambClub.ModelsLogic
             HandRank handRank = null!;
             int FirstPair = 0;
             int SecondPair = 0;
-            int[] CountArr = new int[13];
-            int[] CardsValues = new int[cards.Length];        
+            int[] CountArr = new int[14]; // 1..13 + ace(14)
+            int[] CardsValues = new int[cards.Length];
             int kicker = 0;
             for (int i = 0; i < cards.Length; i++)
             {
@@ -440,7 +440,7 @@ namespace TheLambClub.ModelsLogic
                 int highPair = FirstPair > SecondPair ? FirstPair : SecondPair;
                 int lowPair = FirstPair < SecondPair ? FirstPair : SecondPair;
 
-                handRank= new HandRank
+                handRank = new HandRank
                 {
                     HandType = PlayerModel.LevelsOfHands.TwoPair,
                     PrimaryValue = highPair,
@@ -449,14 +449,14 @@ namespace TheLambClub.ModelsLogic
                     HandCards = cards
                 };
             }
-            
+
             return handRank;
         }
         protected override HandRank? CheckPair(FBCard[] cards)
-        {     
+        {
             HandRank? handRank = null!;
             int pair = 0;
-            int[] CountArr = new int[13];
+            int[] CountArr = new int[14]; // 1..13 + ace(14)
             int[] CardsValues = new int[cards.Length];
             int[] kickers = new int[3];
             for (int i = 0; i < cards.Length; i++)
@@ -464,15 +464,15 @@ namespace TheLambClub.ModelsLogic
                 CardsValues[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
             }
             for (int i = 0; i < CountArr.Length; i++)
-                CountArr[i]= FindPairValue(CardsValues, i+1);
-          for (int i = 0; i < CountArr.Length; i++)
+                CountArr[i] = FindPairValue(CardsValues, i + 1);
+            for (int i = 0; i < CountArr.Length; i++)
             {
-                if (CountArr[i]==2)
+                if (CountArr[i] == 2)
                 {
                     pair = i + 1;
                 }
             }
-             CardsValues = SortDescending(CardsValues);
+            CardsValues = SortDescending(CardsValues);
             int k = 0;
             for (int i = 0; i < CardsValues.Length && k < 3; i++)
             {
@@ -482,7 +482,7 @@ namespace TheLambClub.ModelsLogic
                 }
             }
             if (pair != 0)
-                handRank= new HandRank
+                handRank = new HandRank
                 {
                     HandType = LevelsOfHands.Pair,
                     PrimaryValue = pair,
@@ -491,13 +491,13 @@ namespace TheLambClub.ModelsLogic
                 };
             return handRank;
         }
-        protected override int FindPairValue(int[] cards,int num)
+        protected override int FindPairValue(int[] cards, int num)
         {
             int count = 0;
-            foreach (int card in cards) 
+            foreach (int card in cards)
             {
-            if (card == num)
-                count++;
+                if (card == num)
+                    count++;
             }
             return count;
         }
@@ -509,14 +509,14 @@ namespace TheLambClub.ModelsLogic
             {
                 kickersArray[i] = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
             }
-            kickersArray =SortDescending(kickersArray);
-            
+            kickersArray = SortDescending(kickersArray);
+
             int[] kickers = new int[4];
             for (int i = 1; i < kickersArray.Length; i++)
             {
                 kickers[i - 1] = kickersArray[i];
             }
-            
+
             return new HandRank
             {
                 HandType = LevelsOfHands.HighCard,
@@ -525,32 +525,32 @@ namespace TheLambClub.ModelsLogic
                 HandCards = cards
             };
         }
-        protected override  List<List<FBCard>> GetCombinationsList(FBCard[] cards, int five)
+        protected override List<List<FBCard>> GetCombinationsList(FBCard[] cards, int five)
         {
             List<List<FBCard>> result = [];
-            GetCombinationsRecursive(cards, five, 0, [], result);
-            return result;
-        }
-        private static void GetCombinationsRecursive(FBCard[] cards, int five, int startIndex, 
-            List<FBCard> current, List<List<FBCard>> result)
-        {
-            if (current.Count == five)
+            int n = cards.Length;
+            if (five > n || five <= 0) return result;
+
+            int[] indices = new int[five];
+            for (int i = 0; i < five; i++)
+                indices[i] = i;
+
+            while (true)
             {
                 List<FBCard> combination = [];
-                for (int i = 0; i < current.Count; i++)
-                {
-                    combination.Add(current[i]);
-                }
+                for (int j = 0; j < five; j++)
+                    combination.Add(cards[indices[j]]);
                 result.Add(combination);
-                return;
+                int i = five - 1;
+                while (i >= 0 && indices[i] == n - five + i)
+                    i--;
+                if (i < 0) break;
+
+                indices[i]++;
+                for (int j = i + 1; j < five; j++)
+                    indices[j] = indices[j - 1] + 1;
             }
-            
-            for (int i = startIndex; i < cards.Length; i++)
-            {
-                current.Add(cards[i]);
-                GetCombinationsRecursive(cards, five, i + 1, current, result);
-                current.RemoveAt(current.Count - 1);
-            }
+            return result;
         }
     }
 }
