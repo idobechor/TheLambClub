@@ -277,13 +277,26 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
             }
+            if (!EveryOneAreEqual())
+            {
             Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
-                { nameof(Players), Players },
+                { nameof(Players), Players! },
                 { nameof(Pot), Pot }
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+                fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            }
+            else
+            {
+                Dictionary<string, object> update = new()
+            {
+
+                { nameof(Players), Players! },
+                { nameof(Pot), Pot }
+            };
+                fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            }
         }
      
         public override void CallFunction()
@@ -297,13 +310,27 @@ namespace TheLambClub.ModelsLogic
             {
                 CurrentPlayer!.IsAllIn = true;
             }
-            Dictionary<string, object> update = new()
+            if (!EveryOneAreEqual())
+            {
+                Dictionary<string, object> update = new()
             {
                 { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
                 { nameof(Players), Players! },
                 { nameof(Pot), Pot }
             };
-            fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+                fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            }
+            else 
+            {
+             Dictionary<string, object> update = new()
+            {
+
+                { nameof(Players), Players! },
+                { nameof(Pot), Pot }
+            };
+                fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
+            }
+           
         }
         protected override bool EveryOneIsNotRerazeing()
         {
@@ -343,6 +370,7 @@ namespace TheLambClub.ModelsLogic
             }
             Console.WriteLine("Round Number Updated" + RoundNumber + "  ," + DateTime.Now);
             FillBoard(round);
+
         }
 
         protected bool AnyOneIsAllIn()
@@ -379,10 +407,10 @@ namespace TheLambClub.ModelsLogic
                 return;
             }
             bool isPotMoneyChanged=updatedGame.Pot.Sum()!=Pot.Sum();
-            bool isEndOfRound = IsRoundEnding(updatedGame);
             bool changedToFull = HasGameBecomeFull(updatedGame);
             bool isGameStarted = HasGameJustStarted(updatedGame);
             bool isRoundChanged = RoundNumber != updatedGame.RoundNumber;
+            bool isEndOfRound = IsRoundEnding(updatedGame)&&!isRoundChanged;
             bool isChangeToOneStaying = updatedGame.IsOneStaying() && !IsOneStaying();
             if (isPotMoneyChanged && !IsMyTurn) 
             {
@@ -421,10 +449,7 @@ namespace TheLambClub.ModelsLogic
 
         private bool IsRoundEnding(Game updatedGame)
         {
-            Console.WriteLine("CurrentPlayerIndex"+ CurrentPlayerIndex);
-            Console.WriteLine("updatedGame.CurrentPlayerIndex"+ updatedGame.CurrentPlayerIndex);
-            return CurrentPlayerIndex == MaxNumOfPlayers-1 && updatedGame.CurrentPlayerIndex == 0;
-            
+            return CurrentPlayerIndex == MaxNumOfPlayers - 1 && updatedGame.CurrentPlayerIndex == 0&&!EveryOneAreEqual();
         }
 
         private bool HasGameBecomeFull(Game updatedGame)
@@ -640,9 +665,11 @@ namespace TheLambClub.ModelsLogic
                 FillArrayAndAddCards(true, (t) => { });
             bool shouldEndRound = ShouldEndRound(isEndOfRound, isHandEnded);
             bool shouldSkipTurn = ShouldSkipCurrentPlayerTurn();
-              int round = RoundNumber + 1;
-            if (shouldEndRound) {
-                if (nextRound > 0){
+            int round = RoundNumber + 1;
+            if (shouldEndRound)
+            {
+                if (nextRound > 0)
+                {
                     round = nextRound;
                 }
                 EndOfRound(round);
@@ -650,7 +677,6 @@ namespace TheLambClub.ModelsLogic
 
             UpdateFirebaseIfNeeded(shouldEndRound, shouldSkipTurn, round, isHandEnded);
         }
-
         private bool ShouldEndRound(bool isEndOfRound, bool isHandEnded)
         {
             bool res = isHandEnded;

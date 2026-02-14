@@ -69,7 +69,8 @@ namespace TheLambClub.ViewModel
 
         private void OnWinnerSelected(object? sender, EventArgs e)
         {
-             Shell.Current.ShowPopupAsync(new WinGamePopup(Strings.Dear+game.CurrentPlayer!.Name+Strings.WinningMsg));
+
+            Shell.Current.ShowPopupAsync(new WinGamePopup(Strings.Dear+game.CurrentPlayer!.Name+Strings.WinningMsg));
         }
 
         private void OnPlayerLost(object? sender, EventArgs e)
@@ -92,7 +93,9 @@ namespace TheLambClub.ViewModel
         }
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
-                Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));            
+
+            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));            
         }
         private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg)

@@ -38,14 +38,13 @@ namespace TheLambClub.ViewModel
         private int _BetAmount { get; set; }
         public string CheckOrFold => game.CheckOrCall;
         public string BetAmountStr => Strings.IntoruceYourBet + _BetAmount;
-        public int MinBet => game.MinBet == 0 ? 0 : game.MinBet - 1;
+        public int MinBet => game.MinBet == 0 ? 0 : game.MinBet;
         public int MaxBet => game.MaxBet;
         public int BetAmount
         {
             get => _BetAmount;
             set
             {
-                if (_BetAmount != value)
                     _BetAmount = value;              
                 OnPropertyChanged(nameof(BetAmountStr));
                 ((Command)SubmitBetCommand)?.ChangeCanExecute();
@@ -114,8 +113,7 @@ namespace TheLambClub.ViewModel
 
         private void BetFunction(object obj)
         {
-            if (_BetAmount != MinBet)
-                game.CurrentPlayer!.CurrentBet = _BetAmount;
+            game.CurrentPlayer!.CurrentBet = _BetAmount;
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
