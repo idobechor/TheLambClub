@@ -1,6 +1,7 @@
-﻿using System.Windows.Input;
-using TheLambClub.ModelsLogic;
+﻿
+using System.Windows.Input;
 using TheLambClub.Models;
+using TheLambClub.ModelsLogic;
 using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
@@ -36,13 +37,28 @@ namespace TheLambClub.ViewModel
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                isBusy = value;
+                OnPropertyChanged();
+                (LoginCommand as Command)?.ChangeCanExecute();
+            }
+        }
         private void Login()
         {
-            user.Login();
+            if (!IsBusy)
+            {
+                IsBusy = true;
+                user.Login();
+            }
         }
         public bool CanLogin()
         {
-           return user.CanLogin();           
+           return user.CanLogin()&&!isBusy;           
         }
         public bool IsPassword { get; set; } = true;
         public string Password 

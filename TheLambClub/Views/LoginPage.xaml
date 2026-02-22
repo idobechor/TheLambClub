@@ -7,7 +7,8 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     Title="LoginPage"
     x:DataType="vm:LoginPageVM"
-    BackgroundImageSource="registerbackgroundpage.png">
+    BackgroundImageSource="registerbackgroundpage.png"
+    IsBusy="{Binding IsBusy}">
     <Border
         Margin="0"
         Padding="0"

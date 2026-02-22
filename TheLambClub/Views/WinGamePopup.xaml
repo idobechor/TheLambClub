@@ -22,5 +22,11 @@
             HorizontalTextAlignment="Center"
             Text="{Binding ResultMessage}"
             TextColor="Black" />
+        <Button
+            Text="Home"
+            Command="{Binding MoveToHome}"
+            TextColor="White"
+            CornerRadius="10"
+            HorizontalOptions="Center" />
     </VerticalStackLayout>
 </toolkit:Popup>

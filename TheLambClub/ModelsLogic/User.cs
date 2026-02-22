@@ -41,6 +41,7 @@ namespace TheLambClub.ModelsLogic
         }
         private static void ShowAlert(string msg)
         {
+            //להעביר את זה לIevent ולכבות את הisbuzy
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Toast.Make(msg, ToastDuration.Long).Show();

@@ -3,9 +3,16 @@ using TheLambClub.ViewModel;
 namespace TheLambClub.Views;
 public partial class WinGamePopup : Popup
 {
-	public WinGamePopup( string WinningText)
+    private readonly WinGamePopupVM winGamePopupVM;
+    public WinGamePopup( string WinningText)
 	{
         InitializeComponent();
-        BindingContext = new WinGamePopupVM(WinningText);        
+        winGamePopupVM= new WinGamePopupVM(WinningText);
+        BindingContext = winGamePopupVM;
+        winGamePopupVM.RequestClose += OnRequestClose;
+    }
+    private void OnRequestClose()
+    {
+        Close();
     }
 }

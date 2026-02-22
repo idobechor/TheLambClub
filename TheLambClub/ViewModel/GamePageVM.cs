@@ -45,21 +45,25 @@ namespace TheLambClub.ViewModel
             game.OnWinnerSelected += OnWinnerSelected;
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
-            game.MoneyChanged += OnMoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
 
-        private void OnMoneyChanged(object? sender, ChangingMoneyEvent e)
+        private void OnMoneyChanged()
         {
-            for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count+1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
             {
-                if (i < game.CurrentNumOfPlayers && lstOponnentsLabels[i].Text==e.Name)
+
+
+                for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
                 {
-                    lstOponnentsMoneyLabels[i].Text =e.Money.ToString();
+                    if (i < game.CurrentNumOfPlayers && lstOponnentsLabels[i].Text == game.Players![game.PreviousPlayerIndex()]!.Name)
+                    {
+                        lstOponnentsMoneyLabels[i].Text = game.Players![game.PreviousPlayerIndex()].CurrentMoney.ToString();
+                    }
                 }
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
-            OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
         }
 
         private void OnTurnChanged(object? sender, EventArgs e)
@@ -81,6 +85,7 @@ namespace TheLambClub.ViewModel
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
+            OnMoneyChanged();
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             OnPropertyChanged(nameof(PotMoney));

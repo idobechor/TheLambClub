@@ -2,7 +2,6 @@
 {
     public static class Keys
     {
-        public const string OpenAIKey = "";
         public const string UserNameKey = "Username";
         public const string PasswordNameKey = "Password";
         public const string EmailNameKey = "Email";
@@ -18,6 +17,7 @@
         public const int InitialPotsMoney = 0;
         public const long FinishedSignal = -1000;
         public const int OneHourInMillisconds = 3600000;
+
 
     }
 }
