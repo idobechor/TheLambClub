@@ -438,7 +438,9 @@ namespace TheLambClub.ModelsLogic
 
             int nextRound = 0;
             if (ChangedToEveryOneAreEqual)
+            {
                 nextRound = HandleAllInScenarios();
+            }
             UpdateCheckOrCallUI();
             bool isHandEnded = false;
             Player[] playersArray = null!;
@@ -457,7 +459,7 @@ namespace TheLambClub.ModelsLogic
 
         #region OnChange Helper Methods
 
-        private bool IsRoundEnding(Game updatedGame) => CurrentPlayerIndex == MaxNumOfPlayers - 1 && updatedGame.CurrentPlayerIndex == 0 && !EveryOneAreEqual();
+        private bool IsRoundEnding(Game updatedGame) => CurrentPlayerIndex == MaxNumOfPlayers - 1 && updatedGame.CurrentPlayerIndex == 0;
         private bool HasGameBecomeFull(Game updatedGame)=> CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
         private bool HasGameJustStarted(Game updatedGame) => CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
         private void SyncGameState(Game updatedGame)
