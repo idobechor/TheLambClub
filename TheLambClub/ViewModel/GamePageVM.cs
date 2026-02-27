@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
-using System;
 using System.Collections.ObjectModel;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
@@ -17,17 +16,15 @@ namespace TheLambClub.ViewModel
         {
             get
             {
-
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
                 OnPropertyChanged(nameof(PlayerMoney));
-                return game.Pot != null ? (int)game.Pot.Sum() : Keys.InitialPotsMoney;
+                return game.Pot;
             }
         }
-        public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney; //{ get => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer!.CurrentMoney : 10000; }
+        public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney; 
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
         public ViewCard Card2 => game.ViewCard2!;
-
         public string Status => game.CurrentStatus;
         public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
@@ -47,41 +44,29 @@ namespace TheLambClub.ViewModel
             game.OnTurnChanged += OnTurnChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
-
-
         private void OnMoneyChanged()
         {
             if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count+1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
             {
-
-
                 for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
-                {
                     if (i < game.CurrentNumOfPlayers && lstOponnentsLabels[i].Text == game.Players![game.PreviousPlayerIndex()]!.Name)
-                    {
                         lstOponnentsMoneyLabels[i].Text = game.Players![game.PreviousPlayerIndex()].CurrentMoney.ToString();
-                    }
-                }
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
         }
-
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Status));
         }
-
         private void OnWinnerSelected(object? sender, EventArgs e)
         {
 
             Shell.Current.ShowPopupAsync(new WinGamePopup(Strings.Dear+game.CurrentPlayer!.Name+Strings.WinningMsg));
         }
-
         private void OnPlayerLost(object? sender, EventArgs e)
         {
             Shell.Current.ShowPopupAsync(new LostGamePopup(Strings.Dear + game.CurrentPlayer!.Name + Strings.LosingMsg));
         }
-
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
@@ -103,10 +88,7 @@ namespace TheLambClub.ViewModel
             Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));            
         }
         private bool _IsMyTurn => game.IsMyTurn;
-        private bool IsMyTurn(object arg)
-        {
-            return _IsMyTurn;
-        }
+        private bool IsMyTurn(object arg) => _IsMyTurn;
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             IPokerSuggestionService suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>()!;
@@ -154,26 +136,17 @@ namespace TheLambClub.ViewModel
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
             });
         }
-        //לתקן כללי כתיבת קוד
         private void DisplayOponnentsNames()
         {
             int lblIndex = 0;
             for (int i = 0; i < game.CurrentNumOfPlayers; i++)
-            {
                 if (game.Players![i] != null && game.CurrentPlayer!.Id != game.Players[i].Id)
                 {
                     lstOponnentsLabels[lblIndex].Text = game.Players[i].Name;
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
                 }
-            }
         }
-        public void AddSnapshotListener()
-        {
-            game.AddSnapShotListener();
-        }
-        public void RemoveSnapshotListener()
-        {
-            game.RemoveSnapShotListener();
-        }
+        public void AddSnapshotListener() => game.AddSnapShotListener();
+        public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
     }
 }

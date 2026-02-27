@@ -52,7 +52,7 @@ namespace TheLambClub.Models
         protected int _currentPlayerIndex;
         public abstract int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
-        public double[] Pot = new double[5];
+        public int Pot = 0;
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public int CurrentNumOfPlayers { get; set; }=1;
@@ -89,6 +89,7 @@ namespace TheLambClub.Models
         public abstract ViewCard ?ViewCard2 { get; }
         [Ignored]
         public bool IsHappened=false;
+               
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
@@ -111,5 +112,33 @@ namespace TheLambClub.Models
         protected abstract int FirstPlayerWhichIsNotFold();
         protected abstract void OnMessageReceived(long timeLeft);
         protected abstract void RegisterTimer();
+        protected abstract void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round, bool isEndOfHand);
+        protected abstract void UpdateCheckOrCallUI();
+        protected abstract void SyncGameState(Game updatedGame);
+        protected abstract bool HasGameJustStarted(Game updatedGame);
+        protected abstract bool ShouldEndRound(bool isEndOfRound, bool isHandEnded);
+        protected abstract Player[] HandleLastPlayerWins();
+        protected abstract bool EveryOneAreEqual();
+        protected abstract void EndOfRound(int round);
+        protected abstract int CalculateMinBet();
+        protected abstract bool AllBetsZero();
+        protected abstract void ProcessRoundAndTurnUpdates(bool isEndOfRound, bool isHandEnded, bool changedToFull, int nextRound);
+        protected abstract void DistributePotToWinners(Player[] sortedPlayers, Dictionary<Player, HandRank> Dict);
+        protected abstract bool HasGameBecomeFull(Game updatedGame);
+        protected abstract Dictionary<Player, HandRank> EvaluatePlayerHands();
+        public abstract int PreviousPlayerIndex();
+        protected abstract bool AnyOneIsAllIn();
+        protected abstract Player[] SortPlayersByHandRank(Dictionary<Player, HandRank> ranks);
+        protected abstract bool AmIWinner();
+        protected abstract bool IsRoundEnding(Game updatedGame);
+        protected abstract double CalculateTotalPot();
+        protected abstract bool IsHandOver();
+        protected abstract bool CheckForGameOver();
+        protected abstract Player[] HandleShowdown();
+        protected abstract void EnsureTimerRegistered();
+        protected abstract Player[] HandleHandEnd();
+        protected abstract bool FinalizeHandIfHost();
+        protected abstract int HandleAllInScenarios();
+        protected  bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
     }
 }

@@ -15,10 +15,12 @@ namespace TheLambClub.ViewModel
             WinGamePopup = new WinGamePopupML(winningText);
             MoveToHome = new Command(MoveToHomeFunction);
         }
-
+        public WinGamePopupVM()
+        {
+        }
         private void MoveToHomeFunction(object obj)
         {
-            RequestClose?.Invoke();
+            
             MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Shell.Current.Navigation.PopAsync();

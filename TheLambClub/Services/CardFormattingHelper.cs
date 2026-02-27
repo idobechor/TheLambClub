@@ -5,66 +5,70 @@ using TheLambClub.Models;
 
 namespace TheLambClub.Services
 {
-    /// <summary>
-    /// Formats poker cards as human-readable text for prompts (e.g. "Ace of Spades", "10 of Hearts").
-    /// </summary>
     public static class CardFormattingHelper
     {
-        /// <summary>
-        /// Formats a single card for use in a prompt.
-        /// </summary>
         public static string FormatCard(TheLambClub.Models.FBCard card)
         {
-            string[] ValueNames = { "", "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
-            if (card == null || card.Value < 1 || card.Value > TheLambClub.Models.FBCard.CardsInShape)
+            // Using an array of the consts for easy indexing
+            string[] valueNames = {
+        "", Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
+        Strings.ValFive, Strings.ValSix, Strings.ValSeven, Strings.ValEight,
+        Strings.ValNine, Strings.ValTen, Strings.ValJack, Strings.ValQueen, Strings.ValKing
+    };
+
+            if (card == null || card.Value < 1 || card.Value >= valueNames.Length)
                 return string.Empty;
-            string valueName = ValueNames[card.Value];
+
+            string valueName = valueNames[card.Value];
             string shapeName = card.Shape.ToString();
-            return $"{valueName} of {shapeName}s";
+
+            return $"{valueName}{Strings.OfJoiner}{shapeName}{Strings.PluralS}";
         }
 
-        /// <summary>
-        /// Formats the player's two hole cards.
-        /// </summary>
         public static string FormatPlayerHand(TheLambClub.Models.FBCard card1, TheLambClub.Models.FBCard card2)
         {
             string c1 = FormatCard(card1);
             string c2 = FormatCard(card2);
+
             if (string.IsNullOrEmpty(c1) && string.IsNullOrEmpty(c2))
-                return "Player hand: (none)";
+                return $"{Strings.PlayerHandPrefix}{Strings.None}";
+
             if (string.IsNullOrEmpty(c1))
-                return $"Player hand: {c2}";
+                return $"{Strings.PlayerHandPrefix}{c2}";
+
             if (string.IsNullOrEmpty(c2))
-                return $"Player hand: {c1}";
-            return $"Player hand: {c1}, {c2}";
+                return $"{Strings.PlayerHandPrefix}{c1}";
+
+            return $"{Strings.PlayerHandPrefix}{c1}, {c2}";
         }
 
-        /// <summary>
-        /// Formats the board cards (only non-null entries). Returns e.g. "Board: Ace of Spades, King of Hearts" or "Board: (none)".
-        /// </summary>
         public static string FormatBoard(List<FBCard> boardCards)
         {
             if (boardCards == null)
-                return "Board: (none)";
-            var parts = boardCards.Where(c => c != null && c.Value > 0).Select(FormatCard).Where(s => s.Length > 0).ToList();
+                return $"{Strings.BoardPrefix}{Strings.None}";
+
+            List<string> parts = boardCards
+                .Where(c => c != null && c.Value > 0)
+                .Select(FormatCard)
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToList();
+
             if (parts.Count == 0)
-                return "Board: (none)";
-            return "Board: " + string.Join(", ", parts);
+                return $"{Strings.BoardPrefix}{Strings.None}";
+
+            return Strings.BoardPrefix + string.Join(", ", parts);
         }
 
-        /// <summary>
-        /// Returns a short stage label based on number of board cards: Pre-flop, Flop, Turn, River.
-        /// </summary>
         public static string GetStageLabel(int boardCardCount)
         {
-            switch (boardCardCount)
+            return boardCardCount switch
             {
-                case 0: return "Pre-flop";
-                case 3: return "Flop";
-                case 4: return "Turn";
-                case 5: return "River";
-                default: return "Unknown";
-            }
+                0 => Strings.StagePreFlop,
+                3 => Strings.StageFlop,
+                4 => Strings.StageTurn,
+                5 => Strings.StageRiver,
+                _ => Strings.StageUnknown
+            };
         }
     }
 }

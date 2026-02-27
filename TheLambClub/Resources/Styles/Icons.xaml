@@ -424,7 +424,8 @@
     <x:String x:Key="IconDestruction">&#xf585;</x:String>
     <x:String x:Key="IconVideogame_asset">&#xe338;</x:String>
     <x:String x:Key="IconVideogame_asset_off">&#xe500;</x:String>
-    <x:String x:Key="IconVariables">&#xf851;</x:String>
+    <x:String x:Key="Icon
+              iables">&#xf851;</x:String>
     <x:String x:Key="IconVariable_remove">&#xf51c;</x:String>
     <x:String x:Key="IconVariable_insert">&#xf51d;</x:String>
     <x:String x:Key="IconVariable_add">&#xf51e;</x:String>
