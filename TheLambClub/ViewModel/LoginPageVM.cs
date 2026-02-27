@@ -1,8 +1,10 @@
 ﻿
-using System.Windows.Input;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 using TheLambClub.Views;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using System.Windows.Input;
 
 namespace TheLambClub.ViewModel
 {
@@ -21,6 +23,16 @@ namespace TheLambClub.ViewModel
             LoginCommand=new Command(Login,CanLogin);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             user.OnAuthComplete += OnAuthComplete;
+            user.ShowToastAlert += ShowToastAlert;
+        }
+        private void ShowToastAlert(object? sender, string msg)
+        {
+            isBusy = false;
+            OnPropertyChanged(nameof(isBusy));
+            MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Toast.Make(msg, ToastDuration.Long).Show();
+            });
         }
         private void OnAuthComplete(object? sender, EventArgs e)
         {

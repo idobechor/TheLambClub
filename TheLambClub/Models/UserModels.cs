@@ -5,6 +5,7 @@ namespace TheLambClub.Models
     public abstract class UserModels
     {
         public EventHandler? OnAuthComplete;
+        public EventHandler<string>? ShowToastAlert;
         public FbData fbd = new();
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -16,6 +17,7 @@ namespace TheLambClub.Models
         public abstract bool CanLogin();
         public abstract bool CanRegister();
         public abstract string GetFirebaseErrorMessage(string msg);
+        protected abstract void ShowAlert(string msg);
         public bool IsRegistered => (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))||!IsChecked;
     }
 }

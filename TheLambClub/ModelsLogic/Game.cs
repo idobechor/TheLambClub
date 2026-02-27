@@ -551,7 +551,6 @@ namespace TheLambClub.ModelsLogic
                     round = nextRound;
                 EndOfRound(round);
             }
-
             UpdateFirebaseIfNeeded(shouldEndRound, shouldSkipTurn, round, isHandEnded);
         }
         protected override bool ShouldEndRound(bool isEndOfRound, bool isHandEnded)
@@ -610,41 +609,39 @@ namespace TheLambClub.ModelsLogic
                 TimerCreated = true;
             }     
         }
+
+        public void DisplayOponnentsNames(List<Label> lstOponnentsLabels)
+        {
+            int lblIndex = 0;
+            for (int i = 0; i < CurrentNumOfPlayers; i++)
+                if (Players![i] != null && CurrentPlayer!.Id != Players[i].Id)
+                {
+                    lstOponnentsLabels[lblIndex].Text = Players[i].Name;
+                    lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
+                }
+        }
+        public void UpdateMoney(List<Label> lstOponnentsLabels,List<Label> lstOponnentsMoneyLabels)
+        {
+            for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
+                if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == Players![PreviousPlayerIndex()]!.Name)
+                    lstOponnentsMoneyLabels[i].Text = Players![PreviousPlayerIndex()].CurrentMoney.ToString();
+        }
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
             if (updatedGame != null)
             {
                 bool isChangeToOneStaying = updatedGame.IsOneStaying() && !IsOneStaying();
-                if (updatedGame.IsOneStaying() || IsOneStaying()) {
-                    Console.WriteLine("OneStaying");
-                }
                 bool isPotMoneyChanged = updatedGame.Pot != Pot;
                 bool changedToFull = HasGameBecomeFull(updatedGame);
                 bool isGameStarted = HasGameJustStarted(updatedGame);
                 bool ChangedToEveryOneAreEqual = !EveryOneAreEqual() && updatedGame.EveryOneAreEqual();
                 bool isRoundChanged = RoundNumber != updatedGame.RoundNumber;
-                bool isReturnedFromZeroTozero=CurrentPlayerIndex!=updatedGame.CurrentPlayerIndex && updatedGame.CurrentPlayerIndex == 0 && RoundNumber == updatedGame.RoundNumber;
-                if (isReturnedFromZeroTozero) 
-                {
-                    Console.WriteLine(  "");
-                }
-                bool isEndOfRound = IsRoundEnding(updatedGame) && !isRoundChanged && !(isChangeToOneStaying && !isReturnedFromZeroTozero);
-                if(isEndOfRound)
-                {
-                    Console.WriteLine("cc");
-                }
-                //if (isPotMoneyChanged && !IsMyTurn)
-                //    MoneyChanged?.Invoke(this, new ChangingMoneyEvent(Players![CurrentPlayerIndex].Name, (int)updatedGame.Players![CurrentPlayerIndex].CurrentMoney));
+                bool isEndOfRound = IsRoundEnding(updatedGame) && !isRoundChanged && !(isChangeToOneStaying);
                 SyncGameState(updatedGame);
                 int nextRound = 0;
                 if (isPotMoneyChanged&&EveryOneAreEqual())
                     nextRound = HandleAllInScenarios();
-
-                if (nextRound != 0)
-                {
-                    Console.WriteLine("c");
-                }
                 UpdateCheckOrCallUI();
                 bool isHandEnded = false;
                 Player[] playersArray = null!;

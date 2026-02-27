@@ -48,9 +48,7 @@ namespace TheLambClub.ViewModel
         {
             if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count+1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
             {
-                for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
-                    if (i < game.CurrentNumOfPlayers && lstOponnentsLabels[i].Text == game.Players![game.PreviousPlayerIndex()]!.Name)
-                        lstOponnentsMoneyLabels[i].Text = game.Players![game.PreviousPlayerIndex()].CurrentMoney.ToString();
+                game.UpdateMoney(lstOponnentsMoneyLabels, lstOponnentsLabels);            
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
         }
@@ -138,13 +136,7 @@ namespace TheLambClub.ViewModel
         }
         private void DisplayOponnentsNames()
         {
-            int lblIndex = 0;
-            for (int i = 0; i < game.CurrentNumOfPlayers; i++)
-                if (game.Players![i] != null && game.CurrentPlayer!.Id != game.Players[i].Id)
-                {
-                    lstOponnentsLabels[lblIndex].Text = game.Players[i].Name;
-                    lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
-                }
+            game.DisplayOponnentsNames(lstOponnentsLabels);        
         }
         public void AddSnapshotListener() => game.AddSnapShotListener();
         public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
