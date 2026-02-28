@@ -1,6 +1,6 @@
 using TheLambClub.ViewModel;
 
-namespace TheLambClub.NewFolder;
+namespace TheLambClub.Views;
 
 public partial class LoginPage : ContentPage
 {

@@ -1,5 +1,3 @@
-using TheLambClub.Services;
-
 namespace TheLambClub.Models
 {
     static class Strings
@@ -64,6 +62,12 @@ namespace TheLambClub.Models
         public const string CurrentTurnTxt = "Current Player:";
         public const string YouWonTxt = "You Won";
         public const string YouLostTxt = "You Lost";
+        public const string Home = "Home";
+        public const string RoundResultTxt = "Round Results";
+        public const string Close = "Close";
+        public const string GetAISuggestion = "Get AI suggestion";
+        public const string SuggestionUnavailable = "Suggestion unavailable.";
+        public const string AiSuggestsPrefix = "AI suggests: ";
         public const string userPromptExp = $@"You are a strict Poker Logic Engine acting as an API backend.
     Your goal is to output raw data metrics based on GTO principles. 
     DO NOT provide explanations, conversational text, or markdown formatting.";

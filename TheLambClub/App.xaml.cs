@@ -1,5 +1,4 @@
 using TheLambClub.ModelsLogic;
-using TheLambClub.NewFolder;
 using TheLambClub.Views;
 namespace TheLambClub
 {

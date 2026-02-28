@@ -6,7 +6,7 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
-    x:DataType="vm:PickYourMovePromptPageVM"
+    x:DataType="vm:PickYourMovePopupPageVM"
     CanBeDismissedByTappingOutsideOfPopup="False">
     <Border
      Margin="0"
@@ -44,7 +44,7 @@
                 CornerRadius="15"
                 FontSize="16"
                 IsEnabled="{Binding CanRequestSuggestion}"
-                Text="Get AI suggestion"
+                Text="{x:Static m:Strings.GetAISuggestion}"
                 TextColor="White" />
             <Border Padding="0" BackgroundColor="Black">
                 <Label

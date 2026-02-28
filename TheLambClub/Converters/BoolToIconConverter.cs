@@ -1,7 +1,7 @@
 using TheLambClub.Models;
 using System.Globalization;
 
-namespace LoginApp.Converters
+namespace TheLambClub.Converters
 {
     public class BoolToIconConverter : IValueConverter
     {

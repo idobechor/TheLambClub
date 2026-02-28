@@ -10,7 +10,7 @@ public partial class PickYourMovePopupPage : Popup
 {
     #region fields
 
-    private readonly PickYourMovePromptPageVM PromptYourMoveVM;
+    private readonly PickYourMovePopupPageVM PromptYourMoveVM;
 
     #endregion
 
@@ -19,7 +19,7 @@ public partial class PickYourMovePopupPage : Popup
     public PickYourMovePopupPage(Game game, IPokerSuggestionService? suggestionService)
     {
         InitializeComponent();
-        PromptYourMoveVM = new PickYourMovePromptPageVM(game, TimeLeft, suggestionService);
+        PromptYourMoveVM = new PickYourMovePopupPageVM(game, TimeLeft, suggestionService);
         BindingContext = PromptYourMoveVM;
         PromptYourMoveVM.RequestClose += OnRequestClose;
     }

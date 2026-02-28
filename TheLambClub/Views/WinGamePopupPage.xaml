@@ -1,11 +1,11 @@
 <toolkit:Popup
-    x:Class="TheLambClub.Views.LostGamePopup"
+    x:Class="TheLambClub.Views.WinGamePopupPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               xmlns:m="clr-namespace:TheLambClub.Models"
-               xmlns:vm="clr-namespace:TheLambClub.ViewModel"
-               x:DataType="vm:LostGamePopupVM">
+    xmlns:m="clr-namespace:TheLambClub.Models"
+    xmlns:vm="clr-namespace:TheLambClub.ViewModel"
+    x:DataType="vm:WinGamePopupVM">
     <VerticalStackLayout
         Padding="30"
         BackgroundColor="White"
@@ -15,7 +15,7 @@
             FontAttributes="Bold"
             FontSize="28"
             HorizontalOptions="Center"
-               Text="{x:Static m:Strings.YouLostTxt}"
+            Text="{x:Static m:Strings.YouWonTxt}"
             TextColor="Black" />
         <Label
             FontSize="18"
@@ -24,10 +24,10 @@
             Text="{Binding ResultMessage}"
             TextColor="Black" />
         <Button
-     Text="Home"
-     Command="{Binding MoveToHome}"
-     TextColor="White"
-     CornerRadius="10"
-     HorizontalOptions="Center" />
+            Text="{x:Static m:Strings.Home}"
+            Command="{Binding MoveToHome}"
+            TextColor="White"
+            CornerRadius="10"
+            HorizontalOptions="Center" />
     </VerticalStackLayout>
 </toolkit:Popup>

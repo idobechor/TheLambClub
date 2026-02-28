@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using TheLambClub.NewFolder;
 using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
@@ -33,29 +27,18 @@ namespace TheLambClub.ViewModel
         private void MoveToRegisterPage(object obj)
         {
             if (Application.Current != null)
-            {
-                if (Application.Current != null)
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Application.Current.MainPage = new RegisterPage();
-                    });
-                }
-            }
+                    Application.Current!.MainPage = new RegisterPage();
+                });
         }
-
         private void MoveToLoginPage(object obj)
         {
             if (Application.Current != null)
-            {
-                if (Application.Current != null)
+                MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    MainThread.InvokeOnMainThreadAsync(() =>
-                    {
-                        Application.Current.MainPage = new LoginPage();
-                    });
-                }
-            }
+                    Application.Current!.MainPage = new LoginPage();
+                });
         }
 
         #endregion

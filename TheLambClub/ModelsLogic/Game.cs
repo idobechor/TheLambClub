@@ -656,6 +656,7 @@ namespace TheLambClub.ModelsLogic
                 {
                     playersArray = HandleHandEnd();
                     isHandEnded = FinalizeHandIfHost();
+                  
                 }
                 ProcessRoundAndTurnUpdates(isEndOfRound, isHandEnded, changedToFull, nextRound);
                 EnsureTimerRegistered();

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TheLambClub.Models;
@@ -13,7 +12,7 @@ namespace TheLambClub.Services
         {
             // Using an array of the consts for easy indexing
             string[] valueNames = {
-        "", Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
+        string.Empty, Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
         Strings.ValFive, Strings.ValSix, Strings.ValSeven, Strings.ValEight,
         Strings.ValNine, Strings.ValTen, Strings.ValJack, Strings.ValQueen, Strings.ValKing
     };

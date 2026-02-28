@@ -59,12 +59,14 @@ namespace TheLambClub.ViewModel
             game.OnWinnerSelected += OnWinnerSelected;
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
+            game.OnMyMoneyChanged+= MoneyChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
+     
         #endregion
 
-        #region public methods
+            #region public methods
 
         public void AddSnapshotListener() => game.AddSnapShotListener();
         public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
@@ -73,11 +75,19 @@ namespace TheLambClub.ViewModel
 
         #region private methods
 
-        private void OnMoneyChanged()
+        private void MoneyChanged(object? sender, EventArgs e)
         {
-            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count+1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
             {
-                game.UpdateMoney(lstOponnentsMoneyLabels, lstOponnentsLabels);
+                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels);
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            }
+        }
+        private void MoneyChanged()
+        {
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
+            {
+                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels);
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
         }
@@ -97,7 +107,7 @@ namespace TheLambClub.ViewModel
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
-            OnMoneyChanged();
+            MoneyChanged();
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             OnPropertyChanged(nameof(PotMoney));
