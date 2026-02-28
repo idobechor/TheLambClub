@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using TheLambClub.Models;
 using TheLambClub.Services;
@@ -7,6 +7,8 @@ namespace TheLambClub
 {
     public static class MauiProgram
     {
+        #region public methods
+
         public static MauiApp CreateMauiApp()
         {
             MauiAppBuilder builder = MauiApp.CreateBuilder();
@@ -23,10 +25,12 @@ namespace TheLambClub
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
         }
+
+        #endregion
     }
 }

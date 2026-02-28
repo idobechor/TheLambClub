@@ -6,9 +6,13 @@ namespace TheLambClub.Services
 {
     public interface IPokerSuggestionService
     {
+        #region public methods
+
         Task<PokerSuggestionResult> GetSuggestionAsync(
             FBCard playerCard1,
             FBCard playerCard2,
             List<FBCard> boardCards);
+
+        #endregion
     }
 }

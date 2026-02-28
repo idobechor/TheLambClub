@@ -1,9 +1,33 @@
-﻿using Plugin.CloudFirestore;
+using Plugin.CloudFirestore;
 using TheLambClub.Models;
 namespace TheLambClub.ModelsLogic
 {
     public class FbData : FbDataModel
-    {   
+    {
+        #region properties
+
+        public override string DisplayName
+        {
+            get
+            {
+                string dn = string.Empty;
+                if (facl.User != null)
+                    dn = facl.User.Info.DisplayName;
+                return dn;
+            }
+        }
+        public override string UserId
+        {
+            get
+            {
+                return facl.User.Uid;
+            }
+        }
+
+        #endregion
+
+        #region public methods
+
         public override async void CreateUserWithEmailAndPasswordAsync(string email, string password, string name, Action<System.Threading.Tasks.Task> OnComplete)
         {
             await facl.CreateUserWithEmailAndPasswordAsync(email, password, name).ContinueWith(OnComplete);
@@ -40,7 +64,7 @@ namespace TheLambClub.ModelsLogic
             IQuerySnapshot qs = await cr.WhereEqualsTo(fName, fValue).GetAsync();
             OnComplete(qs);
         }
-        public override async void UpdateFields(string collectonName, string id,Dictionary<string,object>dict, Action<Task> OnComplete)
+        public override async void UpdateFields(string collectonName, string id, Dictionary<string, object> dict, Action<Task> OnComplete)
         {
             IDocumentReference dr = fs.Collection(collectonName).Document(id);
             await dr.UpdateAsync(dict).ContinueWith(OnComplete);
@@ -50,23 +74,7 @@ namespace TheLambClub.ModelsLogic
             IDocumentReference dr = fs.Collection(collectonName).Document(id);
             await dr.DeleteAsync().ContinueWith(OnComplete);
         }
-        public override string DisplayName
-        {
-            get
-            {
-                string dn = string.Empty;
-                if (facl.User != null)
-                    dn = facl.User.Info.DisplayName;
-                return dn;
-            }
-        }
-        public override string UserId
-        {
-            get
-            {
-                return facl.User.Uid;
-            }
-        }
+
+        #endregion
     }
 }
-

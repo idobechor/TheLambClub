@@ -1,4 +1,3 @@
-
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using TheLambClub.ModelsLogic;
@@ -7,19 +6,33 @@ using TheLambClub.ViewModel;
 
 namespace TheLambClub.Views;
 
-public partial class PickYourMovePopupPage  : Popup
+public partial class PickYourMovePopupPage : Popup
 {
+    #region fields
+
     private readonly PickYourMovePromptPageVM PromptYourMoveVM;
+
+    #endregion
+
+    #region constructors
+
     public PickYourMovePopupPage(Game game, IPokerSuggestionService? suggestionService)
-	{
-		InitializeComponent();   
+    {
+        InitializeComponent();
         PromptYourMoveVM = new PickYourMovePromptPageVM(game, TimeLeft, suggestionService);
-        BindingContext= PromptYourMoveVM;
+        BindingContext = PromptYourMoveVM;
         PromptYourMoveVM.RequestClose += OnRequestClose;
     }
+
+    #endregion
+
+    #region private methods
+
     private void OnRequestClose()
     {
         PromptYourMoveVM.Close();
-        Close(); 
+        Close();
     }
+
+    #endregion
 }

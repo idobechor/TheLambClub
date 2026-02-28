@@ -4,9 +4,13 @@ namespace TheLambClub.Views;
 
 public partial class RegisterPage : ContentPage
 {
-	public RegisterPage()
-	{
-		InitializeComponent();
+    #region constructors
+
+    public RegisterPage()
+    {
+        InitializeComponent();
         BindingContext = new RegisterPageVM();
     }
+
+    #endregion
 }

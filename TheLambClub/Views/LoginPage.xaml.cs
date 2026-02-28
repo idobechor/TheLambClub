@@ -4,9 +4,13 @@ namespace TheLambClub.NewFolder;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
-	{
-		InitializeComponent();
+    #region constructors
+
+    public LoginPage()
+    {
+        InitializeComponent();
         BindingContext = new LoginPageVM();
     }
+
+    #endregion
 }

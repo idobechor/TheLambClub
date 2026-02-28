@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
@@ -11,7 +11,22 @@ namespace TheLambClub.ViewModel
 {
     public partial class GamePageVM : ObservableObject
     {
+        #region fields
+
         private readonly Game game;
+        private readonly List<Label> lstOponnentsLabels = [];
+        private readonly List<Label> lstOponnentsMoneyLabels = [];
+
+        #endregion
+
+        #region commands
+
+        public Command ShowPickYourMovePrompt { get; }
+
+        #endregion
+
+        #region properties
+
         public int PotMoney
         {
             get
@@ -21,16 +36,18 @@ namespace TheLambClub.ViewModel
                 return game.Pot;
             }
         }
-        public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney; 
+        public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney;
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
         public ViewCard Card2 => game.ViewCard2!;
         public string Status => game.CurrentStatus;
-        public Command ShowPickYourMovePrompt { get; }
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
         public string MyName => game.MyName;
-        private readonly List<Label> lstOponnentsLabels = [];
-        private readonly List<Label> lstOponnentsMoneyLabels = [];
+        private bool _IsMyTurn => game.IsMyTurn;
+
+        #endregion
+
+        #region constructors
 
         public GamePageVM(Game game, Grid grdOponnents)
         {
@@ -44,11 +61,23 @@ namespace TheLambClub.ViewModel
             game.OnTurnChanged += OnTurnChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
+
+        #endregion
+
+        #region public methods
+
+        public void AddSnapshotListener() => game.AddSnapShotListener();
+        public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
+
+        #endregion
+
+        #region private methods
+
         private void OnMoneyChanged()
         {
             if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count+1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
             {
-                game.UpdateMoney(lstOponnentsMoneyLabels, lstOponnentsLabels);            
+                game.UpdateMoney(lstOponnentsMoneyLabels, lstOponnentsLabels);
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
         }
@@ -83,9 +112,8 @@ namespace TheLambClub.ViewModel
         {
 
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-            Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));            
+            Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));
         }
-        private bool _IsMyTurn => game.IsMyTurn;
         private bool IsMyTurn(object arg) => _IsMyTurn;
         private async void ShowPickYourMovePromptFunction(object obj)
         {
@@ -136,9 +164,9 @@ namespace TheLambClub.ViewModel
         }
         private void DisplayOponnentsNames()
         {
-            game.DisplayOponnentsNames(lstOponnentsLabels);        
+            game.DisplayOponnentsNames(lstOponnentsLabels);
         }
-        public void AddSnapshotListener() => game.AddSnapShotListener();
-        public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
+
+        #endregion
     }
 }

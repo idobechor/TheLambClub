@@ -5,6 +5,8 @@ namespace TheLambClub.Services
 {
     public class PokerSuggestionService : IPokerSuggestionService
     {
+        #region public methods
+
         public async Task<PokerSuggestionResult> GetSuggestionAsync(
        FBCard playerCard1,
        FBCard playerCard2,
@@ -58,5 +60,6 @@ namespace TheLambClub.Services
             return finalResult;
         }
 
+        #endregion
     }
 }

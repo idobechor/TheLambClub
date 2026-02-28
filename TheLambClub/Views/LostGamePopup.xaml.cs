@@ -5,9 +5,13 @@ namespace TheLambClub.Views;
 
 public partial class LostGamePopup : Popup
 {
+    #region constructors
+
     public LostGamePopup(string losingText)
     {
         BindingContext = new LostGamePopupVM(losingText);
         InitializeComponent();
     }
+
+    #endregion
 }

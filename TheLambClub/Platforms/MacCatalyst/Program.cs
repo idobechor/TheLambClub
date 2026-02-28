@@ -1,10 +1,12 @@
-﻿using ObjCRuntime;
+using ObjCRuntime;
 using UIKit;
 
 namespace TheLambClub
 {
     public class Program
     {
+        #region private methods
+
         // This is the main entry point of the application.
         static void Main(string[] args)
         {
@@ -12,5 +14,7 @@ namespace TheLambClub
             // you can specify it here.
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
+
+        #endregion
     }
 }

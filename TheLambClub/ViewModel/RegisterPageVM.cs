@@ -1,4 +1,3 @@
-﻿
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 using TheLambClub.Views;
@@ -10,10 +9,22 @@ namespace TheLambClub.ViewModel
 {
     public class RegisterPageVM : ObservableObject
     {
-        public ICommand RegisterCommand { get; }
-        public ICommand ToggleIsPasswordCommand { get; }
+        #region fields
+
         private readonly User user = new();
         private bool isBusy;
+
+        #endregion
+
+        #region commands
+
+        public ICommand RegisterCommand { get; }
+        public ICommand ToggleIsPasswordCommand { get; }
+
+        #endregion
+
+        #region properties
+
         public bool IsBusy
         {
             get => isBusy;
@@ -25,17 +36,71 @@ namespace TheLambClub.ViewModel
             }
         }
         public bool IsPassword { get; set; } = true;
-        public bool CanRegister()
+        public string UserName
         {
-            return !IsBusy && user.CanRegister();
+            get => user.UserName;
+            set
+            {
+                user.UserName = value;
+                (RegisterCommand as Command)?.ChangeCanExecute();
+            }
+
         }
+        public string Password
+        {
+            get => user.Password;
+            set
+            {
+                user.Password = value;
+                (RegisterCommand as Command)?.ChangeCanExecute();
+            }
+
+        }
+        public string Email
+        {
+            get => user.Email;
+            set
+            {
+                user.Email = value;
+                (RegisterCommand as Command)?.ChangeCanExecute();
+            }
+        }
+        public string Age
+        {
+            get => user.Age;
+            set
+            {
+                user.Age = value;
+                (RegisterCommand as Command)?.ChangeCanExecute();
+            }
+
+        }
+
+        #endregion
+
+        #region constructors
+
         public RegisterPageVM()
         {
-            RegisterCommand=new Command(Register, CanRegister);
+            RegisterCommand = new Command(Register, CanRegister);
             ToggleIsPasswordCommand = new Command(ToggleIsPassword);
             user.OnAuthComplete += OnAuthComplete;
             user.ShowToastAlert += ShowToastAlert;
         }
+
+        #endregion
+
+        #region public methods
+
+        public bool CanRegister()
+        {
+            return !IsBusy && user.CanRegister();
+        }
+
+        #endregion
+
+        #region private methods
+
         private void ShowToastAlert(object? sender, string msg)
         {
             isBusy = false;
@@ -67,46 +132,8 @@ namespace TheLambClub.ViewModel
                 IsBusy = true;
                 user.Register();
             }
-        }        
-        public string UserName
-        {
-            get => user.UserName;
-            set
-            {                              
-                 user.UserName = value;
-                 (RegisterCommand as Command)?.ChangeCanExecute();                            
-            }
-            
         }
-        public string Password
-        {
-            get => user.Password;
-            set
-            {
-                user.Password = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-            }
 
-        }
-        public string Email
-        {
-            get => user.Email;
-            set
-            {
-                user.Email = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-            }
-        }
-        public string Age
-        {
-            get => user.Age;
-            set
-            {
-                user.Age = value;
-                (RegisterCommand as Command)?.ChangeCanExecute();
-            }
-
-        }
-        
+        #endregion
     }
 }

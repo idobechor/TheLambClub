@@ -1,7 +1,9 @@
-﻿namespace TheLambClub.Models
+namespace TheLambClub.Models
 {
     public static class Keys
     {
+        #region fields
+
         public const string OpenAIApiKey = "";
         public const string UserNameKey = "Username";
         public const string PasswordNameKey = "Password";
@@ -20,5 +22,7 @@
         public const int InitialPotsMoney = 0;
         public const long FinishedSignal = -1000;
         public const int OneHourInMillisconds = 3600000;
+
+        #endregion
     }
 }

@@ -5,13 +5,25 @@ namespace TheLambClub.Views;
 
 public partial class GamePage : ContentPage
 {
+    #region fields
+
     private readonly GamePageVM gpVM;
+
+    #endregion
+
+    #region constructors
+
     public GamePage(Game game)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         gpVM = new GamePageVM(game, grdOponnents);
         BindingContext = gpVM;
     }
+
+    #endregion
+
+    #region protected methods
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -23,4 +35,6 @@ public partial class GamePage : ContentPage
         gpVM.RemoveSnapshotListener();
         base.OnDisappearing();
     }
+
+    #endregion
 }

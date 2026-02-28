@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,26 +9,30 @@ namespace TheLambClub.ModelsLogic
 {
     public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks, numUpWinners)
     {
+        #region properties
+
         public override string[] PlayersNames
         {
             get
             {
-                return [..Players.Select(player =>
+                return [.. Players.Select(player =>
                  {
                      string WinnerText = string.Empty;
-                     if(Ranks==null)
-                         WinnerText= Models.Strings.IntoruceTheWinner+player.Name;
+                     if (Ranks == null)
+                         WinnerText = Models.Strings.IntoruceTheWinner + player.Name;
                      else
                      {
-                         if (player!=null)
-                             if (Array.IndexOf(Players, player) <numUpWinners)
-                                WinnerText= Models.Strings.IntoruceTheWinner+player.Name+" "+Ranks[player].ToString();
+                         if (player != null)
+                             if (Array.IndexOf(Players, player) < numUpWinners)
+                                 WinnerText = Models.Strings.IntoruceTheWinner + player.Name + " " + Ranks[player].ToString();
                              else
-                                WinnerText= (Array.IndexOf(Players, player)+1)+" "+player.Name+" "+Ranks[player].ToString();
+                                 WinnerText = (Array.IndexOf(Players, player) + 1) + " " + player.Name + " " + Ranks[player].ToString();
                      }
                      return WinnerText;
                  })];
             }
         }
+
+        #endregion
     }
 }

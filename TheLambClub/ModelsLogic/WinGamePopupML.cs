@@ -1,4 +1,4 @@
-﻿using TheLambClub.Models;
+using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {

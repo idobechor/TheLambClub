@@ -7,6 +7,8 @@ namespace TheLambClub.Services
 {
     public static class CardFormattingHelper
     {
+        #region public methods
+
         public static string FormatCard(TheLambClub.Models.FBCard card)
         {
             // Using an array of the consts for easy indexing
@@ -70,5 +72,7 @@ namespace TheLambClub.Services
                 _ => Strings.StageUnknown
             };
         }
+
+        #endregion
     }
 }

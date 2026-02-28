@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,13 +11,24 @@ namespace TheLambClub.ViewModel
 {
     public class PickRegisterOrLoginPageVM
     {
+        #region commands
+
         public ICommand LoginCommand { get; }
         public ICommand RegisterCommand { get; }
+
+        #endregion
+
+        #region constructors
+
         public PickRegisterOrLoginPageVM()
         {
             LoginCommand = new Command(MoveToLoginPage);
             RegisterCommand = new Command(MoveToRegisterPage);
         }
+
+        #endregion
+
+        #region private methods
 
         private void MoveToRegisterPage(object obj)
         {
@@ -46,5 +57,7 @@ namespace TheLambClub.ViewModel
                 }
             }
         }
+
+        #endregion
     }
 }

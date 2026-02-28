@@ -4,9 +4,13 @@ namespace TheLambClub.Views;
 
 public partial class PickRegisterOrLoginPage : ContentPage
 {
-	public PickRegisterOrLoginPage()
-	{
-		InitializeComponent();
+    #region constructors
+
+    public PickRegisterOrLoginPage()
+    {
+        InitializeComponent();
         BindingContext = new PickRegisterOrLoginPageVM();
     }
+
+    #endregion
 }

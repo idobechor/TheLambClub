@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -10,8 +10,15 @@ namespace TheLambClub.Platforms.Android
     [Service]
     public class DeleteFbDocsService : Service
     {
+        #region fields
+
         private bool isRunning = true;
         private readonly FbData fbd = new();
+
+        #endregion
+
+        #region public methods
+
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
@@ -20,12 +27,26 @@ namespace TheLambClub.Platforms.Android
             thread.Start();
             return base.OnStartCommand(intent, flags, startId);
         }
+        public override IBinder? OnBind(Intent? intent)
+        {
+            // Not used
+            return null;
+        }
+        public override void OnDestroy()
+        {
+            isRunning = false;
+            base.OnDestroy();
+        }
+
+        #endregion
+
+        #region private methods
 
         private void DeleteFbDocs()
         {
             while (isRunning)
             {
-                fbd.GetDocumentsWhereLessThan(Keys.GamesCollection, nameof(GameModel.Created), DateTime.Now.AddDays(-1), OnComplete);           
+                fbd.GetDocumentsWhereLessThan(Keys.GamesCollection, nameof(GameModel.Created), DateTime.Now.AddDays(-1), OnComplete);
                 Thread.Sleep(Keys.OneHourInMillisconds);
             }
             StopSelf();
@@ -37,15 +58,6 @@ namespace TheLambClub.Platforms.Android
                 fbd.DeleteDocument(Keys.GamesCollection, doc.Id, (task) => { });
         }
 
-        public override IBinder? OnBind(Intent? intent)
-        {
-            // Not used
-            return null;
-        }
-        public override void OnDestroy()
-        {
-            isRunning = false;
-            base.OnDestroy();
-        }
+        #endregion
     }
 }

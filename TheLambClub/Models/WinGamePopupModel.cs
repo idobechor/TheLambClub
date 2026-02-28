@@ -1,11 +1,20 @@
-﻿namespace TheLambClub.Models
+namespace TheLambClub.Models
 {
     public class WinGamePopupModel
     {
-        public string WinningGameResult {  get; set; }=string.Empty;
+        #region properties
+
+        public string WinningGameResult { get; set; } = string.Empty;
+
+        #endregion
+
+        #region constructors
+
         public WinGamePopupModel(string winningGameResult)
         {
             WinningGameResult = winningGameResult;
         }
+
+        #endregion
     }
 }

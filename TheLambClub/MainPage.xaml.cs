@@ -1,15 +1,27 @@
-﻿using TheLambClub.ViewModel;
+using TheLambClub.ViewModel;
 
 namespace TheLambClub
 {
     public partial class MainPage : ContentPage
     {
+        #region fields
+
         private readonly MainPageVM mpVM = new();
+
+        #endregion
+
+        #region constructors
+
         public MainPage()
         {
             InitializeComponent();
-           BindingContext = mpVM;
+            BindingContext = mpVM;
         }
+
+        #endregion
+
+        #region protected methods
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -21,5 +33,7 @@ namespace TheLambClub
             mpVM.RemoveSnapshotListener();
             base.OnDisappearing();
         }
+
+        #endregion
     }
 }

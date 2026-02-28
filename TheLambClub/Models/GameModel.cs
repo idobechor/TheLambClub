@@ -1,4 +1,3 @@
-﻿
 using Plugin.CloudFirestore;
 using Plugin.CloudFirestore.Attributes;
 using System.Collections.ObjectModel;
@@ -7,6 +6,29 @@ namespace TheLambClub.Models
 {
     public abstract class GameModel
     {
+        #region fields
+
+        [Ignored]
+        protected IListenerRegistration? ilr;
+        [Ignored]
+        protected FbData fbd = new();
+        [Ignored]
+        protected int _currentPlayerIndex;
+        [Ignored]
+        protected bool TimerCreated = false;
+        [Ignored]
+        protected const int HandComplete = 4;
+        [Ignored]
+        public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);
+        public int Pot = 0;
+        public string PlayerBeforeId = string.Empty;
+        [Ignored]
+        public bool IsHappened = false;
+
+        #endregion
+
+        #region events
+
         [Ignored]
         public EventHandler<WinningPopupEvent>? OnwinnerSelected;
         [Ignored]
@@ -20,10 +42,6 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnTurnChanged;
         [Ignored]
-        protected IListenerRegistration? ilr;
-        [Ignored]      
-        protected FbData fbd = new();
-        [Ignored]
         public EventHandler? OnGameDeleted;
         [Ignored]
         public EventHandler? OnPlayerLost;
@@ -35,28 +53,28 @@ namespace TheLambClub.Models
         public EventHandler? OnCheckOrCallChanged;
         [Ignored]
         public EventHandler? OnMyMoneyChanged;
+
+        #endregion
+
+        #region properties
+
         [Ignored]
-        public  abstract Player ?CurrentPlayer { get; }
+        public abstract Player? CurrentPlayer { get; }
         [Ignored]
-        public abstract string CurrentStatus { get;}
+        public abstract string CurrentStatus { get; }
         [Ignored]
-        protected  SetOfCards SetOfCards { get; }= new SetOfCards();
-        [Ignored]
-        public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);     
+        protected SetOfCards SetOfCards { get; } = new SetOfCards();
         [Ignored]
         public string TimeLeft { get; protected set; } = string.Empty;
         [Ignored]
         public int MaxBet => (int)Players!.Min(p => p.IsFolded == false ? p.CurrentMoney : 10000);
-        public FBCard[]BoardCards { get; set; }=new FBCard[5];
-        public int RoundNumber{get;set;}
-        protected int _currentPlayerIndex;
+        public FBCard[] BoardCards { get; set; } = new FBCard[5];
+        public int RoundNumber { get; set; }
         public abstract int CurrentPlayerIndex { get; set; }
         public string HostName { get; set; } = string.Empty;
-        public int Pot = 0;
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
-        public int CurrentNumOfPlayers { get; set; }=1;
-        public string PlayerBeforeId=string.Empty;
+        public int CurrentNumOfPlayers { get; set; } = 1;
         [Ignored]
         public int MinBet { get; set; }
         public abstract bool IsFull { get; set; }
@@ -64,9 +82,9 @@ namespace TheLambClub.Models
         public string Id { get; set; } = string.Empty;
         [Ignored]
         public string MyName { get; set; } = new User().UserName;
-        public string? HostId { get; set; }=string.Empty;
+        public string? HostId { get; set; } = string.Empty;
         [Ignored]
-        public abstract bool IsHost { get; } 
+        public abstract bool IsHost { get; }
         [Ignored]
         public string NumOfPlayersName => $"{MaxNumOfPlayers }";
         [Ignored]
@@ -74,41 +92,46 @@ namespace TheLambClub.Models
         [Ignored]
         public abstract bool IsMyTurn { get; }
         [Ignored]
-        public bool CanICheck { get; set; }=true;
+        public bool CanICheck { get; set; } = true;
         [Ignored]
         public string CheckOrCall { get; set; } = Strings.Check;
-        [Ignored]
-        protected bool TimerCreated = false;
         public Player[]? Players { get; set; }
-        protected const int HandComplete = 4;       
         [Ignored]
-        public abstract ObservableCollection<ViewCard> ?BoardViewCards { get; }
+        public abstract ObservableCollection<ViewCard>? BoardViewCards { get; }
         [Ignored]
-        public abstract ViewCard ?ViewCard1 { get; }
+        public abstract ViewCard? ViewCard1 { get; }
         [Ignored]
-        public abstract ViewCard ?ViewCard2 { get; }
-        [Ignored]
-        public bool IsHappened=false;
-               
+        public abstract ViewCard? ViewCard2 { get; }
+
+        #endregion
+
+        #region public methods
+
         public abstract void SetDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void AddSnapShotListener();
         public abstract void RemoveSnapShotListener();
         public abstract void DeleteDocument(Action<System.Threading.Tasks.Task> OnComplete);
         public abstract void PickedFold();
-        protected abstract void OnComplete(Task task);
         public abstract void UpdateGuestUser(Action<Task> OnComplete);
+        public abstract void CallFunction();
+        public abstract void BetFunction(object obj);
+        public abstract int PreviousPlayerIndex();
+
+        #endregion
+
+        #region protected methods
+
+        protected abstract void OnComplete(Task task);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
         protected abstract void UpdateFBTurnUpdate(Action<Task> OnComplete);
         protected abstract void FillBoard(int round);
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
-        protected abstract void FillArrayAndAddCards(bool upDateFB,Action<Task> OnComplete);
+        protected abstract void FillArrayAndAddCards(bool upDateFB, Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
-        public abstract void CallFunction();
         protected abstract bool EveryOneIsNotRerazeing();
         protected abstract void EndHand();
-        public abstract void BetFunction(object obj);
         protected abstract int FirstPlayerWhichIsNotFold();
         protected abstract void OnMessageReceived(long timeLeft);
         protected abstract void RegisterTimer();
@@ -126,7 +149,6 @@ namespace TheLambClub.Models
         protected abstract void DistributePotToWinners(Player[] sortedPlayers, Dictionary<Player, HandRank> Dict);
         protected abstract bool HasGameBecomeFull(Game updatedGame);
         protected abstract Dictionary<Player, HandRank> EvaluatePlayerHands();
-        public abstract int PreviousPlayerIndex();
         protected abstract bool AnyOneIsAllIn();
         protected abstract Player[] SortPlayersByHandRank(Dictionary<Player, HandRank> ranks);
         protected abstract bool AmIWinner();
@@ -139,6 +161,8 @@ namespace TheLambClub.Models
         protected abstract Player[] HandleHandEnd();
         protected abstract bool FinalizeHandIfHost();
         protected abstract int HandleAllInScenarios();
-        protected  bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
+        protected bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
+
+        #endregion
     }
 }

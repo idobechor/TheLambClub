@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using TheLambClub.Models;
 
@@ -6,50 +6,39 @@ namespace TheLambClub.ModelsLogic
 {
     public class User : UserModels
     {
+        #region constructors
+
+        public User()
+        {
+            UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
+            Password = Preferences.Get(Keys.PasswordNameKey, string.Empty);
+            Email = Preferences.Get(Keys.EmailNameKey, string.Empty);
+            Age = Preferences.Get(Keys.AgeNameKey, string.Empty);
+        }
+
+        #endregion
+
+        #region public methods
+
         public override void Register()
         {
-            fbd.CreateUserWithEmailAndPasswordAsync(Email, Password , UserName, OnComplete);              
+            fbd.CreateUserWithEmailAndPasswordAsync(Email, Password, UserName, OnComplete);
         }
-        private void OnComplete(Task task)
-        {            
-            if (task.IsCompletedSuccessfully)
-            {
-            if (IsChecked)
-                SaveToPreferences();
-                    OnAuthComplete?.Invoke(this, EventArgs.Empty);
-            }
-            else if (task.Exception != null)
-                ShowAlert(GetFirebaseErrorMessage(task.Exception.Message));                   
-            else
-                ShowAlert(Strings.UnknownRegistrationFailedError);                         
-        }
-        public override  string GetFirebaseErrorMessage(string msg)
+        public override string GetFirebaseErrorMessage(string msg)
         {
             string result = string.Empty;
             if (msg.Contains(Strings.ErrMessageReason))
             {
                 if (msg.Contains(Strings.EmailExists))
-                    result= Strings.EmailExistsErrMsg;
+                    result = Strings.EmailExistsErrMsg;
                 if (msg.Contains(Strings.InvalidEmailAddress))
-                    result= Strings.InvalidEmailErrMessage;
+                    result = Strings.InvalidEmailErrMessage;
                 if (msg.Contains(Strings.WeakPassword))
-                    result= Strings.WeakPasswordErrMessage;
-                if(msg.Contains(Strings.UserNotFound))
-                    result= Strings.UserNotFoundmsg;
+                    result = Strings.WeakPasswordErrMessage;
+                if (msg.Contains(Strings.UserNotFound))
+                    result = Strings.UserNotFoundmsg;
             }
             return result;
-        }
-     
-        protected override void ShowAlert(string msg)
-        {
-            ShowToastAlert?.Invoke(this, msg);
-        }
-        private void SaveToPreferences()
-        {
-            Preferences.Set(Keys.UserNameKey, UserName);
-            Preferences.Set(Keys.PasswordNameKey, Password);
-            Preferences.Set(Keys.EmailNameKey, Email);
-            Preferences.Set(Keys.AgeNameKey, Age);
         }
         public override bool CanRegister()
         {
@@ -58,27 +47,55 @@ namespace TheLambClub.ModelsLogic
         public override void Login()
         {
             if (IsChecked)
-            {           
-             Preferences.Set(Keys.UserNameKey, UserName);
-            Preferences.Set(Keys.PasswordNameKey, Password);
-            Preferences.Set(Keys.EmailNameKey, Email);
+            {
+                Preferences.Set(Keys.UserNameKey, UserName);
+                Preferences.Set(Keys.PasswordNameKey, Password);
+                Preferences.Set(Keys.EmailNameKey, Email);
             }
             else
-             Preferences.Clear();
+                Preferences.Clear();
 
             fbd.SignInWithEmailAndPasswordAsync(Email, Password, OnComplete);
         }
         public override bool CanLogin()
         {
-            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password)&&!string.IsNullOrWhiteSpace(Email));
+            return (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(Email));
         }
-  
-        public User()//שומר בפרפרנסס שזה מסמך על המחשב
+
+        #endregion
+
+        #region protected methods
+
+        protected override void ShowAlert(string msg)
         {
-            UserName = Preferences.Get(Keys.UserNameKey, string.Empty);
-            Password = Preferences.Get(Keys.PasswordNameKey, string.Empty);
-            Email = Preferences.Get(Keys.EmailNameKey, string.Empty);
-            Age = Preferences.Get(Keys.AgeNameKey, string.Empty);
+            ShowToastAlert?.Invoke(this, msg);
         }
+
+        #endregion
+
+        #region private methods
+
+        private void OnComplete(Task task)
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                if (IsChecked)
+                    SaveToPreferences();
+                OnAuthComplete?.Invoke(this, EventArgs.Empty);
+            }
+            else if (task.Exception != null)
+                ShowAlert(GetFirebaseErrorMessage(task.Exception.Message));
+            else
+                ShowAlert(Strings.UnknownRegistrationFailedError);
+        }
+        private void SaveToPreferences()
+        {
+            Preferences.Set(Keys.UserNameKey, UserName);
+            Preferences.Set(Keys.PasswordNameKey, Password);
+            Preferences.Set(Keys.EmailNameKey, Email);
+            Preferences.Set(Keys.AgeNameKey, Age);
+        }
+
+        #endregion
     }
 }

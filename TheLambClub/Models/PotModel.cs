@@ -1,8 +1,11 @@
-﻿namespace TheLambClub.Models
+namespace TheLambClub.Models
 {
     public class PotModel
     {
-        public double[]Pot=new double[5];
+        #region fields
 
+        public double[] Pot = new double[5];
+
+        #endregion
     }
 }

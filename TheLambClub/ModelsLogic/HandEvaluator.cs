@@ -1,4 +1,4 @@
-﻿
+
 using TheLambClub.Models;
 using static TheLambClub.Models.FBCard;
 using static TheLambClub.Models.PlayerModel;
@@ -7,6 +7,8 @@ namespace TheLambClub.ModelsLogic
 {
     public class HandEvaluator : HandEvaluatorModel
     {
+        #region public methods
+
         public override HandRank EvaluateBestHand(FBCard Card1, FBCard Card2, FBCard[] boardCards)
         {
             FBCard[] allCards =
@@ -96,6 +98,11 @@ namespace TheLambClub.ModelsLogic
             }
             return arr;
         }
+
+        #endregion
+
+        #region protected methods
+
         protected override HandRank? CheckRoyalFlush(FBCard[] cards)
         {
             HandRank StraightFlush = CheckStraightFlush(cards)!;
@@ -552,5 +559,7 @@ namespace TheLambClub.ModelsLogic
             }
             return result;
         }
+
+        #endregion
     }
 }
