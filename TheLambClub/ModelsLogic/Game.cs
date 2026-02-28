@@ -228,11 +228,28 @@ namespace TheLambClub.ModelsLogic
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
                 }
         }
-        public void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels)
+        public void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName)
+        { if (winnerName==string.Empty)
         {
             for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
                 if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == Players![PreviousPlayerIndex()]!.Name)
                     lstOponnentsMoneyLabels[i].Text = Players![PreviousPlayerIndex()].CurrentMoney.ToString();
+        }
+        else
+        {
+                int winnerMoney = 0;
+                foreach (Player player in Players!)
+                    if (player.Name == winnerName)
+                    {
+                        winnerMoney = (int)player.CurrentMoney;
+                        break;
+                    }
+                for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
+                    if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == winnerName)
+                    {
+                        lstOponnentsMoneyLabels[i].Text = winnerMoney.ToString();
+                    }
+            }
         }
         #endregion
 
@@ -656,10 +673,13 @@ namespace TheLambClub.ModelsLogic
                 {
                     playersArray = HandleHandEnd();
                     isHandEnded = FinalizeHandIfHost();
-                  
                 }
                 ProcessRoundAndTurnUpdates(isEndOfRound, isHandEnded, changedToFull, nextRound);
                 EnsureTimerRegistered();
+                if(playersArray!=null)
+                    OnMyMoneyChanged?.Invoke(this, playersArray[0].Name);
+                else
+                    OnMyMoneyChanged?.Invoke(this,string.Empty);             
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else

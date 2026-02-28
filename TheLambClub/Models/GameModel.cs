@@ -52,7 +52,7 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler? OnCheckOrCallChanged;
         [Ignored]
-        public EventHandler? OnMyMoneyChanged;
+        public EventHandler<string>? OnMyMoneyChanged;
 
         #endregion
 

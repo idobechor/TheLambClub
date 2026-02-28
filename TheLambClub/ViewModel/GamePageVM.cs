@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 using TheLambClub.Services;
@@ -63,10 +64,19 @@ namespace TheLambClub.ViewModel
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
 
-     
+        private void MoneyChanged(object? sender, string winnerName)
+        {
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
+            {
+                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels, winnerName);
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            }
+        }
+
+
         #endregion
 
-            #region public methods
+        #region public methods
 
         public void AddSnapshotListener() => game.AddSnapShotListener();
         public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
@@ -74,23 +84,6 @@ namespace TheLambClub.ViewModel
         #endregion
 
         #region private methods
-
-        private void MoneyChanged(object? sender, EventArgs e)
-        {
-            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
-            {
-                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels);
-                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-            }
-        }
-        private void MoneyChanged()
-        {
-            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
-            {
-                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels);
-                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-            }
-        }
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Status));
@@ -107,7 +100,6 @@ namespace TheLambClub.ViewModel
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
-            MoneyChanged();
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             OnPropertyChanged(nameof(PotMoney));
