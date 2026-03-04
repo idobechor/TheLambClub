@@ -8,88 +8,95 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:PickYourMovePopupPageVM"
     CanBeDismissedByTappingOutsideOfPopup="False">
-    <Border
-     Margin="0"
-     Padding="0"
-     BackgroundColor="#cF000000"
-     StrokeShape="Rectangle"
-     StrokeThickness="0">
-        <Grid
-        Padding="10"
-        ColumnDefinitions="*,2*"
-        ColumnSpacing="0"
-        RowDefinitions="*,Auto">
-        <VerticalStackLayout
+    <Border Stroke="Gray" StrokeThickness="1" Padding="10" Margin="5">
+            <Grid ColumnDefinitions="1.3*, 1*" RowDefinitions="Auto, Auto" ColumnSpacing="10" RowSpacing="10">
+                <VerticalStackLayout
             Grid.Column="0"
             Grid.Row="0"
-            Spacing="0"
+            Spacing="8"
             VerticalOptions="Center">
-            <Button
+                    <Button
                 BackgroundColor="DarkBlue"
                 Command="{Binding Stay}"
                 CornerRadius="15"
-                FontSize="20"
+                FontSize="16"
+                HeightRequest="60"
+                LineBreakMode="WordWrap"
                 Text="{Binding CheckOrFold}"
-                TextColor="White" />
-            <Button
+                TextColor="White"
+                Padding="5"
+                HorizontalOptions="Fill" />
+                    <Button
                 BackgroundColor="DarkBlue"
                 Command="{Binding Fold}"
                 CornerRadius="15"
-                FontSize="20"
+                FontSize="18"
+                HeightRequest="50"
                 Text="{x:Static m:Strings.FoldBtnTxt}"
-                TextColor="White" />
-            <Button
+                TextColor="White"
+                HorizontalOptions="Fill" />
+                    <Button
                 BackgroundColor="DarkSlateGray"
                 Command="{Binding GetSuggestionCommand}"
                 CornerRadius="15"
-                FontSize="16"
+                FontSize="13"
+                HeightRequest="45"
                 IsEnabled="{Binding CanRequestSuggestion}"
                 Text="{x:Static m:Strings.GetAISuggestion}"
-                TextColor="White" />
-            <Border Padding="0" BackgroundColor="Black">
-                <Label
+                TextColor="White"
+                HorizontalOptions="Fill" />
+                    <Border Padding="2" BackgroundColor="Black" StrokeThickness="0">
+                        <Label
                     x:Name="TimeLeft"
                     BackgroundColor="White"
-                    FontSize="20"
-                    HorizontalOptions="Center"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Center"
                     Text="{Binding TimeLeft}"
                     VerticalOptions="Center" />
-            </Border>
-        </VerticalStackLayout>
-        <VerticalStackLayout
+                    </Border>
+                </VerticalStackLayout>
+            <VerticalStackLayout
             Grid.Column="1"
             Grid.Row="0"
             HorizontalOptions="Center"
-            Spacing="0"
+            Spacing="10"
             VerticalOptions="Center">
-            <Label
-                FontSize="20"
+                <Label
+                FontSize="18"
+                FontAttributes="Bold"
                 HorizontalOptions="Center"
                 Text="{Binding BetAmountStr}" />
-            <Slider
+                <Slider
                 Maximum="{Binding MaxBet}"
                 Minimum="{Binding MinBet}"
-                WidthRequest="200"
+                WidthRequest="140"
                 Value="{Binding BetAmount}" />
-            <Button Command="{Binding SubmitBetCommand}" Text="{x:Static m:Strings.SubmitBetBtn}" />
-        </VerticalStackLayout>
-        <VerticalStackLayout
+                <Button 
+                TextColor="White"
+                FontSize="15"
+                Command="{Binding SubmitBetCommand}" 
+                Text="{x:Static m:Strings.SubmitBetBtn}" />
+            </VerticalStackLayout>
+            <VerticalStackLayout
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Grid.Row="1"
-            Padding="0,8"
+            Padding="0,5"
             VerticalOptions="End">
-            <Label
-                FontSize="10"
+                    <Label
+                FontSize="12"
                 HorizontalTextAlignment="Center"
                 IsVisible="{Binding AiSuggestionVisible}"
                 Text="{Binding AiSuggestionText}"
-                TextColor="DarkBlue" />
-            <ActivityIndicator
+                TextColor="Gray" />
+                    <ActivityIndicator
                 HorizontalOptions="Center"
                 IsRunning="{Binding IsLoadingSuggestion}"
-                IsVisible="{Binding IsLoadingSuggestion}" />
-        </VerticalStackLayout>
-    </Grid>
-    </Border>
+                IsVisible="{Binding IsLoadingSuggestion}"
+                Color="DarkBlue" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
 </toolkit:Popup>

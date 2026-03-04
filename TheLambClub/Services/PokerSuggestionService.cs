@@ -5,8 +5,14 @@ namespace TheLambClub.Services
 {
     public class PokerSuggestionService : IPokerSuggestionService
     {
-        #region public methods
-
+        #region fields
+        private readonly string _apiKey;
+        #endregion
+        #region public methods       
+        public PokerSuggestionService(string apiKey)
+        {
+            _apiKey = apiKey;
+        }
         public async Task<PokerSuggestionResult> GetSuggestionAsync(
        FBCard playerCard1,
        FBCard playerCard2,
@@ -15,9 +21,7 @@ namespace TheLambClub.Services
             PokerSuggestionResult finalResult;
 
             if (string.IsNullOrWhiteSpace(Keys.OpenAIApiKey))
-            {
                 finalResult = PokerSuggestionResult.Failed(Keys.ApiKeyDosentSet);
-            }
             else
             {
                 try
@@ -26,10 +30,8 @@ namespace TheLambClub.Services
                     int boardCount = 0;
 
                     if (boardCards != null)
-                    {
                         foreach (FBCard c in boardCards)
                             if (c != null && c.Value > 0) boardCount++;
-                    }
                     string boardText = CardFormattingHelper.FormatBoard(boardCards!);
                     string stage = CardFormattingHelper.GetStageLabel(boardCount);
                     string userPrompt = $"""

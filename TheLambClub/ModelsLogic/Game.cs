@@ -23,11 +23,13 @@ namespace TheLambClub.ModelsLogic
             {
                 return [.. BoardCards.Select(c =>
                 {
+                    ViewCard res=null!;
                     if (c == null)
-                        return new ViewCard();
-                    return new ViewCard(c);
+                        res= new ViewCard();
+                    else
+                    res = new ViewCard(c);
+                    return res;
                 })];
-
             }
         }
         public override ViewCard? ViewCard1 => CurrentPlayer == null || CurrentPlayer.FBCard1 == null ?
@@ -50,15 +52,9 @@ namespace TheLambClub.ModelsLogic
             {
                 Player p = null!;
                 if (Players != null)
-                {
                     foreach (Player player in Players!)
-                    {
                         if (player != null && player.Id == new FbData().UserId)
-                        {
                             p = player;
-                        }
-                    }
-                }
                 return p;
             }
         }
@@ -107,7 +103,6 @@ namespace TheLambClub.ModelsLogic
             {
                 Dictionary<string, object> update = new()
                 {
-
                     { nameof(Players), Players! },
                 };
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
@@ -158,11 +153,11 @@ namespace TheLambClub.ModelsLogic
             if (!EveryOneAreEqual())
             {
                 Dictionary<string, object> update = new()
-            {
-                { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
-                { nameof(Players), Players! },
-                { nameof(Pot), pot }
-            };
+                {
+                    { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
+                    { nameof(Players), Players! },
+                    { nameof(Pot), pot }
+                };
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
             else
@@ -197,28 +192,34 @@ namespace TheLambClub.ModelsLogic
             else
             {
                 Dictionary<string, object> update = new()
-             {
-                 { nameof(Players), Players! },
-                 { nameof(Pot), pot }
-             };
+                {
+                    { nameof(Players), Players! },
+                    { nameof(Pot), pot }
+                };
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
 
         }
         public override int PreviousPlayerIndex()
         {
+            int result = 0; 
             int previousIndex = CurrentPlayerIndex - 1;
+
             while (previousIndex != CurrentPlayerIndex)
             {
                 if (previousIndex < 0 && CurrentNumOfPlayers - 1 < Players!.Length)
                     previousIndex = CurrentNumOfPlayers - 1;
                 if (!Players![previousIndex].IsFolded)
-                    return previousIndex;
+                {
+                    result = previousIndex;
+                    break;
+                }
                 previousIndex--;
             }
-            return 0;
+
+            return result;
         }
-        public void DisplayOponnentsNames(List<Label> lstOponnentsLabels)
+        public override void DisplayOponnentsNames(List<Label> lstOponnentsLabels)
         {
             int lblIndex = 0;
             for (int i = 0; i < CurrentNumOfPlayers; i++)
@@ -228,15 +229,16 @@ namespace TheLambClub.ModelsLogic
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
                 }
         }
-        public void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName)
-        { if (winnerName==string.Empty)
+        public override void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName)
         {
-            for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
-                if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == Players![PreviousPlayerIndex()]!.Name)
-                    lstOponnentsMoneyLabels[i].Text = Players![PreviousPlayerIndex()].CurrentMoney.ToString();
-        }
-        else
-        {
+            if (winnerName == string.Empty)
+            {
+                for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
+                    if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == Players![PreviousPlayerIndex()]!.Name)
+                        lstOponnentsMoneyLabels[i].Text = Players![PreviousPlayerIndex()].CurrentMoney.ToString();
+            }
+            else
+            {
                 int winnerMoney = 0;
                 foreach (Player player in Players!)
                     if (player.Name == winnerName)
@@ -246,9 +248,7 @@ namespace TheLambClub.ModelsLogic
                     }
                 for (int i = 0; i < lstOponnentsMoneyLabels.Count; i++)
                     if (i < CurrentNumOfPlayers && lstOponnentsLabels[i].Text == winnerName)
-                    {
                         lstOponnentsMoneyLabels[i].Text = winnerMoney.ToString();
-                    }
             }
         }
         #endregion
@@ -285,7 +285,6 @@ namespace TheLambClub.ModelsLogic
                     item.FBCard1 = SetOfCards.GetRandomCard();
                     item.FBCard2 = SetOfCards.GetRandomCard();
                 }
-
             if (upDateFB)
                 UpdatePlayersArray(_ => { });
         }
@@ -362,7 +361,7 @@ namespace TheLambClub.ModelsLogic
             }
             return i;
         }
-        protected int FirstPlayerWhichIsNotFolded()
+        protected override int FirstPlayerWhichIsNotFolded()
         {
             int i = 0;
             foreach (Player player in Players!)
@@ -402,13 +401,11 @@ namespace TheLambClub.ModelsLogic
         {
             bool r = false;
             foreach (Player p in Players!)
-            {
                 if (!p.IsFolded && p.IsAllIn)
                 {
                     r = true;
                     break;
                 }
-            }
             return r;
         }
         protected override bool EveryOneAreEqual()
@@ -512,12 +509,10 @@ namespace TheLambClub.ModelsLogic
             DistributePotToWinners(sortedPlayers, ranks);
             bool found = CheckForGameOver();
             if (found)
-            {
                 if (AmIWinner())
                     OnWinnerSelected?.Invoke(this, EventArgs.Empty);
                 else
                     OnPlayerLost?.Invoke(this, EventArgs.Empty);
-            }
             else
             {
                 int i = 1;
@@ -534,8 +529,7 @@ namespace TheLambClub.ModelsLogic
         }
         protected override bool AmIWinner()
         {
-            double max = Players!.Max(p => p.CurrentMoney);
-            return CurrentPlayer!.CurrentMoney == max;
+            return CurrentPlayer!.CurrentMoney == Players!.Max(p => p.CurrentMoney);
         }
         protected override bool CheckForGameOver()
         {

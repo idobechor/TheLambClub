@@ -161,6 +161,9 @@ namespace TheLambClub.Models
         protected abstract Player[] HandleHandEnd();
         protected abstract bool FinalizeHandIfHost();
         protected abstract int HandleAllInScenarios();
+        protected abstract int FirstPlayerWhichIsNotFolded();
+        public abstract void DisplayOponnentsNames(List<Label> lstOponnentsLabels);
+        public abstract void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName);
         protected bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
 
         #endregion
