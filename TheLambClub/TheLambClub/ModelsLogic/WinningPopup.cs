@@ -5,7 +5,7 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks, numUpWinners)
+    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks)
     {
         #region properties
 
