@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using TheLambClub.Models;
 using TheLambClub.ModelsLogic;
 
 namespace TheLambClub.ViewModel
@@ -7,7 +8,7 @@ namespace TheLambClub.ViewModel
     {
         #region fields
 
-        private readonly LostGamePopupML lostGamePopupML;
+        private readonly LostGamePopupModel lostGamePopupModel;
 
         #endregion
 
@@ -19,7 +20,7 @@ namespace TheLambClub.ViewModel
 
         #region properties
 
-        public string ResultMessage => lostGamePopupML.LosingGameResult;
+        public string ResultMessage => lostGamePopupModel.LosingGameResult;
 
         #endregion
 
@@ -27,7 +28,7 @@ namespace TheLambClub.ViewModel
 
         public LostGamePopupVM(string winningText)
         {
-            lostGamePopupML = new LostGamePopupML(winningText);
+            lostGamePopupModel = new LostGamePopupModel(winningText);
             MoveToHome = new Command(MoveToHomeFunction);
         }
 
