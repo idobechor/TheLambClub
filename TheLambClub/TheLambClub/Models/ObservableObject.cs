@@ -7,6 +7,10 @@ public class ObservableObject : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+        
+        
+        public void ShowInstructionsPrompt(object obj) => Application.Current!.MainPage!.DisplayAlert(Strings.InsructionsTxtTitle, Strings.InsructionsTxt, Strings.Ok);
+
     #endregion
 
     #region protected methods

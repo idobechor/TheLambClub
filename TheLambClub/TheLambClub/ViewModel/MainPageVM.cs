@@ -24,7 +24,7 @@ namespace TheLambClub.ViewModel
 
         #region properties
 
-        public ObservableCollection<int>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value; }
+        public ObservableCollection<int>? NumberOfPlayersList { get => games.NumberOfPlayersList; set => games.NumberOfPlayersList = value!; }
         public int SelectedNumberOfPlayers { get => games.SelectedNumberOfPlayers;
             set { games.SelectedNumberOfPlayers = value; (AddGameCommand as Command)?.ChangeCanExecute(); } }
         public ObservableCollection<Game>? GamesList => games.GamesList;
@@ -60,13 +60,7 @@ namespace TheLambClub.ViewModel
         }
 
         #endregion
-
         #region public methods
-
-        public void ShowInstructionsPrompt(object obj)
-        {
-            Application.Current!.MainPage!.DisplayAlert(Strings.InsructionsTxtTitle, Strings.InsructionsTxt, Strings.Ok);
-        }
         public void AddSnapshotListener()
         {
             games.AddSnapshotListener();

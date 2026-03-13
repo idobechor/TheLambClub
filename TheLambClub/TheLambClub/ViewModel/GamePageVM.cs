@@ -44,7 +44,7 @@ namespace TheLambClub.ViewModel
         public string Status => game.CurrentStatus;
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
         public string MyName => game.MyName;
-        private bool _IsMyTurn => game.IsMyTurn;
+        private bool IsMyTurnPrivate => game.IsMyTurn;
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             OnPropertyChanged(nameof(PotMoney));
             OnPropertyChanged(nameof(PlayerMoney));
-            OnPropertyChanged(nameof(_IsMyTurn));
+            OnPropertyChanged(nameof(IsMyTurnPrivate));
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
@@ -116,7 +116,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));
         }
-        private bool IsMyTurn(object arg) => _IsMyTurn;
+        private bool IsMyTurn(object arg) => IsMyTurnPrivate;
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             IPokerSuggestionService suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>()!;
