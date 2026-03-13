@@ -22,18 +22,8 @@ namespace TheLambClub.ModelsLogic
                    new ViewCard(c))];
         public override ViewCard? ViewCard1 => CurrentPlayer == null || CurrentPlayer.FBCard1 == null ?
             new ViewCard() : new ViewCard(CurrentPlayer.FBCard1);
-        public override ViewCard? ViewCard2
-        {
-            get
-            {
-                ViewCard vc;
-                if (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)
-                    vc = new ViewCard();
-                else
-                    vc = new ViewCard(CurrentPlayer.FBCard2);
-                return vc;
-            }
-        }
+        public override ViewCard? ViewCard2 => (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)?
+            new ViewCard() : new ViewCard(CurrentPlayer.FBCard2);
         public override Player? CurrentPlayer
         {
             get
