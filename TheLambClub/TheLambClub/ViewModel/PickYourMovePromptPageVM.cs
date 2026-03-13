@@ -107,50 +107,42 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(MinBet));
         }
         private bool CanSubmitBet(object arg) => BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
-        private void StayFunction()
-        {
-            game.CallFunction();
-            RequestClose?.Invoke();
-        }
         private void BetFunction(object obj)
         {
             game.CurrentPlayer!.CurrentBet = BetAmountPrivate;
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
-        private void FoldFunction()
-        {
-            game.PickedFold();
-            RequestClose?.Invoke();
-        }
         private async void GetSuggestionAsync(object obj)
         {
-            if (_suggestionService == null) return;
-            IsLoadingSuggestion = true;
-            AiSuggestionText = null;
-            OnPropertyChanged(nameof(CanRequestSuggestion));
-            (GetSuggestionCommand as Command)?.ChangeCanExecute();
-
-            try
+            if (_suggestionService != null)
             {
-                PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
-                    game.CurrentPlayer?.FBCard1!,
-                    game.CurrentPlayer?.FBCard2!,
-                    [.. game.BoardCards]);
-
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    if (result.Success)
-                        AiSuggestionText = "AI suggests: " + (result.Suggestion ?? "").ToUpperInvariant();
-                    else
-                        AiSuggestionText = result.RawResponse ?? "Suggestion unavailable.";
-                });
-            }
-            finally
-            {
-                IsLoadingSuggestion = false;
+                IsLoadingSuggestion = true;
+                AiSuggestionText = null;
                 OnPropertyChanged(nameof(CanRequestSuggestion));
                 (GetSuggestionCommand as Command)?.ChangeCanExecute();
+
+                try
+                {
+                    PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
+                        game.CurrentPlayer?.FBCard1!,
+                        game.CurrentPlayer?.FBCard2!,
+                        [.. game.BoardCards]);
+
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        if (result.Success)
+                            AiSuggestionText = Strings.AiSuggestionTxt + (result.Suggestion ?? String.Empty).ToUpperInvariant();
+                        else
+                            AiSuggestionText = result.RawResponse ?? Strings.DefaultUnavailableMessage;
+                    });
+                }
+                finally
+                {
+                    IsLoadingSuggestion = false;
+                    OnPropertyChanged(nameof(CanRequestSuggestion));
+                    (GetSuggestionCommand as Command)?.ChangeCanExecute();
+                }
             }
         }
 

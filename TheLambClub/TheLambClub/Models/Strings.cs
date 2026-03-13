@@ -95,7 +95,8 @@ namespace TheLambClub.Models
         public const string ValJack = "Jack";
         public const string ValQueen = "Queen";
         public const string ValKing = "King";
-
+        public const string AiSuggestionTxt = "AI suggests: ";
+        public const string DefaultUnavailableMessage = "Suggestion unavailable.";
         #endregion
     }
 }

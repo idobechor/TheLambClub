@@ -3,16 +3,13 @@ using TheLambClub.Models;
 
 namespace TheLambClub.Services
 {
-    public class PokerSuggestionService : IPokerSuggestionService
+    public class PokerSuggestionService(string apiKey) : IPokerSuggestionService
     {
         #region fields
-        private readonly string _apiKey;
+        private readonly string _apiKey = apiKey;
+
         #endregion
         #region public methods       
-        public PokerSuggestionService(string apiKey)
-        {
-            _apiKey = apiKey;
-        }
         public async Task<PokerSuggestionResult> GetSuggestionAsync(
        FBCard playerCard1,
        FBCard playerCard2,

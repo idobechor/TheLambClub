@@ -10,12 +10,11 @@ namespace TheLambClub.Services
 
         public static string FormatCard(TheLambClub.Models.FBCard card)
         {
-            // Using an array of the consts for easy indexing
-            string[] valueNames = {
+            string[] valueNames = [
         string.Empty, Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
         Strings.ValFive, Strings.ValSix, Strings.ValSeven, Strings.ValEight,
         Strings.ValNine, Strings.ValTen, Strings.ValJack, Strings.ValQueen, Strings.ValKing
-    };
+        ];
 
             if (card == null || card.Value < 1 || card.Value >= valueNames.Length)
                 return string.Empty;
@@ -48,11 +47,10 @@ namespace TheLambClub.Services
             if (boardCards == null)
                 return $"{Strings.BoardPrefix}{Strings.None}";
 
-            List<string> parts = boardCards
+            List<string> parts = [.. boardCards
                 .Where(c => c != null && c.Value > 0)
                 .Select(FormatCard)
-                .Where(s => !string.IsNullOrEmpty(s))
-                .ToList();
+                .Where(s => !string.IsNullOrEmpty(s))];
 
             if (parts.Count == 0)
                 return $"{Strings.BoardPrefix}{Strings.None}";
