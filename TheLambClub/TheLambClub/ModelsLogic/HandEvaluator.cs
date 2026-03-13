@@ -107,7 +107,7 @@ namespace TheLambClub.ModelsLogic
                 List<FBCard> flushCardsList = [];
                 foreach (FBCard card in cards)
                 {
-                    if (card.Shape == flush.HandCards[0].Shape)
+                    if (card.Shape == flush.HandCards![0].Shape)
                     {
                         flushCardsList.Add(card);
                     }

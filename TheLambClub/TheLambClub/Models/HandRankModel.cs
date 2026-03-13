@@ -8,11 +8,11 @@ namespace TheLambClub.Models
     {
         #region properties
 
-        public LevelsOfHands HandType { get; set; }
-        public int PrimaryValue { get; set; }
-        public int SecondaryValue { get; set; }
-        public int[] Kickers { get; set; }
-        public FBCard[] HandCards { get; set; }
+        public LevelsOfHands? HandType { get; set; }
+        public int? PrimaryValue { get; set; }
+        public int ?SecondaryValue { get; set; }
+        public int[]? Kickers { get; set; }
+        public FBCard[]? HandCards { get; set; }
 
         #endregion
 
