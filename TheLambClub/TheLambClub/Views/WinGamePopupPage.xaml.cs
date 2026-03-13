@@ -18,7 +18,6 @@ public partial class WinGamePopupPage : Popup
         InitializeComponent();
         winGamePopupVM = new WinGamePopupVM(WinningText);
         BindingContext = winGamePopupVM;
-        winGamePopupVM.RequestClose += OnRequestClose;
     }
 
     #endregion

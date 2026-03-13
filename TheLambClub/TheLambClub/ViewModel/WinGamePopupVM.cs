@@ -8,25 +8,19 @@ namespace TheLambClub.ViewModel
     {
         #region fields
 
-        private readonly WinGamePopupML WinGamePopup;
-
-        #endregion
-
-        #region events
-
-        public event Action? RequestClose;
+        private readonly WinGamePopupML? WinGamePopup;
 
         #endregion
 
         #region commands
 
-        public ICommand MoveToHome { get; }
+        public ICommand? MoveToHome { get; }
 
         #endregion
 
         #region properties
 
-        public string ResultMessage => WinGamePopup.WinningGameResult;
+        public string ResultMessage => WinGamePopup!.WinningGameResult;
 
         #endregion
 
