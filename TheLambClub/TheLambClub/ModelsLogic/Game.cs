@@ -291,14 +291,7 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-        protected override void UpdateFBTurnUpdate(Action<Task> OnComplete)
-        {
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
-        }
+
         protected override void FillBoard(int round)
         {
             if (round == 0)
@@ -327,36 +320,6 @@ namespace TheLambClub.ModelsLogic
                 if (player != null && !player.IsFolded)
                     countNotFolded++;
             return countNotFolded == 1;
-        }
-        protected override int FirstPlayerWhichIsNotFold()
-        {
-            int i = 0;
-            foreach (Player player in Players!)
-            {
-                if (player != null && !player.IsFolded)
-                    break;
-                i++;
-            }
-            return i;
-        }
-        protected override int FirstPlayerWhichIsNotFolded()
-        {
-            int i = 0;
-            foreach (Player player in Players!)
-            {
-                if (player != null && !player.IsFolded)
-                    break;
-                i++;
-            }
-            return i;
-        }
-        protected override bool EveryOneIsNotRerazeing()
-        {
-            bool result = true;
-            foreach (Player player in Players!)
-                if (player != null && player.IsReRazed)
-                    result = false;
-            return result;
         }
         protected override void EndHand()
         {

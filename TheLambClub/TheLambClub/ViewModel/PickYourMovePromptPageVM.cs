@@ -13,7 +13,6 @@ namespace TheLambClub.ViewModel
         private readonly Game game;
         private readonly Label TimeLeftLabel;
         private readonly IPokerSuggestionService? _suggestionService;
-        private int timeInt;
 
         #endregion
 
@@ -26,9 +25,7 @@ namespace TheLambClub.ViewModel
         #region commands
 
         public ICommand GetSuggestionCommand { get; }
-        public ICommand Stay => new Command(StayFunction);
         public ICommand SubmitBetCommand { get; private set; }
-        public ICommand Fold => new Command(FoldFunction);
 
         #endregion
 
@@ -98,21 +95,10 @@ namespace TheLambClub.ViewModel
 
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
-            if (int.TryParse(TimeLeft, out timeInt))
-            {
-                if (timeInt <= 10)
-                {
-                    TimeLeftLabel.TextColor = Colors.Red;
-                }
-                else
-                {
-                    TimeLeftLabel.TextColor = Colors.Black;
-                }
-            }
+            if (int.TryParse(TimeLeft, out int time))
+                TimeLeftLabel.TextColor = time <= 10 ? Colors.Red : Colors.Black;
             else
-            {
                 RequestClose?.Invoke();
-            }
             OnPropertyChanged(nameof(TimeLeft));
         }
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
@@ -120,11 +106,8 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(CheckOrFold));
             OnPropertyChanged(nameof(MinBet));
         }
-        private bool CanSubmitBet(object arg)
-        {
-            return BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
-        }
-        private void StayFunction(object obj)
+        private bool CanSubmitBet(object arg) => BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
+        private void StayFunction()
         {
             game.CallFunction();
             RequestClose?.Invoke();
@@ -135,7 +118,7 @@ namespace TheLambClub.ViewModel
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
-        private void FoldFunction(object obj)
+        private void FoldFunction()
         {
             game.PickedFold();
             RequestClose?.Invoke();
@@ -150,7 +133,7 @@ namespace TheLambClub.ViewModel
 
             try
             {
-                var result = await _suggestionService.GetSuggestionAsync(
+                PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
                     game.CurrentPlayer?.FBCard1!,
                     game.CurrentPlayer?.FBCard2!,
                     [.. game.BoardCards]);

@@ -123,16 +123,13 @@ namespace TheLambClub.Models
 
         protected abstract void OnComplete(Task task);
         protected abstract void UpdateFireBaseJoinGame(Action<Task> OnComplete);
-        protected abstract void UpdateFBTurnUpdate(Action<Task> OnComplete);
         protected abstract void FillBoard(int round);
         protected abstract void OnChange(IDocumentSnapshot? snapshot, Exception? error);
         protected abstract void FillArrayAndAddCards(bool upDateFB, Action<Task> OnComplete);
         protected abstract void UpdatePlayersArray(Action<Task> OnComplete);
         protected abstract bool IsOneStaying();
         protected abstract void ChangeIsFoldedToFalse();
-        protected abstract bool EveryOneIsNotRerazeing();
         protected abstract void EndHand();
-        protected abstract int FirstPlayerWhichIsNotFold();
         protected abstract void OnMessageReceived(long timeLeft);
         protected abstract void RegisterTimer();
         protected abstract void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round, bool isEndOfHand);
@@ -161,7 +158,6 @@ namespace TheLambClub.Models
         protected abstract Player[] HandleHandEnd();
         protected abstract bool FinalizeHandIfHost();
         protected abstract int HandleAllInScenarios();
-        protected abstract int FirstPlayerWhichIsNotFolded();
         public abstract void DisplayOponnentsNames(List<Label> lstOponnentsLabels);
         public abstract void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName);
         protected bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
