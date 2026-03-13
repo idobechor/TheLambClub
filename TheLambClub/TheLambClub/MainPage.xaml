@@ -6,21 +6,23 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:MainPageVM">
+<ContentPage.ToolbarItems>
+    
+    <ToolbarItem 
+         Text="{x:Static m:Strings.Instructions}"
+        Command="{Binding InstructionsCommand}"
+        Order="Secondary" />
+</ContentPage.ToolbarItems>
     <ScrollView BackgroundColor="Black">
         <VerticalStackLayout Padding="25" Spacing="30">
-            <Grid Margin="0,10,0,0" ColumnDefinitions="*, Auto">
+            <Grid Margin="0,10,0,0" ColumnDefinitions="*">
                 <Label
                     FontSize="15"
                     Text="{x:Static m:Strings.TheLambClub}"
                     TextColor="#D4AF37" />
-                <Button
-                    Grid.Column="1"
-                    Background="#2A2A2A"
-                    Command="{Binding InstructionsCommand}"
-                    FontFamily="MaterialSymbols"
-                    Text="{StaticResource IconDeveloper_guide}"
-                    TextColor="Blue" />
+
             </Grid>
+            
             <Border
                 HeightRequest="180"
                 Stroke="#D4AF37"

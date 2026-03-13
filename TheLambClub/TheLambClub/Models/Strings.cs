@@ -97,6 +97,7 @@ namespace TheLambClub.Models
         public const string ValKing = "King";
         public const string AiSuggestionTxt = "AI suggests: ";
         public const string DefaultUnavailableMessage = "Suggestion unavailable.";
+        public const string Instructions = "Instructions";
         #endregion
     }
 }
