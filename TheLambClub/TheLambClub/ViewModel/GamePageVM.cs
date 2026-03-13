@@ -15,6 +15,7 @@ namespace TheLambClub.ViewModel
         #region fields
 
         private readonly Game game;
+        private readonly ModelsLogic.Connectivity _connectivity = new();
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
 
@@ -37,6 +38,7 @@ namespace TheLambClub.ViewModel
                 return game.Pot;
             }
         }
+        public bool IsConnected => _connectivity.IsConnected;
         public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney;
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
@@ -61,19 +63,9 @@ namespace TheLambClub.ViewModel
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
             game.OnMyMoneyChanged+= MoneyChanged;
+            _connectivity.ConnectivityChanged += OnConnectivityChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
-
-        private void MoneyChanged(object? sender, string winnerName)
-        {
-            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
-            {
-                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels, winnerName);
-                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-            }
-        }
-
-
         #endregion
 
         #region public methods
@@ -84,6 +76,18 @@ namespace TheLambClub.ViewModel
         #endregion
 
         #region private methods
+        private void MoneyChanged(object? sender, string winnerName)
+        {
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
+            {
+                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels, winnerName);
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            }
+        }
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(IsConnected));
+        }
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Status));
