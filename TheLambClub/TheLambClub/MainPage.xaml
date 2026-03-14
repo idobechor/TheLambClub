@@ -6,9 +6,8 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:MainPageVM">
-<ContentPage.ToolbarItems>
-    
-    <ToolbarItem 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
          Text="{x:Static m:Strings.Instructions}"
         Command="{Binding InstructionsCommand}"
         Order="Secondary" />
@@ -20,9 +19,7 @@
                     FontSize="15"
                     Text="{x:Static m:Strings.TheLambClub}"
                     TextColor="#D4AF37" />
-
             </Grid>
-            
             <Border
                 HeightRequest="180"
                 Stroke="#D4AF37"

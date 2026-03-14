@@ -150,7 +150,6 @@ namespace TheLambClub.Models
         protected abstract Player[] SortPlayersByHandRank(Dictionary<Player, HandRank> ranks);
         protected abstract bool AmIWinner();
         protected abstract bool IsRoundEnding(Game updatedGame);
-        protected abstract double CalculateTotalPot();
         protected abstract bool IsHandOver();
         protected abstract bool CheckForGameOver();
         protected abstract Player[] HandleShowdown();
@@ -161,7 +160,6 @@ namespace TheLambClub.Models
         public abstract void DisplayOponnentsNames(List<Label> lstOponnentsLabels);
         public abstract void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName);
         protected bool ShouldSkipCurrentPlayerTurn() => CurrentPlayer != null && IsMyTurn && (CurrentPlayer.IsFolded);
-
         #endregion
     }
 }
