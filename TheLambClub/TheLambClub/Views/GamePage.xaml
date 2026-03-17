@@ -48,7 +48,7 @@
         <VerticalStackLayout Grid.Row="2" VerticalOptions="Center">
             <Border
                 BackgroundColor="Green"
-                HeightRequest="160"
+                HeightRequest="150"
                 HorizontalOptions="Center"
                 Stroke="Black"
                 StrokeThickness="6"
@@ -66,7 +66,7 @@
                             <Image
                                 Margin="3"
                                 Aspect="AspectFit"
-                                HeightRequest="80"
+                                HeightRequest="75"
                                 Source="{Binding Source}"
                                 WidthRequest="55" />
                         </DataTemplate>
@@ -76,7 +76,7 @@
             <Label
                 Padding="15,4"
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding PotMoney}"
                 TextColor="White" />
@@ -88,13 +88,13 @@
             VerticalOptions="End">
             <Label
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding Name}"
                 TextColor="White" />
             <Label
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding PlayerMoney}"
                 TextColor="White" />
@@ -103,7 +103,7 @@
                     Padding="0"
                     CornerRadius="8"
                     HasShadow="True"
-                    HeightRequest="110"
+                    HeightRequest="100"
                     IsClippedToBounds="True"
                     WidthRequest="80">
                     <Image Aspect="AspectFill" Source="{Binding Card1.Source}" />
@@ -112,7 +112,7 @@
                     Padding="0"
                     CornerRadius="8"
                     HasShadow="True"
-                    HeightRequest="110"
+                    HeightRequest="100"
                     IsClippedToBounds="True"
                     WidthRequest="80">
                     <Image Aspect="AspectFill" Source="{Binding Card2.Source}" />

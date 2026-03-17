@@ -18,7 +18,7 @@ namespace TheLambClub.Models
         public const string Age = "Age";
         public const string Ok = "Ok";
         public const string PrivateRoomButtonTxt = "private room";
-        public const string CreateGameButtonTxt = "Create game";
+        public const string CreateGameButtonTxt = "Create";
         public const string WelcomeTxt = "Hello {0} Welcome to TheLambClub";
         public const string TheLambClub = "TheLambClub";
         public const string customRoomCodeTitleTxt = "custom room code";
@@ -98,6 +98,8 @@ namespace TheLambClub.Models
         public const string AiSuggestionTxt = "AI suggests: ";
         public const string DefaultUnavailableMessage = "Suggestion unavailable.";
         public const string Instructions = "Instructions";
+        public const string StartNewTable = "START A NEW TABLE";
+        public const string ActiveTables = "ACTIVE TABLES";
         #endregion
     }
 }
