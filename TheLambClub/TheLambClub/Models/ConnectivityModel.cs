@@ -1,6 +1,6 @@
 ﻿namespace TheLambClub.Models
 {
-    public class ConnectivityModel
+    public abstract class ConnectivityModel
     {
         private bool _isConnected;
         public bool IsConnected
@@ -16,5 +16,6 @@
             }
         }
         public EventHandler? ConnectivityChanged { get; set; }
+        protected abstract void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e);
     }
 }

@@ -12,18 +12,6 @@ namespace TheLambClub.Models
 
         #endregion
 
-        #region properties
-
-        //public static int CardsInShape
-        //{
-        //    get
-        //    {
-        //        return CardsImage.GetLength(1);
-        //    }
-        //}
-
-        #endregion
-
         #region constructors
 
         public ViewCard(FBCard card)

@@ -38,7 +38,7 @@ namespace TheLambClub.Models
         public const string EmailExistsErrMsg = "This email is already in use";
         public const string UnknownRegistrationFailedError = "Unknown Error";
         public const string UserNotFound = "INVALID_LOGIN_CREDENTIALS";
-        public const string UserNotFoundmsg = "User not found";
+        public const string UserNotFoundmsg = "Email or Password is incorrect";
         public const string JoinGameErr = "Error joining game";
         public const string GameDeleted = "Deleted";
         public const string PickerTitle = "number of players";
@@ -51,7 +51,7 @@ namespace TheLambClub.Models
         public const string SubmitBetBtn = "Submit Bet";
         public const string TimeUp = "Time Up";
         public const string WaitingForPlayers = "Waiting";
-        public const string HisRankIs = "HisHandRank-";
+        public const string HisRankIs = "His Hand Rank:";
         public const string Call = "call ";
         public const string Check = "Check";
         public const string IntoruceTheWinner = "The Winner is:";

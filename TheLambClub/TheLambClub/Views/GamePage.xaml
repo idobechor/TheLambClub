@@ -103,7 +103,7 @@
                     Padding="0"
                     CornerRadius="8"
                     HasShadow="True"
-                    HeightRequest="100"
+                    HeightRequest="110"
                     IsClippedToBounds="True"
                     WidthRequest="80">
                     <Image Aspect="AspectFill" Source="{Binding Card1.Source}" />
@@ -112,7 +112,7 @@
                     Padding="0"
                     CornerRadius="8"
                     HasShadow="True"
-                    HeightRequest="100"
+                    HeightRequest="110"
                     IsClippedToBounds="True"
                     WidthRequest="80">
                     <Image Aspect="AspectFill" Source="{Binding Card2.Source}" />

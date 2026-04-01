@@ -20,11 +20,6 @@ namespace TheLambClub.Models
         protected const int HandComplete = 4;
         [Ignored]
         public TimerSettings timerSettings = new(Keys.TimerTotalTime, Keys.TimerInterval);
-        public int Pot = 0;
-        public string PlayerBeforeId = string.Empty;
-        [Ignored]
-        public bool IsHappened = false;
-
         #endregion
 
         #region events
@@ -32,13 +27,9 @@ namespace TheLambClub.Models
         [Ignored]
         public EventHandler<WinningPopupEvent>? OnwinnerSelected;
         [Ignored]
-        public EventHandler<ChangingMoneyEvent>? MoneyChanged;
-        [Ignored]
         public EventHandler? TimeLeftChanged;
         [Ignored]
         public EventHandler? TimeLeftFinished;
-        [Ignored]
-        public EventHandler? OpenMyTurnPopUp;
         [Ignored]
         public EventHandler? OnTurnChanged;
         [Ignored]
@@ -57,7 +48,7 @@ namespace TheLambClub.Models
         #endregion
 
         #region properties
-
+        public int Pot = 0;
         [Ignored]
         public abstract Player? CurrentPlayer { get; }
         [Ignored]
@@ -71,7 +62,6 @@ namespace TheLambClub.Models
         public FBCard[] BoardCards { get; set; } = new FBCard[5];
         public int RoundNumber { get; set; }
         public abstract int CurrentPlayerIndex { get; set; }
-        public string HostName { get; set; } = string.Empty;
         public DateTime Created { get; set; }
         public int MaxNumOfPlayers { get; set; }
         public int CurrentNumOfPlayers { get; set; } = 1;
@@ -80,19 +70,12 @@ namespace TheLambClub.Models
         public abstract bool IsFull { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;
-        [Ignored]
         public string MyName { get; set; } = new User().UserName;
         public string? HostId { get; set; } = string.Empty;
         [Ignored]
         public abstract bool IsHost { get; }
         [Ignored]
-        public string NumOfPlayersName => $"{MaxNumOfPlayers }";
-        [Ignored]
-        public int? NumberOfPlayers { get; set; }
-        [Ignored]
         public abstract bool IsMyTurn { get; }
-        [Ignored]
-        public bool CanICheck { get; set; } = true;
         [Ignored]
         public string CheckOrCall { get; set; } = Strings.Check;
         public Player[]? Players { get; set; }
@@ -102,7 +85,8 @@ namespace TheLambClub.Models
         public abstract ViewCard? ViewCard1 { get; }
         [Ignored]
         public abstract ViewCard? ViewCard2 { get; }
-
+        [Ignored]
+        public string NumOfPlayersName => $"{MaxNumOfPlayers}";
         #endregion
 
         #region public methods

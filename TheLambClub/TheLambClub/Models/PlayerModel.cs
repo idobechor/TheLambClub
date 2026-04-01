@@ -6,15 +6,10 @@ namespace TheLambClub.Models
     public abstract class PlayerModel(string name, string id)
     {
         #region fields
-
-        [Ignored]
-        protected readonly SetOfCards setCards = new();
-        private double _currentMoney = 10000; // ערך התחלתי
-
+        private double _currentMoney = 10000; 
         #endregion
 
         #region properties
-
         public bool IsFolded { get; set; } = false;
         public FBCard? FBCard1 { get; set; }
         public FBCard? FBCard2 { get; set; }
@@ -26,7 +21,6 @@ namespace TheLambClub.Models
             get => _currentMoney;
             set => _currentMoney = value;
         }
-        public bool IsReRazed { get; set; } = false;
         public bool IsAllIn { get; set; } = false;
         public enum LevelsOfHands
         {

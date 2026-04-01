@@ -23,7 +23,6 @@ namespace TheLambClub.Models
         public string Email { get; set; } = string.Empty;
         public string Age { get; set; } = string.Empty;
         public bool IsChecked { get; set; } = true;
-        public bool IsRegistered => (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password)) || !IsChecked;
 
         #endregion
 

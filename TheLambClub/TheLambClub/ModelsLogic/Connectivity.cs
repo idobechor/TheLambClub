@@ -4,20 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TheLambClub.Models;
+using static TheLambClub.Models.FBCard;
 
 namespace TheLambClub.ModelsLogic
 {
     public class Connectivity : ConnectivityModel
     {
+        #region constructors
         public Connectivity()
         {
             Microsoft.Maui.Networking.Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
             IsConnected = Microsoft.Maui.Networking.Connectivity.Current.NetworkAccess == NetworkAccess.Internet;
         }
+        #endregion
 
-        private void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+        #region public methods
+        protected override void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
         {
             IsConnected = e.NetworkAccess == NetworkAccess.Internet;
         }
+        #endregion
     }
 }

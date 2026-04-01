@@ -36,9 +36,7 @@ namespace TheLambClub.ModelsLogic
         public Game() {}
         public Game(int selectedNumberOfPlayers)
         {
-            HostName = new User().UserName;
             Created = DateTime.Now;
-            NumberOfPlayers = selectedNumberOfPlayers;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers;
             CurrentPlayerIndex = 0;
@@ -300,10 +298,7 @@ namespace TheLambClub.ModelsLogic
         protected override void EndOfRound(int round)
         {
             foreach (Player player in Players!)
-            {
                 player!.CurrentBet = 0;
-                player.IsReRazed = false;
-            }
             FillBoard(round);
         }
         protected override bool AnyOneIsAllIn()

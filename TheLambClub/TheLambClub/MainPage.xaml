@@ -100,7 +100,7 @@
                                         <Label
                                             FontAttributes="Bold"
                                             FontSize="18"
-                                            Text="{Binding HostName}"
+                                            Text="{Binding MyName}"
                                             TextColor="White" />
                                         <Label
                                             FontSize="11"
