@@ -45,7 +45,7 @@ namespace TheLambClub.ViewModel
         public ViewCard Card2 => game.ViewCard2!;
         public string Status => game.CurrentStatus;
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
-        public string MyName => game.MyName;
+        public string MyName => Game.MyName;
         private bool IsMyTurnPrivate => game.IsMyTurn;
 
         #endregion

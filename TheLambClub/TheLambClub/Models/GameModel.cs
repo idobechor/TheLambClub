@@ -70,7 +70,8 @@ namespace TheLambClub.Models
         public abstract bool IsFull { get; set; }
         [Ignored]
         public string Id { get; set; } = string.Empty;
-        public string MyName { get; set; } = new User().UserName;
+        [Ignored]
+        static public string MyName { get; } = new User().UserName;
         public string? HostId { get; set; } = string.Empty;
         [Ignored]
         public abstract bool IsHost { get; }

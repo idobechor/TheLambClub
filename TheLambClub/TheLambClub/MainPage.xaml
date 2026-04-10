@@ -100,7 +100,7 @@
                                         <Label
                                             FontAttributes="Bold"
                                             FontSize="18"
-                                            Text="{Binding MyName}"
+                                            Text="{Binding MyName, Mode=OneWay}"
                                             TextColor="White" />
                                         <Label
                                             FontSize="11"

@@ -16,14 +16,7 @@ namespace TheLambClub.ModelsLogic
                 return dn;
             }
         }
-        public override string UserId
-        {
-            get
-            {
-                return facl.User.Uid;
-            }
-        }
-
+        public override string UserId => facl.User.Uid;
         #endregion
 
         #region public methods

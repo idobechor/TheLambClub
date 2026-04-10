@@ -1,12 +1,11 @@
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-
 using CommunityToolkit.Mvvm.Messaging;
 using TheLambClub.Models;
-using TheLambClub.Platforms.Android;
 
-namespace TheLambClub
+namespace TheLambClub.Platforms.Android
 {
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
@@ -32,7 +31,7 @@ namespace TheLambClub
 
         private void StartDeleteFBDocsService()
         {
-            Intent = new Android.Content.Intent(this, typeof(DeleteFbDocsService));
+            Intent = new Intent(this, typeof(DeleteFbDocsService));
             StartService(Intent);
         }
 

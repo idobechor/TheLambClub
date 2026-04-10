@@ -17,10 +17,7 @@ namespace TheLambClub.Models
         public ViewCard(FBCard card)
         {
             if (card == null)
-            {
                 Source = Keys.BackOfCard;
-            }
-
             if (card != null && card.Value > 0)
                 Source = CardsImage[(int)card.Shape, card.Value - 1];
         }

@@ -24,9 +24,7 @@ namespace TheLambClub.Services
 
         public static string FormatPlayerHand(TheLambClub.Models.FBCard card1, TheLambClub.Models.FBCard card2)
         {
-            List<string> validCards = new[] { FormatCard(card1), FormatCard(card2) }
-                .Where(c => !string.IsNullOrEmpty(c))
-                .ToList();
+            List<string> validCards = [.. new[] { FormatCard(card1), FormatCard(card2) }.Where(c => !string.IsNullOrEmpty(c))];
 
             string result = Strings.PlayerHandPrefix +
                 (validCards.Count == 0 ? Strings.None : string.Join(", ", validCards));
@@ -37,11 +35,10 @@ namespace TheLambClub.Services
         public static string FormatBoard(List<FBCard> boardCards)
         {
             List<string> parts = boardCards != null
-                ? boardCards.Where(c => c != null && c.Value > 0)
+                ? [.. boardCards.Where(c => c != null && c.Value > 0)
                             .Select(FormatCard)
-                            .Where(s => !string.IsNullOrEmpty(s))
-                            .ToList()
-                : new List<string>();
+                            .Where(s => !string.IsNullOrEmpty(s))]
+                : [];
 
             string result = Strings.BoardPrefix +
                 (parts.Count > 0 ? string.Join(", ", parts) : Strings.None);
