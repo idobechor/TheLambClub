@@ -5,15 +5,10 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
-    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks, numUpWinners)
+    public class WinningPopup(Player[] players, Dictionary<Player, HandRank> ranks, int numUpWinners) : WinningPopupModel(players, ranks)
     {
         #region properties
-
-        public override string[] PlayersNames
-        {
-            get
-            {
-                return [.. Players.Select(player =>
+        public override string[] PlayersNames => [.. Players.Select(player =>
                  {
                      string WinnerText = string.Empty;
                      if (Ranks == null)
@@ -28,9 +23,6 @@ namespace TheLambClub.ModelsLogic
                      }
                      return WinnerText;
                  })];
-            }
-        }
-
         #endregion
     }
 }

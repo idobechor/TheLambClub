@@ -15,6 +15,7 @@ namespace TheLambClub.ViewModel
         #region fields
 
         private readonly Game game;
+        private readonly ModelsLogic.Connectivity _connectivity = new();
         private readonly List<Label> lstOponnentsLabels = [];
         private readonly List<Label> lstOponnentsMoneyLabels = [];
 
@@ -37,14 +38,14 @@ namespace TheLambClub.ViewModel
                 return game.Pot;
             }
         }
+        public bool IsConnected => _connectivity.IsConnected;
         public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney;
         public string Name => game.CurrentPlayer!.Name;
         public ViewCard Card1 => game.ViewCard1!;
         public ViewCard Card2 => game.ViewCard2!;
         public string Status => game.CurrentStatus;
         public ObservableCollection<ViewCard>? BoardCards => game.BoardViewCards;
-        public string MyName => game.MyName;
-        private bool _IsMyTurn => game.IsMyTurn;
+        private bool IsMyTurnPrivate => game.IsMyTurn;
 
         #endregion
 
@@ -61,19 +62,9 @@ namespace TheLambClub.ViewModel
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
             game.OnMyMoneyChanged+= MoneyChanged;
+            _connectivity.ConnectivityChanged += OnConnectivityChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
-
-        private void MoneyChanged(object? sender, string winnerName)
-        {
-            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
-            {
-                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels, winnerName);
-                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
-            }
-        }
-
-
         #endregion
 
         #region public methods
@@ -84,6 +75,18 @@ namespace TheLambClub.ViewModel
         #endregion
 
         #region private methods
+        private void MoneyChanged(object? sender, string winnerName)
+        {
+            if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
+            {
+                game.UpdateMoney(lstOponnentsLabels, lstOponnentsMoneyLabels, winnerName);
+                OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
+            }
+        }
+        private void OnConnectivityChanged(object? sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(IsConnected));
+        }
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Status));
@@ -104,7 +107,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             OnPropertyChanged(nameof(PotMoney));
             OnPropertyChanged(nameof(PlayerMoney));
-            OnPropertyChanged(nameof(_IsMyTurn));
+            OnPropertyChanged(nameof(IsMyTurnPrivate));
             OnPropertyChanged(nameof(BoardCards));
             OnPropertyChanged(nameof(Card1));
             OnPropertyChanged(nameof(Card2));
@@ -116,7 +119,7 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));
         }
-        private bool IsMyTurn(object arg) => _IsMyTurn;
+        private bool IsMyTurn(object arg) => IsMyTurnPrivate;
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             IPokerSuggestionService suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>()!;

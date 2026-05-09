@@ -1,6 +1,6 @@
 namespace TheLambClub.Models
 {
-    public class ViewCard : ImageButton
+    public partial class ViewCard : ImageButton
     {
         #region fields
 
@@ -12,27 +12,12 @@ namespace TheLambClub.Models
 
         #endregion
 
-        #region properties
-
-        public static int CardsInShape
-        {
-            get
-            {
-                return CardsImage.GetLength(1);
-            }
-        }
-
-        #endregion
-
         #region constructors
 
         public ViewCard(FBCard card)
         {
             if (card == null)
-            {
                 Source = Keys.BackOfCard;
-            }
-
             if (card != null && card.Value > 0)
                 Source = CardsImage[(int)card.Shape, card.Value - 1];
         }

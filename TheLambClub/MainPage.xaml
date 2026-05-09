@@ -6,20 +6,19 @@
     xmlns:m="clr-namespace:TheLambClub.Models"
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:MainPageVM">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+         Text="{x:Static m:Strings.Instructions}"
+        Command="{Binding InstructionsCommand}"
+        Order="Secondary" />
+</ContentPage.ToolbarItems>
     <ScrollView BackgroundColor="Black">
         <VerticalStackLayout Padding="25" Spacing="30">
-            <Grid Margin="0,10,0,0" ColumnDefinitions="*, Auto">
+            <Grid Margin="0,10,0,0" ColumnDefinitions="*">
                 <Label
                     FontSize="15"
                     Text="{x:Static m:Strings.TheLambClub}"
                     TextColor="#D4AF37" />
-                <Button
-                    Grid.Column="1"
-                    Background="#2A2A2A"
-                    Command="{Binding InstructionsCommand}"
-                    FontFamily="MaterialSymbols"
-                    Text="{StaticResource IconDeveloper_guide}"
-                    TextColor="Blue" />
             </Grid>
             <Border
                 HeightRequest="180"
@@ -43,7 +42,7 @@
                     FontAttributes="Bold"
                     FontSize="12"
                     HorizontalOptions="Center"
-                    Text="START A NEW TABLE"
+                    Text="{x:Static m:Strings.StartNewTable}"
                     TextColor="#D4AF37" />
                 <Grid ColumnDefinitions="*, 130" ColumnSpacing="15">
                     <Border
@@ -67,7 +66,7 @@
                         FontAttributes="Bold"
                         FontSize="20"
                         HeightRequest="50"
-                        Text="CREATE"
+                        Text="{x:Static m:Strings.CreateGameButtonTxt}"
                         TextColor="#000000" />
                 </Grid>
             </VerticalStackLayout>
@@ -76,7 +75,7 @@
                     CharacterSpacing="2"
                     FontAttributes="Bold"
                     FontSize="12"
-                    Text="ACTIVE TABLES"
+                    Text="{x:Static m:Strings.ActiveTables}"
                     TextColor="#888888" />
 
                 <CollectionView
@@ -101,7 +100,7 @@
                                         <Label
                                             FontAttributes="Bold"
                                             FontSize="18"
-                                            Text="{Binding HostName}"
+                                            Text="{Binding MyName, Mode=OneWay}"
                                             TextColor="White" />
                                         <Label
                                             FontSize="11"

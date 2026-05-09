@@ -12,80 +12,36 @@ namespace TheLambClub.ModelsLogic
         {
             get => _currentPlayerIndex;
             set
-            {
-                OnTurnChanged?.Invoke(this, EventArgs.Empty);
+            {              
                 _currentPlayerIndex = value;
+                OnTurnChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        public override ObservableCollection<ViewCard>? BoardViewCards
-        {
-            get
-            {
-                return [.. BoardCards.Select(c =>
-                {
-                    ViewCard res=null!;
-                    if (c == null)
-                        res= new ViewCard();
-                    else
-                    res = new ViewCard(c);
-                    return res;
-                })];
-            }
-        }
+        public override ObservableCollection<ViewCard>? BoardViewCards 
+            => [.. BoardCards.Select(c => c== null ? new ViewCard(): 
+                   new ViewCard(c))];
         public override ViewCard? ViewCard1 => CurrentPlayer == null || CurrentPlayer.FBCard1 == null ?
             new ViewCard() : new ViewCard(CurrentPlayer.FBCard1);
-        public override ViewCard? ViewCard2
-        {
-            get
-            {
-                ViewCard vc;
-                if (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)
-                    vc = new ViewCard();
-                else
-                    vc = new ViewCard(CurrentPlayer.FBCard2);
-                return vc;
-            }
-        }
-        public override Player? CurrentPlayer
-        {
-            get
-            {
-                Player p = null!;
-                if (Players != null)
-                    foreach (Player player in Players!)
-                        if (player != null && player.Id == new FbData().UserId)
-                            p = player;
-                return p;
-            }
-        }
+        public override ViewCard? ViewCard2 => (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)?
+            new ViewCard() : new ViewCard(CurrentPlayer.FBCard2);
+        public override Player? CurrentPlayer =>
+          Players?.FirstOrDefault(p => p != null && p.Id == new FbData().UserId);
         public override bool IsFull { get => CurrentNumOfPlayers == MaxNumOfPlayers; set => _ = CurrentNumOfPlayers == MaxNumOfPlayers; }
         public override string CurrentStatus => IsFull ? Strings.CurrentTurnTxt + Players![CurrentPlayerIndex]!.Name : Strings.WaitingForPlayers;
-        public override bool IsMyTurn
-        {
-            get
-            {
-                bool IsMyTurn = false;
-                if (Players != null)
-                    IsMyTurn = Players[CurrentPlayerIndex].Id == fbd.UserId && IsFull;
-                return IsMyTurn;
-            }
-        }
+        public override bool IsMyTurn =>
+        Players != null && IsFull && Players[CurrentPlayerIndex].Id == fbd.UserId;
         public override bool IsHost => HostId == fbd.UserId;
         #endregion
-
         #region Constructor
-        public Game() { }
+        public Game() {}
         public Game(int selectedNumberOfPlayers)
         {
-            HostName = new User().UserName;
             Created = DateTime.Now;
-            NumberOfPlayers = selectedNumberOfPlayers;
             CurrentNumOfPlayers = 1;
             MaxNumOfPlayers = selectedNumberOfPlayers;
             CurrentPlayerIndex = 0;
         }
         #endregion
-
         #region Public Methods
         public override void PickedFold()
         {
@@ -93,10 +49,10 @@ namespace TheLambClub.ModelsLogic
             if (!IsOneStaying())
             {
                 Dictionary<string, object> update = new()
-            {
-                { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
-                { nameof(Players), Players! },
-            };
+                {
+                    { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
+                    { nameof(Players), Players! },
+                };
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
             else
@@ -108,14 +64,8 @@ namespace TheLambClub.ModelsLogic
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
         }
-        public override void SetDocument(Action<Task> OnComplete)
-        {
-            Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
-        }
-        public override void AddSnapShotListener()
-        {
-            ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
-        }
+        public override void SetDocument(Action<Task> OnComplete) => Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
+        public override void AddSnapShotListener() => ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
         public override void RemoveSnapShotListener()
         {
             ilr?.Remove();
@@ -138,10 +88,7 @@ namespace TheLambClub.ModelsLogic
                 UpdateFireBaseJoinGame(OnComplete);
             }
         }
-        public override void DeleteDocument(Action<Task> OnComplete)
-        {
-            fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
-        }
+        public override void DeleteDocument(Action<Task> OnComplete) => fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
         public override void BetFunction(object obj)
         {
             int pot = 0;
@@ -198,13 +145,11 @@ namespace TheLambClub.ModelsLogic
                 };
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
-
         }
         public override int PreviousPlayerIndex()
         {
             int result = 0; 
             int previousIndex = CurrentPlayerIndex - 1;
-
             while (previousIndex != CurrentPlayerIndex)
             {
                 if (previousIndex < 0 && CurrentNumOfPlayers - 1 < Players!.Length)
@@ -216,7 +161,6 @@ namespace TheLambClub.ModelsLogic
                 }
                 previousIndex--;
             }
-
             return result;
         }
         public override void DisplayOponnentsNames(List<Label> lstOponnentsLabels)
@@ -313,14 +257,7 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-        protected override void UpdateFBTurnUpdate(Action<Task> OnComplete)
-        {
-            Dictionary<string, object> dict = new()
-            {
-                { nameof(CurrentPlayerIndex), (CurrentPlayerIndex + 1) % CurrentNumOfPlayers },
-            };
-            fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
-        }
+
         protected override void FillBoard(int round)
         {
             if (round == 0)
@@ -350,36 +287,6 @@ namespace TheLambClub.ModelsLogic
                     countNotFolded++;
             return countNotFolded == 1;
         }
-        protected override int FirstPlayerWhichIsNotFold()
-        {
-            int i = 0;
-            foreach (Player player in Players!)
-            {
-                if (player != null && !player.IsFolded)
-                    break;
-                i++;
-            }
-            return i;
-        }
-        protected override int FirstPlayerWhichIsNotFolded()
-        {
-            int i = 0;
-            foreach (Player player in Players!)
-            {
-                if (player != null && !player.IsFolded)
-                    break;
-                i++;
-            }
-            return i;
-        }
-        protected override bool EveryOneIsNotRerazeing()
-        {
-            bool result = true;
-            foreach (Player player in Players!)
-                if (player != null && player.IsReRazed)
-                    result = false;
-            return result;
-        }
         protected override void EndHand()
         {
             SetOfCards.FillPakage();
@@ -391,10 +298,7 @@ namespace TheLambClub.ModelsLogic
         protected override void EndOfRound(int round)
         {
             foreach (Player player in Players!)
-            {
                 player!.CurrentBet = 0;
-                player.IsReRazed = false;
-            }
             FillBoard(round);
         }
         protected override bool AnyOneIsAllIn()
@@ -455,18 +359,11 @@ namespace TheLambClub.ModelsLogic
             int round = 0;
             if (AnyOneIsAllIn())
             {
-                _ = CalculateTotalPot();
                 for (int i = RoundNumber; i < HandComplete + 1; i++)
                     BoardCards[i] = SetOfCards.GetRandomCard();
                 round = HandComplete;
             }
             return round;
-        }
-        protected override double CalculateTotalPot()
-        {
-            double sum = 0;
-            sum += Pot;
-            return sum;
         }
         protected override void UpdateCheckOrCallUI()
         {
@@ -527,10 +424,7 @@ namespace TheLambClub.ModelsLogic
             }
             return sortedPlayers;
         }
-        protected override bool AmIWinner()
-        {
-            return CurrentPlayer!.CurrentMoney == Players!.Max(p => p.CurrentMoney);
-        }
+        protected override bool AmIWinner() => CurrentPlayer!.CurrentMoney == Players!.Max(p => p.CurrentMoney);
         protected override bool CheckForGameOver()
         {
             bool isGameOver = false;

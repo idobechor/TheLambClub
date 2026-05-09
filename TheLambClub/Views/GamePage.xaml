@@ -7,8 +7,25 @@
     xmlns:vm="clr-namespace:TheLambClub.ViewModel"
     x:DataType="vm:GamePageVM"
     BackgroundImageSource="treebackground.jpg">
-    <Grid Padding="15" RowDefinitions="Auto, *, Auto, Auto">
-        <VerticalStackLayout Grid.Row="0" Spacing="10">
+    <Grid Padding="15" RowDefinitions="Auto,Auto, *, Auto, Auto">
+        <HorizontalStackLayout>
+            <Label x:Name="ConnectionStatusLabel"
+               FontFamily="MaterialSymbols" 
+               FontSize="32"
+               VerticalOptions="Start">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding IsConnected}" Value="True">
+                        <Setter Property="Text" Value="{x:Static m:Icons.Wifi}" />
+                        <Setter Property="TextColor" Value="Green" />
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding IsConnected}" Value="False">
+                        <Setter Property="Text" Value="{x:Static m:Icons.Wifi_off}" />
+                        <Setter Property="TextColor" Value="Red" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+        </HorizontalStackLayout>
+        <VerticalStackLayout Grid.Row="1" Spacing="10">
             <Frame
                 Padding="10,5"
                 BackgroundColor="#1A1A1A"
@@ -28,10 +45,10 @@
                 HorizontalOptions="Center"
                 RowSpacing="2" />
         </VerticalStackLayout>
-        <VerticalStackLayout Grid.Row="1" VerticalOptions="Center">
+        <VerticalStackLayout Grid.Row="2" VerticalOptions="Center">
             <Border
                 BackgroundColor="Green"
-                HeightRequest="160"
+                HeightRequest="150"
                 HorizontalOptions="Center"
                 Stroke="Black"
                 StrokeThickness="6"
@@ -49,7 +66,7 @@
                             <Image
                                 Margin="3"
                                 Aspect="AspectFit"
-                                HeightRequest="80"
+                                HeightRequest="75"
                                 Source="{Binding Source}"
                                 WidthRequest="55" />
                         </DataTemplate>
@@ -59,25 +76,25 @@
             <Label
                 Padding="15,4"
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding PotMoney}"
                 TextColor="White" />
         </VerticalStackLayout>
         <VerticalStackLayout
-            Grid.Row="2"
+            Grid.Row="3"
             HorizontalOptions="Center"
             Spacing="8"
             VerticalOptions="End">
             <Label
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding Name}"
                 TextColor="White" />
             <Label
                 FontAttributes="Bold"
-                FontSize="15"
+                FontSize="13"
                 HorizontalOptions="Center"
                 Text="{Binding PlayerMoney}"
                 TextColor="White" />
@@ -103,7 +120,7 @@
             </HorizontalStackLayout>
         </VerticalStackLayout>
         <Button
-            Grid.Row="3"
+            Grid.Row="4"
             Command="{Binding ShowPickYourMovePrompt}"
             HorizontalOptions="Fill"
             Text="{x:Static m:Strings.PickMoveTxt}" />

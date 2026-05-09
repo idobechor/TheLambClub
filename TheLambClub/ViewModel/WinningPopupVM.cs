@@ -7,7 +7,7 @@ namespace TheLambClub.ViewModel
     {
         #region fields
 
-        private readonly WinningPopup winningPopup;
+        private readonly WinningPopup ?winningPopup;
 
         #endregion
 
@@ -19,13 +19,13 @@ namespace TheLambClub.ViewModel
 
         #region commands
 
-        public ICommand ClosePopupCommand { get; }
+        public ICommand ?ClosePopupCommand { get; }
 
         #endregion
 
         #region properties
 
-        public string[] PlayersNames => winningPopup.PlayersNames;
+        public string[] PlayersNames => winningPopup!.PlayersNames;
 
         #endregion
 

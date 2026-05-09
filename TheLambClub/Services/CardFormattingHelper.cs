@@ -7,62 +7,48 @@ namespace TheLambClub.Services
     public static class CardFormattingHelper
     {
         #region public methods
-
-        public static string FormatCard(TheLambClub.Models.FBCard card)
+        public static string FormatCard(FBCard card)
         {
-            // Using an array of the consts for easy indexing
-            string[] valueNames = {
-        string.Empty, Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
-        Strings.ValFive, Strings.ValSix, Strings.ValSeven, Strings.ValEight,
-        Strings.ValNine, Strings.ValTen, Strings.ValJack, Strings.ValQueen, Strings.ValKing
-    };
+            string[] valueNames = [
+                string.Empty, Strings.ValAce, Strings.ValTwo, Strings.ValThree, Strings.ValFour,
+            Strings.ValFive, Strings.ValSix, Strings.ValSeven, Strings.ValEight,
+            Strings.ValNine, Strings.ValTen, Strings.ValJack, Strings.ValQueen, Strings.ValKing
+            ];
 
-            if (card == null || card.Value < 1 || card.Value >= valueNames.Length)
-                return string.Empty;
+            string result = (card != null && card.Value >= 1 && card.Value < valueNames.Length)
+                ? $"{valueNames[card.Value]}{Strings.OfJoiner}{card.Shape}{Strings.PluralS}"
+                : string.Empty;
 
-            string valueName = valueNames[card.Value];
-            string shapeName = card.Shape.ToString();
-
-            return $"{valueName}{Strings.OfJoiner}{shapeName}{Strings.PluralS}";
+            return result;
         }
 
-        public static string FormatPlayerHand(TheLambClub.Models.FBCard card1, TheLambClub.Models.FBCard card2)
+        public static string FormatPlayerHand(FBCard card1, FBCard card2)
         {
-            string c1 = FormatCard(card1);
-            string c2 = FormatCard(card2);
+            List<string> validCards = [.. new[] { FormatCard(card1), FormatCard(card2) }.Where(c => !string.IsNullOrEmpty(c))];
 
-            if (string.IsNullOrEmpty(c1) && string.IsNullOrEmpty(c2))
-                return $"{Strings.PlayerHandPrefix}{Strings.None}";
+            string result = Strings.PlayerHandPrefix +
+                (validCards.Count == 0 ? Strings.None : string.Join(", ", validCards));
 
-            if (string.IsNullOrEmpty(c1))
-                return $"{Strings.PlayerHandPrefix}{c2}";
-
-            if (string.IsNullOrEmpty(c2))
-                return $"{Strings.PlayerHandPrefix}{c1}";
-
-            return $"{Strings.PlayerHandPrefix}{c1}, {c2}";
+            return result;
         }
 
         public static string FormatBoard(List<FBCard> boardCards)
         {
-            if (boardCards == null)
-                return $"{Strings.BoardPrefix}{Strings.None}";
+            List<string> parts = boardCards != null
+                ? [.. boardCards.Where(c => c != null && c.Value > 0)
+                            .Select(FormatCard)
+                            .Where(s => !string.IsNullOrEmpty(s))]
+                : [];
 
-            List<string> parts = boardCards
-                .Where(c => c != null && c.Value > 0)
-                .Select(FormatCard)
-                .Where(s => !string.IsNullOrEmpty(s))
-                .ToList();
+            string result = Strings.BoardPrefix +
+                (parts.Count > 0 ? string.Join(", ", parts) : Strings.None);
 
-            if (parts.Count == 0)
-                return $"{Strings.BoardPrefix}{Strings.None}";
-
-            return Strings.BoardPrefix + string.Join(", ", parts);
+            return result;
         }
 
         public static string GetStageLabel(int boardCardCount)
         {
-            return boardCardCount switch
+            string result = boardCardCount switch
             {
                 0 => Strings.StagePreFlop,
                 3 => Strings.StageFlop,
@@ -70,6 +56,8 @@ namespace TheLambClub.Services
                 5 => Strings.StageRiver,
                 _ => Strings.StageUnknown
             };
+
+            return result;
         }
 
         #endregion

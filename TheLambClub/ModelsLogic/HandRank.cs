@@ -11,19 +11,19 @@ namespace TheLambClub.ModelsLogic
             int res = 0;
             if (other != null)
             {
-                int myType = (int)HandType;
-                int otherType = (int)other.HandType;
+                int myType = (int)HandType!;
+                int otherType = (int)other.HandType!;
                 if (myType != otherType)
                 {
                     res = myType - otherType;
                 }
                 else if (PrimaryValue != other.PrimaryValue)
                 {
-                    res = PrimaryValue - other.PrimaryValue;
+                    res = (int)(PrimaryValue - other.PrimaryValue)!;
                 }
                 else if (SecondaryValue != other.SecondaryValue)
                 {
-                    res = SecondaryValue - other.SecondaryValue;
+                    res = (int)(SecondaryValue - other.SecondaryValue)!;
                 }
                 else if (Kickers != null && other.Kickers != null)
                 {

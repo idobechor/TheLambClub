@@ -13,7 +13,6 @@ namespace TheLambClub.ViewModel
         private readonly Game game;
         private readonly Label TimeLeftLabel;
         private readonly IPokerSuggestionService? _suggestionService;
-        private int timeInt;
 
         #endregion
 
@@ -26,29 +25,27 @@ namespace TheLambClub.ViewModel
         #region commands
 
         public ICommand GetSuggestionCommand { get; }
-        public ICommand Stay => new Command(StayFunction);
         public ICommand SubmitBetCommand { get; private set; }
-        public ICommand Fold => new Command(FoldFunction);
 
         #endregion
 
         #region properties
 
-        private int _BetAmount { get; set; }
+        private int BetAmountPrivate { get; set; }
         private string? _aiSuggestionText;
         private bool _isLoadingSuggestion;
         public string TimeLeft => game.TimeLeft;
         public TimerSettings TimerSettings => game.timerSettings;
         public string CheckOrFold => game.CheckOrCall;
-        public string BetAmountStr => Strings.IntoruceYourBet + _BetAmount;
+        public string BetAmountStr => Strings.IntoruceYourBet + BetAmountPrivate;
         public int MinBet => game.MinBet == 0 ? 0 : game.MinBet;
         public int MaxBet => game.MaxBet;
         public int BetAmount
         {
-            get => _BetAmount;
+            get => BetAmountPrivate;
             set
             {
-                _BetAmount = value;
+                BetAmountPrivate = value;
                 OnPropertyChanged(nameof(BetAmountStr));
                 ((Command)SubmitBetCommand)?.ChangeCanExecute();
             }
@@ -98,21 +95,10 @@ namespace TheLambClub.ViewModel
 
         private void OnTimeLeftChanged(object? sender, EventArgs e)
         {
-            if (int.TryParse(TimeLeft, out timeInt))
-            {
-                if (timeInt <= 10)
-                {
-                    TimeLeftLabel.TextColor = Colors.Red;
-                }
-                else
-                {
-                    TimeLeftLabel.TextColor = Colors.Black;
-                }
-            }
+            if (int.TryParse(TimeLeft, out int time))
+                TimeLeftLabel.TextColor = time <= 10 ? Colors.Red : Colors.Black;
             else
-            {
                 RequestClose?.Invoke();
-            }
             OnPropertyChanged(nameof(TimeLeft));
         }
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
@@ -120,54 +106,43 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(CheckOrFold));
             OnPropertyChanged(nameof(MinBet));
         }
-        private bool CanSubmitBet(object arg)
-        {
-            return BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
-        }
-        private void StayFunction(object obj)
-        {
-            game.CallFunction();
-            RequestClose?.Invoke();
-        }
+        private bool CanSubmitBet(object arg) => BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
         private void BetFunction(object obj)
         {
-            game.CurrentPlayer!.CurrentBet = _BetAmount;
+            game.CurrentPlayer!.CurrentBet = BetAmountPrivate;
             game.BetFunction(obj);
-            RequestClose?.Invoke();
-        }
-        private void FoldFunction(object obj)
-        {
-            game.PickedFold();
             RequestClose?.Invoke();
         }
         private async void GetSuggestionAsync(object obj)
         {
-            if (_suggestionService == null) return;
-            IsLoadingSuggestion = true;
-            AiSuggestionText = null;
-            OnPropertyChanged(nameof(CanRequestSuggestion));
-            (GetSuggestionCommand as Command)?.ChangeCanExecute();
-
-            try
+            if (_suggestionService != null)
             {
-                var result = await _suggestionService.GetSuggestionAsync(
-                    game.CurrentPlayer?.FBCard1!,
-                    game.CurrentPlayer?.FBCard2!,
-                    [.. game.BoardCards]);
-
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    if (result.Success)
-                        AiSuggestionText = "AI suggests: " + (result.Suggestion ?? "").ToUpperInvariant();
-                    else
-                        AiSuggestionText = result.RawResponse ?? "Suggestion unavailable.";
-                });
-            }
-            finally
-            {
-                IsLoadingSuggestion = false;
+                IsLoadingSuggestion = true;
+                AiSuggestionText = null;
                 OnPropertyChanged(nameof(CanRequestSuggestion));
                 (GetSuggestionCommand as Command)?.ChangeCanExecute();
+
+                try
+                {
+                    PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
+                        game.CurrentPlayer?.FBCard1!,
+                        game.CurrentPlayer?.FBCard2!,
+                        [.. game.BoardCards]);
+
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        if (result.Success)
+                            AiSuggestionText = Strings.AiSuggestionTxt + (result.Suggestion ?? String.Empty).ToUpperInvariant();
+                        else
+                            AiSuggestionText = result.RawResponse ?? Strings.DefaultUnavailableMessage;
+                    });
+                }
+                finally
+                {
+                    IsLoadingSuggestion = false;
+                    OnPropertyChanged(nameof(CanRequestSuggestion));
+                    (GetSuggestionCommand as Command)?.ChangeCanExecute();
+                }
             }
         }
 

@@ -34,21 +34,21 @@ namespace TheLambClub.ViewModel
 
         #region properties
 
-        private int _BetAmount { get; set; }
+        private int BetAmountPrivate { get; set; }
         private string? _aiSuggestionText;
         private bool _isLoadingSuggestion;
         public string TimeLeft => game.TimeLeft;
         public TimerSettings TimerSettings => game.timerSettings;
         public string CheckOrFold => game.CheckOrCall;
-        public string BetAmountStr => Strings.IntoruceYourBet + _BetAmount;
+        public string BetAmountStr => Strings.IntoruceYourBet + BetAmountPrivate;
         public int MinBet => game.MinBet == 0 ? 0 : game.MinBet;
         public int MaxBet => game.MaxBet;
         public int BetAmount
         {
-            get => _BetAmount;
+            get => BetAmountPrivate;
             set
             {
-                _BetAmount = value;
+                BetAmountPrivate = value;
                 OnPropertyChanged(nameof(BetAmountStr));
                 ((Command)SubmitBetCommand)?.ChangeCanExecute();
             }
@@ -125,7 +125,7 @@ namespace TheLambClub.ViewModel
         }
         private void BetFunction(object obj)
         {
-            game.CurrentPlayer!.CurrentBet = _BetAmount;
+            game.CurrentPlayer!.CurrentBet = BetAmountPrivate;
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
@@ -136,30 +136,32 @@ namespace TheLambClub.ViewModel
         }
         private async void GetSuggestionAsync(object obj)
         {
-            if (_suggestionService == null) return;
-            IsLoadingSuggestion = true;
-            AiSuggestionText = null;
-            OnPropertyChanged(nameof(CanRequestSuggestion));
-            (GetSuggestionCommand as Command)?.ChangeCanExecute();
-            try
+            if (_suggestionService != null)
             {
-                PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
-                    game.CurrentPlayer?.FBCard1!,
-                    game.CurrentPlayer?.FBCard2!,
-                    [.. game.BoardCards]);
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    if (result.Success)
-                        AiSuggestionText = Strings.AiSuggestsPrefix + (result.Suggestion ?? string.Empty).ToUpperInvariant();
-                    else
-                        AiSuggestionText = result.RawResponse ?? Strings.SuggestionUnavailable;
-                });
-            }
-            finally
-            {
-                IsLoadingSuggestion = false;
+                IsLoadingSuggestion = true;
+                AiSuggestionText = null;
                 OnPropertyChanged(nameof(CanRequestSuggestion));
                 (GetSuggestionCommand as Command)?.ChangeCanExecute();
+                try
+                {
+                    PokerSuggestionResult result = await _suggestionService.GetSuggestionAsync(
+                        game.CurrentPlayer?.FBCard1!,
+                        game.CurrentPlayer?.FBCard2!,
+                        [.. game.BoardCards]);
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        if (result.Success)
+                            AiSuggestionText = Strings.AiSuggestsPrefix + (result.Suggestion ?? string.Empty).ToUpperInvariant();
+                        else
+                            AiSuggestionText = result.RawResponse ?? Strings.SuggestionUnavailable;
+                    });
+                }
+                finally
+                {
+                    IsLoadingSuggestion = false;
+                    OnPropertyChanged(nameof(CanRequestSuggestion));
+                    (GetSuggestionCommand as Command)?.ChangeCanExecute();
+                }
             }
         }
 

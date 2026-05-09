@@ -16,16 +16,6 @@ public partial class WinGamePopup : Popup
         InitializeComponent();
         winGamePopupVM = new WinGamePopupVM(WinningText);
         BindingContext = winGamePopupVM;
-        winGamePopupVM.RequestClose += OnRequestClose;
-    }
-
-    #endregion
-
-    #region private methods
-
-    private void OnRequestClose()
-    {
-        Close();
     }
 
     #endregion

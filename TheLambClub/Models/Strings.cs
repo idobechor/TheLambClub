@@ -18,7 +18,7 @@ namespace TheLambClub.Models
         public const string Age = "Age";
         public const string Ok = "Ok";
         public const string PrivateRoomButtonTxt = "private room";
-        public const string CreateGameButtonTxt = "Create game";
+        public const string CreateGameButtonTxt = "Create";
         public const string WelcomeTxt = "Hello {0} Welcome to TheLambClub";
         public const string TheLambClub = "TheLambClub";
         public const string customRoomCodeTitleTxt = "custom room code";
@@ -38,7 +38,7 @@ namespace TheLambClub.Models
         public const string EmailExistsErrMsg = "This email is already in use";
         public const string UnknownRegistrationFailedError = "Unknown Error";
         public const string UserNotFound = "INVALID_LOGIN_CREDENTIALS";
-        public const string UserNotFoundmsg = "User not found";
+        public const string UserNotFoundmsg = "Email or Password is incorrect";
         public const string JoinGameErr = "Error joining game";
         public const string GameDeleted = "Deleted";
         public const string PickerTitle = "number of players";
@@ -51,7 +51,7 @@ namespace TheLambClub.Models
         public const string SubmitBetBtn = "Submit Bet";
         public const string TimeUp = "Time Up";
         public const string WaitingForPlayers = "Waiting";
-        public const string HisRankIs = "HisHandRank-";
+        public const string HisRankIs = "His Hand Rank:";
         public const string Call = "call ";
         public const string Check = "Check";
         public const string IntoruceTheWinner = "The Winner is:";
@@ -95,7 +95,11 @@ namespace TheLambClub.Models
         public const string ValJack = "Jack";
         public const string ValQueen = "Queen";
         public const string ValKing = "King";
-
+        public const string AiSuggestionTxt = "AI suggests: ";
+        public const string DefaultUnavailableMessage = "Suggestion unavailable.";
+        public const string Instructions = "Instructions";
+        public const string StartNewTable = "START A NEW TABLE";
+        public const string ActiveTables = "ACTIVE TABLES";
         #endregion
     }
 }

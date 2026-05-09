@@ -1,4 +1,3 @@
-
 using TheLambClub.Models;
 using static TheLambClub.Models.FBCard;
 using static TheLambClub.Models.PlayerModel;
@@ -32,18 +31,16 @@ namespace TheLambClub.ModelsLogic
 
             for (int i = 0; i < combinations.Count; i++)
             {
-                FBCard[] combinationArray = combinations[i].ToArray();
+                FBCard[] combinationArray = [.. combinations[i]];
                 HandRank currentHand = EvaluateHand(combinationArray);
                 if (currentHand.IsBetter(bestHand))
-                {
                     bestHand = currentHand;
-                }
             }
             return bestHand;
         }
         public override HandRank EvaluateHand(FBCard[] cards)
         {
-            HandRank bestHand = null!;
+            HandRank bestHand;
             if (CheckRoyalFlush(cards) != null)
                 bestHand = CheckRoyalFlush(cards)!;
             else if (CheckStraightFlush(cards) != null)
@@ -69,33 +66,17 @@ namespace TheLambClub.ModelsLogic
         public override int[] BubbleSort(int[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
-            {
                 for (int j = 0; j < arr.Length - i - 1; j++)
-                {
                     if (arr[j] > arr[j + 1])
-                    {
-                        int temp = arr[j];
-                        arr[j] = arr[j + 1];
-                        arr[j + 1] = temp;
-                    }
-                }
-            }
+                        (arr[j + 1], arr[j]) = (arr[j], arr[j + 1]);
             return arr;
         }
         public override int[] SortDescending(int[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
-            {
                 for (int j = i + 1; j < arr.Length; j++)
-                {
                     if (arr[i] < arr[j])
-                    {
-                        int temp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = temp;
-                    }
-                }
-            }
+                        (arr[j], arr[i]) = (arr[i], arr[j]);
             return arr;
         }
 
@@ -125,12 +106,12 @@ namespace TheLambClub.ModelsLogic
                 List<FBCard> flushCardsList = [];
                 foreach (FBCard card in cards)
                 {
-                    if (card.Shape == flush.HandCards[0].Shape)
+                    if (card.Shape == flush.HandCards![0].Shape)
                     {
                         flushCardsList.Add(card);
                     }
                 }
-                HandRank straight = CheckStraight(flushCardsList.ToArray())!;
+                HandRank straight = CheckStraight([.. flushCardsList])!;
                 if (straight != null)
                 {
                     handRank = new HandRank
@@ -187,7 +168,7 @@ namespace TheLambClub.ModelsLogic
                 {
                     HandType = LevelsOfHands.FourOfAKind,
                     PrimaryValue = normalizedFourValue,
-                    Kickers = new[] { kicker },
+                    Kickers = [kicker],
                     HandCards = cards
                 };
             }
@@ -238,7 +219,7 @@ namespace TheLambClub.ModelsLogic
                     if (card.Shape == flushShape)
                         flushCardsList.Add(card);
                 }
-                FBCard[] sortedFlushCards = SortCardsDescendingBubbleSort(flushCardsList.ToArray());
+                FBCard[] sortedFlushCards = SortCardsDescendingBubbleSort([.. flushCardsList]);
 
                 FBCard[] finalFlushCards = new FBCard[5];
                 int[] finalKickers = new int[4];
@@ -278,16 +259,10 @@ namespace TheLambClub.ModelsLogic
                     int valueMax = sortedCards[maxIndex].Value == 1 ? 14 : sortedCards[maxIndex].Value;
 
                     if (valueJ > valueMax)
-                    {
                         maxIndex = j;
-                    }
                 }
                 if (maxIndex != i)
-                {
-                    FBCard temp = sortedCards[i];
-                    sortedCards[i] = sortedCards[maxIndex];
-                    sortedCards[maxIndex] = temp;
-                }
+                    (sortedCards[maxIndex], sortedCards[i]) = (sortedCards[i], sortedCards[maxIndex]);
             }
 
             return sortedCards;
@@ -313,7 +288,7 @@ namespace TheLambClub.ModelsLogic
                     distinctValuesList.Add(value);
                 }
             }
-            int[] distinctValues = distinctValuesList.ToArray();
+            int[] distinctValues = [.. distinctValuesList];
             distinctValues = BubbleSort(distinctValues);
             for (int i = 0; i <= distinctValues.Length - 5; i++)
             {
@@ -368,7 +343,7 @@ namespace TheLambClub.ModelsLogic
         {
             HandRank handRank = null!;
             int threeOfAKindValue = 0;
-            int[] CountArr = new int[14]; // 1..13 + ace(14)
+            int[] CountArr = new int[14]; 
             int[] CardsValues = new int[cards.Length];
             int[] kickers = new int[2];
             for (int i = 0; i < cards.Length; i++)
@@ -452,7 +427,7 @@ namespace TheLambClub.ModelsLogic
                     HandType = PlayerModel.LevelsOfHands.TwoPair,
                     PrimaryValue = highPair,
                     SecondaryValue = lowPair,
-                    Kickers = new[] { kicker },
+                    Kickers = [kicker],
                     HandCards = cards
                 };
             }

@@ -24,7 +24,7 @@
             Text="{Binding ResultMessage}"
             TextColor="Black" />
         <Button
-     Text="Home"
+     Text="{x:Static m:Strings.Home}"
      Command="{Binding MoveToHome}"
      TextColor="White"
      CornerRadius="10"
