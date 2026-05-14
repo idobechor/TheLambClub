@@ -100,7 +100,7 @@
                                         <Label
                                             FontAttributes="Bold"
                                             FontSize="18"
-                                            Text="{Binding MyName, Mode=OneWay}"
+                                            Text="{x:Static m:Strings.Available}"
                                             TextColor="White" />
                                         <Label
                                             FontSize="11"

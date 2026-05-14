@@ -466,6 +466,7 @@ namespace TheLambClub.Models
         /// Header for the list of existing game tables.
         /// </summary>
         public const string ActiveTables = "ACTIVE TABLES";
+        public const string Available = "AVAILABLE";
 
         #endregion
     }
