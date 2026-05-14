@@ -7,6 +7,10 @@ using System.Windows.Input;
 
 namespace TheLambClub.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the Registration Page. Manages user registration input, 
+    /// validation commands, and UI state feedback for the registration process.
+    /// </summary>
     public class RegisterPageVM : ObservableObject
     {
         #region fields
@@ -18,7 +22,14 @@ namespace TheLambClub.ViewModel
 
         #region commands
 
+        /// <summary>
+        /// Command to initiate the user registration process.
+        /// </summary>
         public ICommand RegisterCommand { get; }
+
+        /// <summary>
+        /// Command to toggle the visibility of the password field.
+        /// </summary>
         public ICommand ToggleIsPasswordCommand { get; }
 
         #endregion
@@ -35,7 +46,9 @@ namespace TheLambClub.ViewModel
                 (RegisterCommand as Command)?.ChangeCanExecute();
             }
         }
+
         public bool IsPassword { get; set; } = true;
+
         public string UserName
         {
             get => user.UserName;
@@ -44,8 +57,8 @@ namespace TheLambClub.ViewModel
                 user.UserName = value;
                 (RegisterCommand as Command)?.ChangeCanExecute();
             }
-
         }
+
         public string Password
         {
             get => user.Password;
@@ -54,8 +67,8 @@ namespace TheLambClub.ViewModel
                 user.Password = value;
                 (RegisterCommand as Command)?.ChangeCanExecute();
             }
-
         }
+
         public string Email
         {
             get => user.Email;
@@ -65,6 +78,7 @@ namespace TheLambClub.ViewModel
                 (RegisterCommand as Command)?.ChangeCanExecute();
             }
         }
+
         public string Age
         {
             get => user.Age;
@@ -73,13 +87,15 @@ namespace TheLambClub.ViewModel
                 user.Age = value;
                 (RegisterCommand as Command)?.ChangeCanExecute();
             }
-
         }
 
         #endregion
 
         #region constructors
 
+        /// <summary>
+        /// Initializes the RegisterPageVM, binds command logic, and subscribes to authentication events.
+        /// </summary>
         public RegisterPageVM()
         {
             RegisterCommand = new Command(Register, CanRegister);
@@ -92,6 +108,9 @@ namespace TheLambClub.ViewModel
 
         #region public methods
 
+        /// <summary>
+        /// Determines if the registration command can be executed based on field validation and busy state.
+        /// </summary>
         public bool CanRegister()
         {
             return !IsBusy && user.CanRegister();
@@ -101,6 +120,9 @@ namespace TheLambClub.ViewModel
 
         #region private methods
 
+        /// <summary>
+        /// Displays an error message toast when registration fails.
+        /// </summary>
         private void ShowToastAlert(object? sender, string msg)
         {
             isBusy = false;
@@ -110,6 +132,10 @@ namespace TheLambClub.ViewModel
                 Toast.Make(msg, ToastDuration.Long).Show();
             });
         }
+
+        /// <summary>
+        /// Handles successful registration by switching the application main page to AppShell.
+        /// </summary>
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
@@ -120,11 +146,19 @@ namespace TheLambClub.ViewModel
                 });
             }
         }
+
+        /// <summary>
+        /// Switches the password field between masked and visible states.
+        /// </summary>
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
+
+        /// <summary>
+        /// Triggers the user registration process if the system is not currently busy.
+        /// </summary>
         private void Register()
         {
             if (!IsBusy)

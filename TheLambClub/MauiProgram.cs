@@ -12,8 +12,7 @@ namespace TheLambClub
         public static MauiApp CreateMauiApp()
         {
             MauiAppBuilder builder = MauiApp.CreateBuilder();
-            string? apiKey = Keys.OpenAIApiKey;
-            builder.Services.AddSingleton<IPokerSuggestionService>(_ => new PokerSuggestionService(apiKey));
+            builder.Services.AddSingleton<IPokerSuggestionService>(_ => new PokerSuggestionService(Keys.OpenAIApiKey));
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()

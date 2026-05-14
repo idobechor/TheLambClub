@@ -5,35 +5,71 @@ using TheLambClub.Models;
 
 namespace TheLambClub.ModelsLogic
 {
+    /// <summary>
+    /// Represents the main game logic, managing player turns, poker rules, 
+    /// and synchronization with the Firebase database.
+    /// </summary>
     public class Game : GameModel
     {
         #region Properties
+        /// <summary>
+        /// Gets or sets the index of the player whose turn it currently is.
+        /// Triggers the OnTurnChanged event when updated.
+        /// </summary>
         public override int CurrentPlayerIndex
         {
             get => _currentPlayerIndex;
             set
-            {              
+            {
                 _currentPlayerIndex = value;
                 OnTurnChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-        public override ObservableCollection<ViewCard>? BoardViewCards 
-            => [.. BoardCards.Select(c => c== null ? new ViewCard(): 
-                   new ViewCard(c))];
+        /// <summary>
+        /// Provides a collection of cards on the board formatted for the view.
+        /// </summary>
+        public override ObservableCollection<ViewCard>? BoardViewCards
+            => [.. BoardCards.Select(c => c == null ? new ViewCard() : new ViewCard(c))];
+        /// <summary>
+        /// Represents the first card of the current local player.
+        /// </summary>
         public override ViewCard? ViewCard1 => CurrentPlayer == null || CurrentPlayer.FBCard1 == null ?
             new ViewCard() : new ViewCard(CurrentPlayer.FBCard1);
-        public override ViewCard? ViewCard2 => (CurrentPlayer == null || CurrentPlayer.FBCard2 == null)?
+        /// <summary>
+        /// Represents the second card of the current local player.
+        /// </summary>
+        public override ViewCard? ViewCard2 => (CurrentPlayer == null || CurrentPlayer.FBCard2 == null) ?
             new ViewCard() : new ViewCard(CurrentPlayer.FBCard2);
+        /// <summary>
+        /// Retrieves the local player object based on the authenticated Firebase User ID.
+        /// </summary>
         public override Player? CurrentPlayer =>
           Players?.FirstOrDefault(p => p != null && p.Id == new FbData().UserId);
+        /// <summary>
+        /// Checks if the game room has reached its maximum player capacity.
+        /// </summary>
         public override bool IsFull { get => CurrentNumOfPlayers == MaxNumOfPlayers; set => _ = CurrentNumOfPlayers == MaxNumOfPlayers; }
+
+        /// <summary>
+        /// Returns a status string indicating either the current turn or that the game is waiting for players.
+        /// </summary>
         public override string CurrentStatus => IsFull ? Strings.CurrentTurnTxt + Players![CurrentPlayerIndex]!.Name : Strings.WaitingForPlayers;
+        /// <summary>
+        /// Determines if the current turn belongs to the local player.
+        /// </summary>
         public override bool IsMyTurn =>
         Players != null && IsFull && Players[CurrentPlayerIndex].Id == fbd.UserId;
+        /// <summary>
+        /// Determines if the local player is the host (creator) of the game.
+        /// </summary>
         public override bool IsHost => HostId == fbd.UserId;
         #endregion
         #region Constructor
-        public Game() {}
+        public Game() { }
+
+        /// <summary>
+        /// Initializes a new instance of a game with a specific number of allowed players.
+        /// </summary>
         public Game(int selectedNumberOfPlayers)
         {
             Created = DateTime.Now;
@@ -43,6 +79,10 @@ namespace TheLambClub.ModelsLogic
         }
         #endregion
         #region Public Methods
+
+        /// <summary>
+        /// Handles the logic when a player chooses to fold, updating their status and the database.
+        /// </summary>
         public override void PickedFold()
         {
             CurrentPlayer!.IsFolded = true;
@@ -64,13 +104,27 @@ namespace TheLambClub.ModelsLogic
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
         }
+        /// <summary>
+        /// Saves the game document to Firestore.
+        /// </summary>
         public override void SetDocument(Action<Task> OnComplete) => Id = fbd.SetDocument(this, Keys.GamesCollection, Id, OnComplete);
+
+        /// <summary>
+        /// Adds a real-time snapshot listener to sync the game state with Firestore.
+        /// </summary>
         public override void AddSnapShotListener() => ilr = fbd.AddSnapshotListener(Keys.GamesCollection, Id, OnChange);
+
+        /// <summary>
+        /// Removes the listener and deletes the game document.
+        /// </summary>
         public override void RemoveSnapShotListener()
         {
             ilr?.Remove();
             DeleteDocument(OnComplete);
         }
+        /// <summary>
+        /// Adds a guest player to the game if they are not already present.
+        /// </summary>
         public override void UpdateGuestUser(Action<Task> OnComplete)
         {
             bool alreadyInGame = false;
@@ -89,6 +143,10 @@ namespace TheLambClub.ModelsLogic
             }
         }
         public override void DeleteDocument(Action<Task> OnComplete) => fbd.DeleteDocument(Keys.GamesCollection, Id, OnComplete);
+
+        /// <summary>
+        /// Processes a bet action, updating money, the pot, and moving to the next player.
+        /// </summary>
         public override void BetFunction(object obj)
         {
             int pot = 0;
@@ -117,6 +175,9 @@ namespace TheLambClub.ModelsLogic
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
         }
+        /// <summary>
+        /// Handles the "Call" action by matching the current maximum bet in the round.
+        /// </summary>
         public override void CallFunction()
         {
             double maxBet = Players!.Max(p => p.CurrentBet);
@@ -146,9 +207,12 @@ namespace TheLambClub.ModelsLogic
                 fbd.UpdateFields(Keys.GamesCollection, Id, update, _ => { });
             }
         }
+        /// <summary>
+        /// Calculates the index of the previous player who has not folded.
+        /// </summary>
         public override int PreviousPlayerIndex()
         {
-            int result = 0; 
+            int result = 0;
             int previousIndex = CurrentPlayerIndex - 1;
             while (previousIndex != CurrentPlayerIndex)
             {
@@ -163,6 +227,10 @@ namespace TheLambClub.ModelsLogic
             }
             return result;
         }
+
+        /// <summary>
+        /// Updates the UI labels with the names of the opponents.
+        /// </summary>
         public override void DisplayOponnentsNames(List<Label> lstOponnentsLabels)
         {
             int lblIndex = 0;
@@ -173,6 +241,9 @@ namespace TheLambClub.ModelsLogic
                     lstOponnentsLabels[lblIndex++].BackgroundColor = Colors.Red;
                 }
         }
+        /// <summary>
+        /// Updates the UI money labels for opponents or the winner.
+        /// </summary>
         public override void UpdateMoney(List<Label> lstOponnentsLabels, List<Label> lstOponnentsMoneyLabels, string winnerName)
         {
             if (winnerName == string.Empty)
@@ -257,7 +328,6 @@ namespace TheLambClub.ModelsLogic
             };
             fbd.UpdateFields(Keys.GamesCollection, Id, dict, OnComplete);
         }
-
         protected override void FillBoard(int round)
         {
             if (round == 0)
@@ -538,6 +608,9 @@ namespace TheLambClub.ModelsLogic
                 TimerCreated = true;
             }
         }
+        /// <summary>
+        /// Handler for database changes, updating the local state and triggering necessary game events.
+        /// </summary>
         protected override void OnChange(IDocumentSnapshot? snapshot, Exception? error)
         {
             Game? updatedGame = snapshot?.ToObject<Game>();
@@ -564,10 +637,10 @@ namespace TheLambClub.ModelsLogic
                 }
                 ProcessRoundAndTurnUpdates(isEndOfRound, isHandEnded, changedToFull, nextRound);
                 EnsureTimerRegistered();
-                if(playersArray!=null)
+                if (playersArray != null)
                     OnMyMoneyChanged?.Invoke(this, playersArray[0].Name);
                 else
-                    OnMyMoneyChanged?.Invoke(this,string.Empty);             
+                    OnMyMoneyChanged?.Invoke(this, string.Empty);
                 OnGameChanged?.Invoke(this, EventArgs.Empty);
             }
             else

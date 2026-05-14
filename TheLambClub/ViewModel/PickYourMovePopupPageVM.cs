@@ -6,6 +6,10 @@ using TheLambClub.Services;
 
 namespace TheLambClub.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the move selection popup. Manages user actions (Bet, Call, Fold),
+    /// real-time timer updates, and AI-driven poker strategy suggestions.
+    /// </summary>
     public partial class PickYourMovePopupPageVM : ObservableObject
     {
         #region fields
@@ -19,6 +23,9 @@ namespace TheLambClub.ViewModel
 
         #region events
 
+        /// <summary>
+        /// Event to request the closing of the popup view.
+        /// </summary>
         public event Action? RequestClose;
 
         #endregion
@@ -37,12 +44,14 @@ namespace TheLambClub.ViewModel
         private int BetAmountPrivate { get; set; }
         private string? _aiSuggestionText;
         private bool _isLoadingSuggestion;
+
         public string TimeLeft => game.TimeLeft;
         public TimerSettings TimerSettings => game.timerSettings;
         public string CheckOrFold => game.CheckOrCall;
         public string BetAmountStr => Strings.IntoruceYourBet + BetAmountPrivate;
         public int MinBet => game.MinBet == 0 ? 0 : game.MinBet;
         public int MaxBet => game.MaxBet;
+
         public int BetAmount
         {
             get => BetAmountPrivate;
@@ -53,23 +62,30 @@ namespace TheLambClub.ViewModel
                 ((Command)SubmitBetCommand)?.ChangeCanExecute();
             }
         }
+
         public string? AiSuggestionText
         {
             get => _aiSuggestionText;
             private set { _aiSuggestionText = value; OnPropertyChanged(); OnPropertyChanged(nameof(AiSuggestionVisible)); }
         }
+
         public bool AiSuggestionVisible => !string.IsNullOrEmpty(_aiSuggestionText);
+
         public bool IsLoadingSuggestion
         {
             get => _isLoadingSuggestion;
             private set { _isLoadingSuggestion = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanRequestSuggestion)); }
         }
+
         public bool CanRequestSuggestion => _suggestionService != null && !_isLoadingSuggestion;
 
         #endregion
 
         #region constructors
 
+        /// <summary>
+        /// Initializes the ViewModel, subscribes to game events, and initializes the suggestion service.
+        /// </summary>
         public PickYourMovePopupPageVM(Game game, Label label, IPokerSuggestionService? suggestionService = null)
         {
             GetSuggestionCommand = new Command(GetSuggestionAsync, _ => CanRequestSuggestion);
@@ -86,6 +102,9 @@ namespace TheLambClub.ViewModel
 
         #region public methods
 
+        /// <summary>
+        /// Cleans up event subscriptions when the popup is closing.
+        /// </summary>
         public void Close()
         {
             game.TimeLeftChanged -= OnTimeLeftChanged;
@@ -109,31 +128,40 @@ namespace TheLambClub.ViewModel
                 RequestClose?.Invoke();
             OnPropertyChanged(nameof(TimeLeft));
         }
+
         private void OnCheckOrCallChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(CheckOrFold));
             OnPropertyChanged(nameof(MinBet));
         }
+
         private bool CanSubmitBet(object arg)
         {
             return BetAmount != 0 && game!.Players!.All(p => p.IsFolded || p.CurrentMoney > 0);
         }
+
         private void StayFunction(object obj)
         {
             game.CallFunction();
             RequestClose?.Invoke();
         }
+
         private void BetFunction(object obj)
         {
             game.CurrentPlayer!.CurrentBet = BetAmountPrivate;
             game.BetFunction(obj);
             RequestClose?.Invoke();
         }
+
         private void FoldFunction(object obj)
         {
             game.PickedFold();
             RequestClose?.Invoke();
         }
+
+        /// <summary>
+        /// Asynchronously fetches an AI poker suggestion and updates the UI.
+        /// </summary>
         private async void GetSuggestionAsync(object obj)
         {
             if (_suggestionService != null)

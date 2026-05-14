@@ -7,6 +7,10 @@ using System.Windows.Input;
 
 namespace TheLambClub.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the Login Page. Manages user input, authentication commands, 
+    /// and UI state feedback for the login process.
+    /// </summary>
     public partial class LoginPageVM : ObservableObject
     {
         #region fields
@@ -18,7 +22,14 @@ namespace TheLambClub.ViewModel
 
         #region commands
 
+        /// <summary>
+        /// Command to execute the user login process.
+        /// </summary>
         public ICommand LoginCommand { get; }
+
+        /// <summary>
+        /// Command to toggle the visibility of the password field.
+        /// </summary>
         public ICommand ToggleIsPasswordCommand { get; }
 
         #endregion
@@ -40,7 +51,9 @@ namespace TheLambClub.ViewModel
                 (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
+
         public bool IsPassword { get; set; } = true;
+
         public string Password
         {
             get => user.Password;
@@ -50,6 +63,7 @@ namespace TheLambClub.ViewModel
                 (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
+
         public string UserName
         {
             get => user.UserName;
@@ -59,6 +73,7 @@ namespace TheLambClub.ViewModel
                 (LoginCommand as Command)?.ChangeCanExecute();
             }
         }
+
         public string Email
         {
             get => user.Email;
@@ -73,6 +88,9 @@ namespace TheLambClub.ViewModel
 
         #region constructors
 
+        /// <summary>
+        /// Initializes the LoginPageVM, sets up command logic, and subscribes to authentication events.
+        /// </summary>
         public LoginPageVM()
         {
             LoginCommand = new Command(Login, CanLogin);
@@ -85,6 +103,9 @@ namespace TheLambClub.ViewModel
 
         #region public methods
 
+        /// <summary>
+        /// Determines if the login command can be executed based on field validation and busy state.
+        /// </summary>
         public bool CanLogin()
         {
             return user.CanLogin() && !isBusy;
@@ -94,6 +115,9 @@ namespace TheLambClub.ViewModel
 
         #region private methods
 
+        /// <summary>
+        /// Displays an error message toast when authentication fails.
+        /// </summary>
         private void ShowToastAlert(object? sender, string msg)
         {
             isBusy = false;
@@ -103,6 +127,10 @@ namespace TheLambClub.ViewModel
                 Toast.Make(msg, ToastDuration.Long).Show();
             });
         }
+
+        /// <summary>
+        /// Handles successful authentication by switching the application main page to AppShell.
+        /// </summary>
         private void OnAuthComplete(object? sender, EventArgs e)
         {
             if (Application.Current != null)
@@ -113,11 +141,19 @@ namespace TheLambClub.ViewModel
                 });
             }
         }
+
+        /// <summary>
+        /// Switches the password field between masked and visible states.
+        /// </summary>
         private void ToggleIsPassword()
         {
             IsPassword = !IsPassword;
             OnPropertyChanged(nameof(IsPassword));
         }
+
+        /// <summary>
+        /// Triggers the user login process if the system is not currently busy.
+        /// </summary>
         private void Login()
         {
             if (!IsBusy)

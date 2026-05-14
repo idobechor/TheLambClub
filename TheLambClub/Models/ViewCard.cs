@@ -1,9 +1,17 @@
 namespace TheLambClub.Models
 {
+    /// <summary>
+    /// Represents a visual UI component for a playing card, inheriting from <see cref="ImageButton"/>.
+    /// This class maps logic-based card data to specific image resources.
+    /// </summary>
     public partial class ViewCard : ImageButton
     {
         #region fields
 
+        /// <summary>
+        /// A 2D array containing the filenames for card images, organized by suit (row) and rank (column).
+        /// Suits are ordered: Clubs, Diamonds, Hearts, Spades.
+        /// </summary>
         public static readonly string[,] CardsImage = {
         {"ace_club.png","two_club.png","three_club.png","four_club.png","five_club.png","six_club.png","seven_club.png","eight_club.png","nine_club.png","ten_club.png","jack_club.png","queen_club.png","king_club.png"  },
         {"ace_diamond.png","two_diamond.png","three_diamond.png","four_diamond.png","five_diamond.png","six_diamond.png","seven_diamond.png","eight_diamond.png","nine_diamond.png","ten_diamond.png","jack_diamond.png","queen_diamond.png","king_diamond.png"  },
@@ -14,6 +22,11 @@ namespace TheLambClub.Models
 
         #region constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewCard"/> class based on a specific <see cref="FBCard"/>.
+        /// Maps the card's shape and value to its corresponding image asset.
+        /// </summary>
+        /// <param name="card">The backend card model to represent. If null, the card back is displayed.</param>
         public ViewCard(FBCard card)
         {
             if (card == null)
@@ -21,6 +34,10 @@ namespace TheLambClub.Models
             if (card != null && card.Value > 0)
                 Source = CardsImage[(int)card.Shape, card.Value - 1];
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewCard"/> class showing the card back by default.
+        /// </summary>
         public ViewCard()
         {
             Source = Keys.BackOfCard;

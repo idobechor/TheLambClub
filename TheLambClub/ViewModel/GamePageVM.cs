@@ -10,6 +10,10 @@ using TheLambClub.Views;
 
 namespace TheLambClub.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the Game Page, managing the state of the poker game, 
+    /// UI updates, and interaction with the game logic and services.
+    /// </summary>
     public partial class GamePageVM : ObservableObject
     {
         #region fields
@@ -23,12 +27,18 @@ namespace TheLambClub.ViewModel
 
         #region commands
 
+        /// <summary>
+        /// Command to trigger the move selection popup.
+        /// </summary>
         public Command ShowPickYourMovePrompt { get; }
 
         #endregion
 
         #region properties
 
+        /// <summary>
+        /// Gets the current amount of money in the pot, while triggering UI updates for related properties.
+        /// </summary>
         public int PotMoney
         {
             get
@@ -38,6 +48,7 @@ namespace TheLambClub.ViewModel
                 return game.Pot;
             }
         }
+
         public bool IsConnected => _connectivity.IsConnected;
         public int PlayerMoney => game != null && game.CurrentPlayer != null ? (int)game.CurrentPlayer.CurrentMoney : Keys.InitialMoney;
         public string Name => game.CurrentPlayer!.Name;
@@ -51,6 +62,12 @@ namespace TheLambClub.ViewModel
 
         #region constructors
 
+        /// <summary>
+        /// Initializes the ViewModel, setting up event handlers for game state changes 
+        /// and initializing the opponent display grid.
+        /// </summary>
+        /// <param name="game">The current game session.</param>
+        /// <param name="grdOponnents">The UI grid to populate with opponent data.</param>
         public GamePageVM(Game game, Grid grdOponnents)
         {
             this.game = game;
@@ -61,7 +78,7 @@ namespace TheLambClub.ViewModel
             game.OnWinnerSelected += OnWinnerSelected;
             game.OnwinnerSelected += WinnerSelected;
             game.OnTurnChanged += OnTurnChanged;
-            game.OnMyMoneyChanged+= MoneyChanged;
+            game.OnMyMoneyChanged += MoneyChanged;
             _connectivity.ConnectivityChanged += OnConnectivityChanged;
             ShowPickYourMovePrompt = new Command(ShowPickYourMovePromptFunction, IsMyTurn);
         }
@@ -69,12 +86,23 @@ namespace TheLambClub.ViewModel
 
         #region public methods
 
+        /// <summary>
+        /// Starts listening for real-time Firebase database updates.
+        /// </summary>
         public void AddSnapshotListener() => game.AddSnapShotListener();
+
+        /// <summary>
+        /// Stops listening for real-time Firebase database updates.
+        /// </summary>
         public void RemoveSnapshotListener() => game.RemoveSnapShotListener();
 
         #endregion
 
         #region private methods
+
+        /// <summary>
+        /// Handles updates to the players' money and refreshes the UI.
+        /// </summary>
         private void MoneyChanged(object? sender, string winnerName)
         {
             if (lstOponnentsMoneyLabels != null && lstOponnentsMoneyLabels.Count + 1 == game.MaxNumOfPlayers && lstOponnentsMoneyLabels.Count != 0)
@@ -83,23 +111,30 @@ namespace TheLambClub.ViewModel
                 OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             }
         }
+
         private void OnConnectivityChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(IsConnected));
         }
+
         private void OnTurnChanged(object? sender, EventArgs e)
         {
             OnPropertyChanged(nameof(Status));
         }
+
         private void OnWinnerSelected(object? sender, EventArgs e)
         {
-
-            Shell.Current.ShowPopupAsync(new WinGamePopup(Strings.Dear+game.CurrentPlayer!.Name+Strings.WinningMsg));
+            Shell.Current.ShowPopupAsync(new WinGamePopup($"{Strings.Dear} {game.CurrentPlayer!.Name} {Strings.WinningMsg}"));
         }
+
         private void OnPlayerLost(object? sender, EventArgs e)
         {
-            Shell.Current.ShowPopupAsync(new LostGamePopup(Strings.Dear + game.CurrentPlayer!.Name + Strings.LosingMsg));
+            Shell.Current.ShowPopupAsync(new LostGamePopup($"{Strings.Dear} {game.CurrentPlayer!.Name} {Strings.LosingMsg}"));
         }
+
+        /// <summary>
+        /// Refreshes all bound UI properties when the game state changes.
+        /// </summary>
         private void OnGameChanged(object? sender, EventArgs e)
         {
             DisplayOponnentsNames();
@@ -113,19 +148,28 @@ namespace TheLambClub.ViewModel
             OnPropertyChanged(nameof(Card2));
             ((Command)ShowPickYourMovePrompt)?.ChangeCanExecute();
         }
+
         private void WinnerSelected(object? sender, WinningPopupEvent winningEvent)
         {
-
             OnPropertyChanged(nameof(lstOponnentsMoneyLabels));
             Shell.Current.ShowPopupAsync(new WinningPopupPage(winningEvent.playersArray, winningEvent.ranks, winningEvent.numberOfWinners));
         }
+
         private bool IsMyTurn(object arg) => IsMyTurnPrivate;
+
+        /// <summary>
+        /// Opens the move selection popup and injects the poker suggestion service.
+        /// </summary>
         private async void ShowPickYourMovePromptFunction(object obj)
         {
             IPokerSuggestionService suggestionService = Shell.Current?.Handler?.MauiContext?.Services?.GetService<IPokerSuggestionService>()!;
             await Shell.Current!.ShowPopupAsync(new PickYourMovePopupPage(game, suggestionService));
             ((Command)ShowPickYourMovePrompt).ChangeCanExecute();
         }
+
+        /// <summary>
+        /// Programmatically constructs the grid to display opponent names and current chip counts.
+        /// </summary>
         private void InitOponnentsGrid(Grid grdOponnents)
         {
             int oponnentsCount = game.MaxNumOfPlayers - 1;
@@ -159,6 +203,9 @@ namespace TheLambClub.ViewModel
             }
         }
 
+        /// <summary>
+        /// Handles the event when a game is deleted by navigating away and notifying the user.
+        /// </summary>
         private void OnGameDeleted(object? sender, EventArgs e)
         {
             MainThread.InvokeOnMainThreadAsync(() =>
@@ -167,6 +214,7 @@ namespace TheLambClub.ViewModel
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
             });
         }
+
         private void DisplayOponnentsNames()
         {
             game.DisplayOponnentsNames(lstOponnentsLabels);
