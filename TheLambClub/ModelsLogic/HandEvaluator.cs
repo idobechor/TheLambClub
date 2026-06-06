@@ -269,23 +269,19 @@ namespace TheLambClub.ModelsLogic
         {
             FBCard[] sortedCards = new FBCard[cards.Length];
             Array.Copy(cards, sortedCards, cards.Length);
-
             for (int i = 0; i < sortedCards.Length - 1; i++)
             {
                 int maxIndex = i;
-
                 for (int j = i + 1; j < sortedCards.Length; j++)
                 {
                     int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;
                     int valueMax = sortedCards[maxIndex].Value == 1 ? 14 : sortedCards[maxIndex].Value;
-
                     if (valueJ > valueMax)
                         maxIndex = j;
                 }
                 if (maxIndex != i)
                     (sortedCards[maxIndex], sortedCards[i]) = (sortedCards[i], sortedCards[maxIndex]);
             }
-
             return sortedCards;
         }
         /// <summary>

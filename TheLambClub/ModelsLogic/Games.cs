@@ -57,11 +57,9 @@ namespace TheLambClub.ModelsLogic
         {
             ilr?.Remove();
         }
-
         #endregion
 
         #region protected methods
-
         /// <summary>
         /// Displays a toast message on the UI thread when a game is deleted.
         /// </summary>
@@ -72,7 +70,6 @@ namespace TheLambClub.ModelsLogic
                 Toast.Make(Strings.GameDeleted, ToastDuration.Long).Show();
             });
         }
-
         /// <summary>
         /// Handles the completion of the document creation process.
         /// </summary>
@@ -81,7 +78,6 @@ namespace TheLambClub.ModelsLogic
             IsBusy = false;
             OnGameAdded?.Invoke(this, CurrentGame!);
         }
-
         /// <summary>
         /// Triggered when the collection changes. It queries Firestore for games 
         /// that are not yet full to update the lobby list.
@@ -90,7 +86,6 @@ namespace TheLambClub.ModelsLogic
         {
             fbd.GetDocumentsWhereEqualTo(Keys.GamesCollection, nameof(GameModel.IsFull), false, OnComplete);
         }
-
         /// <summary>
         /// Processes the query results of available games, populating the GamesList 
         /// and notifying the UI of changes.

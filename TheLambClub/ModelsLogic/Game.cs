@@ -474,8 +474,7 @@ namespace TheLambClub.ModelsLogic
             Dictionary<Player, HandRank> ranks = EvaluatePlayerHands();
             Player[] sortedPlayers = SortPlayersByHandRank(ranks);
             DistributePotToWinners(sortedPlayers, ranks);
-            bool found = CheckForGameOver();
-            if (found)
+            if (CheckForGameOver())
                 if (AmIWinner())
                     OnWinnerSelected?.Invoke(this, EventArgs.Empty);
                 else

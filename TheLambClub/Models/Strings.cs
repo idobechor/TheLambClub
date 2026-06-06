@@ -467,6 +467,8 @@ namespace TheLambClub.Models
         /// </summary>
         public const string ActiveTables = "ACTIVE TABLES";
         public const string Available = "AVAILABLE";
+        public const string POTBALANCE = "POT BALANCE";
+        public const string YOURBALANCE = "YOUR BALANCE";
 
         #endregion
     }
