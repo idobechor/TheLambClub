@@ -68,7 +68,7 @@ namespace TheLambClub.ModelsLogic
         /// <returns>A string indicating the hand type.</returns>
         public override string ToString()
         {
-            return Strings.HisRankIs + HandType.ToString();
+            return $"{Strings.HisRankIs} {HandType}";
         }
 
         #endregion
