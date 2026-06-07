@@ -27,7 +27,6 @@ namespace TheLambClub.ModelsLogic
             {
                 int myType = (int)HandType!;
                 int otherType = (int)other.HandType!;
-
                 // 1. Compare the hand category (e.g., Flush vs Straight)
                 if (myType != otherType)
                     res = myType - otherType;
@@ -51,7 +50,6 @@ namespace TheLambClub.ModelsLogic
             }
             return res;
         }
-
         /// <summary>
         /// Determines if the current hand is stronger than the specified hand.
         /// </summary>
@@ -61,7 +59,6 @@ namespace TheLambClub.ModelsLogic
         {
             return Compare(other) > 0;
         }
-
         /// <summary>
         /// Returns a string representation of the hand rank for display purposes.
         /// </summary>
@@ -70,8 +67,6 @@ namespace TheLambClub.ModelsLogic
         {
             return $"{Strings.HisRankIs} {HandType}";
         }
-
         #endregion
-
     }
 }

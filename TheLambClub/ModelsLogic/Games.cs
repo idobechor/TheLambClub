@@ -34,8 +34,7 @@ namespace TheLambClub.ModelsLogic
                 // Initialize the players array and set the current user as the host.
                 currentGame.Players = new Player[SelectedNumberOfPlayers];
                 currentGame.Players[0] = new Player((new User()).UserName, fbd.UserId);
-                currentGame.HostId = fbd.UserId;
-                
+                currentGame.HostId = fbd.UserId;              
                 // Subscribe to deletion events and save the document.
                 currentGame.OnGameDeleted += OnGameDeleted;
                 CurrentGame.SetDocument(OnComplete);

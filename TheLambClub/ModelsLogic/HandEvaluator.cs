@@ -174,12 +174,12 @@ namespace TheLambClub.ModelsLogic
             }
             if (foundFour)
             {
-                int normalizedFourValue = fourValue == 1 ? 14 : fourValue;
+                int normalizedFourValue = fourValue == LowValueOfAce ? HighValueOfAce : fourValue;
                 int kicker = 0;
                 for (int i = 0; i < cards.Length; i++)
                     if (cards[i].Value != fourValue)
                     {
-                        int cardValue = cards[i].Value == 1 ? 14 : cards[i].Value;
+                        int cardValue = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
                         if (cardValue > kicker)
                             kicker = cardValue;
                     }
@@ -231,7 +231,7 @@ namespace TheLambClub.ModelsLogic
             HandRank handRank = null!;
             foreach (FBCard card in cards)
                 dict[card.Shape]++;
-            if (!(dict[Shapes.Club] < 5 && dict[Shapes.Diamond] < 5 && dict[Shapes.Heart] < 5 && dict[Shapes.Spade] < 5))
+            if (dict[Shapes.Club] >= 5 || dict[Shapes.Diamond] >= 5 || dict[Shapes.Heart] >= 5 || dict[Shapes.Spade] >= 5)
             {
                 Shapes flushShape = dict[Shapes.Club] >= 5 ? Shapes.Club :
                 dict[Shapes.Diamond] >= 5 ? Shapes.Diamond :
@@ -242,14 +242,13 @@ namespace TheLambClub.ModelsLogic
                     if (card.Shape == flushShape)
                         flushCardsList.Add(card);
                 FBCard[] sortedFlushCards = SortCardsDescendingBubbleSort([.. flushCardsList]);
-
                 FBCard[] finalFlushCards = new FBCard[5];
                 int[] finalKickers = new int[4];
                 for (int i = 0; i < 5; i++)
                     finalFlushCards[i] = sortedFlushCards[i];
                 for (int i = 1; i < 5; i++)
-                    finalKickers[i - 1] = sortedFlushCards[i].Value == 1 ? 14 : sortedFlushCards[i].Value;
-                int primaryValue = sortedFlushCards[0].Value == 1 ? 14 : sortedFlushCards[0].Value;
+                    finalKickers[i - 1] = sortedFlushCards[i].Value == LowValueOfAce ? HighValueOfAce : sortedFlushCards[i].Value;
+                int primaryValue = sortedFlushCards[0].Value == LowValueOfAce ? HighValueOfAce : sortedFlushCards[0].Value;
                 handRank = new HandRank
                 {
                     HandType = LevelsOfHands.Flush,
@@ -274,8 +273,8 @@ namespace TheLambClub.ModelsLogic
                 int maxIndex = i;
                 for (int j = i + 1; j < sortedCards.Length; j++)
                 {
-                    int valueJ = sortedCards[j].Value == 1 ? 14 : sortedCards[j].Value;
-                    int valueMax = sortedCards[maxIndex].Value == 1 ? 14 : sortedCards[maxIndex].Value;
+                    int valueJ = sortedCards[j].Value == LowValueOfAce ? HighValueOfAce : sortedCards[j].Value;
+                    int valueMax = sortedCards[maxIndex].Value == LowValueOfAce ? HighValueOfAce : sortedCards[maxIndex].Value;
                     if (valueJ > valueMax)
                         maxIndex = j;
                 }
@@ -295,7 +294,7 @@ namespace TheLambClub.ModelsLogic
             List<int> distinctValuesList = [];
             for (int i = 0; i < cards.Length; i++)
             {
-                int value = cards[i].Value == 1 ? 14 : cards[i].Value;
+                int value = cards[i].Value == LowValueOfAce ? HighValueOfAce : cards[i].Value;
                 bool alreadyExists = false;
                 for (int j = 0; j < distinctValuesList.Count; j++)
                     if (distinctValuesList[j] == value)
@@ -381,7 +380,7 @@ namespace TheLambClub.ModelsLogic
             if (threeOfAKindValue != 0)
                 handRank = new HandRank
                 {
-                    HandType = PlayerModel.LevelsOfHands.ThreeOfAKind,
+                    HandType = LevelsOfHands.ThreeOfAKind,
                     PrimaryValue = threeOfAKindValue,
                     Kickers = kickers,
                     HandCards = cards

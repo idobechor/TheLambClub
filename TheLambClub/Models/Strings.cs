@@ -273,7 +273,7 @@ namespace TheLambClub.Models
         /// <summary>
         /// Label for the current active player's name.
         /// </summary>
-        public const string CurrentTurnTxt = "Current Player:";
+        public const string CurrentTurnTxt = "Playing:";
 
         /// <summary>
         /// Victory header text.
