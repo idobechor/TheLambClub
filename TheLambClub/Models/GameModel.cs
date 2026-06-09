@@ -398,13 +398,6 @@ namespace TheLambClub.Models
         protected abstract void SyncGameState(Game updatedGame);
 
         /// <summary>
-        /// Determines if the game has just transitioned from a lobby to a started state.
-        /// </summary>
-        /// <param name="updatedGame">The updated game data.</param>
-        /// <returns>True if the game just started.</returns>
-        protected abstract bool HasGameJustStarted(Game updatedGame);
-
-        /// <summary>
         /// Checks if the current betting round should conclude.
         /// </summary>
         /// <param name="isEndOfRound">Current round end status.</param>

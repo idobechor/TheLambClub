@@ -414,7 +414,6 @@ namespace TheLambClub.ModelsLogic
         }
         protected override bool IsRoundEnding(Game updatedGame) => CurrentPlayerIndex == MaxNumOfPlayers - 1 && updatedGame.CurrentPlayerIndex == 0;
         protected override bool HasGameBecomeFull(Game updatedGame) => CurrentNumOfPlayers < MaxNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
-        protected override bool HasGameJustStarted(Game updatedGame) => CurrentNumOfPlayers != updatedGame.CurrentNumOfPlayers && updatedGame.CurrentNumOfPlayers == MaxNumOfPlayers;
         protected override void SyncGameState(Game updatedGame)
         {
             Players = updatedGame.Players;
@@ -564,7 +563,7 @@ namespace TheLambClub.ModelsLogic
         }
         protected override void UpdateFirebaseIfNeeded(bool endedRound, bool skippedTurn, int round, bool isEndOfHand)
         {
-            if (!(!IsHost && !skippedTurn))
+            if (IsHost || skippedTurn)
             {
                 if (endedRound && IsHost && !isEndOfHand)
                 {
@@ -618,7 +617,6 @@ namespace TheLambClub.ModelsLogic
                 bool isChangeToOneStaying = updatedGame.IsOneStaying() && !IsOneStaying();
                 bool isPotMoneyChanged = updatedGame.Pot != Pot;
                 bool changedToFull = HasGameBecomeFull(updatedGame);
-                bool isGameStarted = HasGameJustStarted(updatedGame);
                 bool ChangedToEveryOneAreEqual = !EveryOneAreEqual() && updatedGame.EveryOneAreEqual();
                 bool isRoundChanged = RoundNumber != updatedGame.RoundNumber;
                 bool isEndOfRound = IsRoundEnding(updatedGame) && !isRoundChanged && !(isChangeToOneStaying);
